@@ -47,7 +47,7 @@ const products = [
         description: 'Classic vintage style denim jacket. Perfect for all seasons.',
         price: 89.95,
         stock: 40,
-        image_url: 'https://images.unsplash.com/photo-1601333762779-83bf81eaef56?w=500&auto=format&fit=crop&q=60',
+        image_url: 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=500&auto=format&fit=crop&q=60',
         category: 'Clothing'
     },
     {
