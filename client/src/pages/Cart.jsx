@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 
 const Cart = () => {
-    const { cartItems, removeFromCart, clearCart, cartTotal } = useCart();
+    const { cartItems, removeFromCart, clearCart, cartTotal, cartCount } = useCart();
     const { user } = useAuth();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
@@ -45,7 +45,7 @@ const Cart = () => {
 
     if (cartItems.length === 0) {
         return (
-            <div className="container mt-5 text-center">
+            <div className="container mt-5 text-center fade-in">
                 <h2>Your Cart is Empty</h2>
                 <button className="btn btn-primary mt-3" onClick={() => navigate('/')}>Browse Products</button>
             </div>
@@ -53,7 +53,7 @@ const Cart = () => {
     }
 
     return (
-        <div className="container mt-5">
+        <div className="container mt-5 fade-in">
             <h2 className="mb-4">Shopping Cart</h2>
             <div className="row">
                 <div className="col-md-8">
@@ -92,6 +92,10 @@ const Cart = () => {
                                 <span className="text-primary">Summary</span>
                             </h4>
                             <ul className="list-group mb-3">
+                                <li className="list-group-item d-flex justify-content-between">
+                                    <span>Total Items</span>
+                                    <strong>{cartCount}</strong>
+                                </li>
                                 <li className="list-group-item d-flex justify-content-between">
                                     <span>Total (USD)</span>
                                     <strong>${cartTotal.toFixed(2)}</strong>
