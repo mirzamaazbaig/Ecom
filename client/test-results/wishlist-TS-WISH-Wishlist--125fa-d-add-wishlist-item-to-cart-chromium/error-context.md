@@ -28,8 +28,8 @@
               - /url: /cart
               - generic [ref=e24]: 🛒
           - listitem [ref=e25]:
-            - button "Hello, test_user_1766688721127_rhdm3 Account" [ref=e26] [cursor=pointer]:
-              - generic [ref=e27]: Hello, test_user_1766688721127_rhdm3
+            - button "Hello, test_user_1766688743408_jhwdw Account" [ref=e26] [cursor=pointer]:
+              - generic [ref=e27]: Hello, test_user_1766688743408_jhwdw
               - generic [ref=e28]: Account
   - generic [ref=e29]:
     - heading "Your Wishlist is Empty" [level=2] [ref=e30]
