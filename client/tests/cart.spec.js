@@ -1,50 +1,140 @@
-import { test, expect } from '@playwright/test';
+/**
+ * Shopping Cart E2E Tests
+ * ------------------------
+ * Test Suite ID: TS_CART
+ * Following ISTQB TAE Guidelines:
+ * - Modular test design
+ * - Independent test execution
+ * - Clear verification points
+ */
 
-test.describe('Shopping Cart', () => {
-    // Setup: Create a user and login before tests
-    test.beforeEach(async ({ page }) => {
-        const uniqueEmail = `cart_test_${Date.now()}@example.com`;
-        const password = 'password123';
+import { test, expect, TestAssertions, PageActions } from './fixtures/test-fixtures.js';
 
-        // Register (which auto-logins)
-        await page.goto('/register');
-        await page.fill('input[type="email"]', uniqueEmail);
-        await page.fill('input[type="password"] >> nth=0', password);
-        await page.fill('input[type="password"] >> nth=1', password);
-        await page.click('button[type="submit"]');
+test.describe('TS_CART: Shopping Cart Test Suite', () => {
 
-        await expect(page).toHaveURL('/');
-    });
+    test.describe('Add to Cart', () => {
 
-    test('should add product to cart and verify count', async ({ page }) => {
-        // Go to Home
-        await page.goto('/');
+        test('TC_CART_001: Should add product to cart from home page', async ({ authenticatedPage }) => {
+            await authenticatedPage.goto('/');
+            await authenticatedPage.waitForSelector('.card');
 
-        // Click on the first product's "View Details" button
-        await page.waitForSelector('.card');
-        await page.click('text=View Details');
+            // Handle alert
+            authenticatedPage.once('dialog', dialog => dialog.accept());
 
-        // On Product Details Page
-        // Handle alert dialog that appears after adding to cart
-        page.on('dialog', async dialog => {
-            expect(dialog.message()).toContain('Added');
-            await dialog.dismiss();
+            // Click Add to Cart on first product
+            await authenticatedPage.locator('.card .btn-primary').first().click();
+
+            // Verify cart (navigate to cart page)
+            await authenticatedPage.click('text=Cart');
+            await expect(authenticatedPage).toHaveURL('/cart');
+
+            // Cart should have items
+            await TestAssertions.assertCartHasItems(authenticatedPage);
         });
 
-        // Click Add to Cart
-        await page.click('text=Add to Cart');
+        test('TC_CART_002: Should add product to cart from product details page', async ({ authenticatedPage }) => {
+            await PageActions.goToFirstProduct(authenticatedPage);
 
-        // Navigate to Cart
-        await page.click('text=Cart');
-        await expect(page).toHaveURL('/cart');
+            // Handle alert
+            authenticatedPage.once('dialog', dialog => dialog.accept());
 
-        // Verify item is in cart
-        // Check for "Total Items" row we added
-        await expect(page.locator('text=Total Items')).toBeVisible();
+            // Add to cart
+            await PageActions.addProductToCart(authenticatedPage);
 
-        // Summary should show at least 1 item
-        // The count might be dynamic, so we check if the element contains a number > 0
-        // Or simply check that the list group item exists
-        await expect(page.locator('.list-group-item').first()).toBeVisible();
+            // Navigate to cart and verify
+            await authenticatedPage.click('text=Cart');
+            await expect(authenticatedPage).toHaveURL('/cart');
+            await TestAssertions.assertCartHasItems(authenticatedPage);
+        });
+
+        test('TC_CART_003: Should add product with custom quantity', async ({ authenticatedPage }) => {
+            await PageActions.goToFirstProduct(authenticatedPage);
+
+            // Set quantity to 2
+            await authenticatedPage.fill('input[type="number"]', '2');
+
+            // Handle alert
+            authenticatedPage.once('dialog', dialog => dialog.accept());
+
+            await PageActions.addProductToCart(authenticatedPage);
+
+            // Verify
+            await authenticatedPage.click('text=Cart');
+            await expect(authenticatedPage.locator('text=Quantity: 2')).toBeVisible();
+        });
+    });
+
+    test.describe('Cart Display', () => {
+
+        test('TC_CART_004: Should display cart items correctly', async ({ authenticatedPage }) => {
+            // Add item first
+            await authenticatedPage.goto('/');
+            await authenticatedPage.waitForSelector('.card');
+            authenticatedPage.once('dialog', dialog => dialog.accept());
+            await authenticatedPage.locator('.card .btn-primary').first().click();
+
+            // Go to cart
+            await authenticatedPage.click('text=Cart');
+
+            // Verify cart elements
+            await expect(authenticatedPage.locator('h2:has-text("Shopping Cart")')).toBeVisible();
+            await expect(authenticatedPage.locator('text=Summary')).toBeVisible();
+            await expect(authenticatedPage.locator('text=Total Items')).toBeVisible();
+            await expect(authenticatedPage.locator('text=Total (USD)')).toBeVisible();
+            await expect(authenticatedPage.locator('button:has-text("Checkout")')).toBeVisible();
+        });
+
+        test('TC_CART_005: Should show empty cart message when cart is empty', async ({ authenticatedPage }) => {
+            await authenticatedPage.goto('/cart');
+
+            // Verify empty cart state
+            await expect(authenticatedPage.locator('text=Your Cart is Empty')).toBeVisible();
+            await expect(authenticatedPage.locator('text=Browse Products')).toBeVisible();
+        });
+    });
+
+    test.describe('Remove from Cart', () => {
+
+        test('TC_CART_006: Should remove item from cart', async ({ authenticatedPage }) => {
+            // Add item
+            await authenticatedPage.goto('/');
+            await authenticatedPage.waitForSelector('.card');
+            authenticatedPage.once('dialog', dialog => dialog.accept());
+            await authenticatedPage.locator('.card .btn-primary').first().click();
+
+            // Go to cart
+            await authenticatedPage.click('text=Cart');
+            await TestAssertions.assertCartHasItems(authenticatedPage);
+
+            // Remove item
+            await authenticatedPage.click('button:has-text("Remove")');
+
+            // Verify cart is empty
+            await expect(authenticatedPage.locator('text=Your Cart is Empty')).toBeVisible({ timeout: 5000 });
+        });
+    });
+
+    test.describe('Cart Calculations', () => {
+
+        test('TC_CART_007: Should calculate total correctly', async ({ authenticatedPage }) => {
+            // Add item
+            await authenticatedPage.goto('/');
+            await authenticatedPage.waitForSelector('.card');
+
+            // Get product price before adding
+            const priceText = await authenticatedPage.locator('.card-text.fw-bold').first().innerText();
+            const price = parseFloat(priceText.replace('$', ''));
+
+            authenticatedPage.once('dialog', dialog => dialog.accept());
+            await authenticatedPage.locator('.card .btn-primary').first().click();
+
+            // Go to cart and verify total
+            await authenticatedPage.click('text=Cart');
+
+            const totalText = await authenticatedPage.locator('.list-group-item:has-text("Total (USD)") strong').innerText();
+            const total = parseFloat(totalText.replace('$', ''));
+
+            expect(total).toBe(price);
+        });
     });
 });

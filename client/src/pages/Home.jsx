@@ -124,7 +124,7 @@ const Home = () => {
                                         </div>
                                         <div className="card-body d-flex flex-column">
                                             <h5 className="card-title text-truncate" title={product.name}>
-                                                <Link to={`/product/${product.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                                                <Link to={`/products/${product.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                                                     {product.name}
                                                 </Link>
                                             </h5>
@@ -147,7 +147,7 @@ const Home = () => {
                                                 >
                                                     Add to Cart
                                                 </button>
-                                                <Link to={`/product/${product.id}`} className="btn btn-outline-secondary w-100">
+                                                <Link to={`/products/${product.id}`} className="btn btn-outline-secondary w-100">
                                                     View Details
                                                 </Link>
                                             </div>

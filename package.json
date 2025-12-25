@@ -1,0 +1,15 @@
+{
+    "name": "ecom-portfolio-root",
+    "version": "1.0.0",
+    "description": "Root script manager for E-commerce Project",
+    "scripts": {
+        "install-all": "npm install && cd client && npm install && cd ../server && npm install",
+        "dev": "concurrently \"npm run server\" \"npm run client\"",
+        "server": "cd server && npm run dev",
+        "client": "cd client && npm run dev",
+        "test:e2e": "cd client && npm run test:e2e"
+    },
+    "devDependencies": {
+        "concurrently": "^8.2.2"
+    }
+}

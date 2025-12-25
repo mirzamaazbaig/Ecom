@@ -10,6 +10,7 @@ import Home from './pages/Home';
 import ProductDetails from './pages/ProductDetails';
 import Cart from './pages/Cart';
 import MyOrders from './pages/MyOrders';
+import Wishlist from './pages/Wishlist';
 
 
 import AdminDashboard from './pages/AdminDashboard';
@@ -45,6 +46,11 @@ function App() {
             <Route path="/my-orders" element={
               <ProtectedRoute>
                 <MyOrders />
+              </ProtectedRoute>
+            } />
+            <Route path="/wishlist" element={
+              <ProtectedRoute>
+                <Wishlist />
               </ProtectedRoute>
             } />
             <Route path="/admin" element={
