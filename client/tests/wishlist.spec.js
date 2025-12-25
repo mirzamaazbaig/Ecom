@@ -20,7 +20,7 @@ test.describe('TS_WISH: Wishlist Test Suite', () => {
             await PageActions.addProductToWishlist(authenticatedPage);
 
             // Navigate to wishlist and verify
-            await authenticatedPage.click('a:has-text("Wishlist")');
+            await authenticatedPage.click('a[href="/wishlist"]');
             await expect(authenticatedPage).toHaveURL('/wishlist');
 
             // Should show at least one item
@@ -36,7 +36,7 @@ test.describe('TS_WISH: Wishlist Test Suite', () => {
             await PageActions.addProductToWishlist(authenticatedPage);
 
             // Navigate to wishlist
-            await authenticatedPage.click('a:has-text("Wishlist")');
+            await authenticatedPage.click('a[href="/wishlist"]');
 
             // Verify wishlist elements
             await expect(authenticatedPage.locator('h2:has-text("My Wishlist")')).toBeVisible();

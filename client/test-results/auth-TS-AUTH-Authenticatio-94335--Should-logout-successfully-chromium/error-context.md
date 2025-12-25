@@ -28,148 +28,143 @@
               - /url: /cart
               - generic [ref=e24]: 🛒
           - listitem [ref=e25]:
-            - button "Hello, test_user_1766687347437_eftas Account" [active] [ref=e26] [cursor=pointer]:
-              - generic [ref=e27]: Hello, test_user_1766687347437_eftas
+            - button "Hello, test_user_1766688181043_ppqck Account" [active] [ref=e26] [cursor=pointer]:
+              - generic [ref=e27]: Hello, test_user_1766688181043_ppqck
               - generic [ref=e28]: Account
-  - generic [ref=e29]:
-    - generic [ref=e31]:
-      - heading "Summer Sale is Live!" [level=1] [ref=e32]
-      - paragraph [ref=e33]: Up to 50% off on all Electronics
-      - button "Shop Now" [ref=e34] [cursor=pointer]
-    - generic [ref=e36]:
-      - generic [ref=e37]:
-        - generic [ref=e38]:
-          - heading "Categories" [level=5] [ref=e39]
-          - list [ref=e40]:
-            - listitem [ref=e41] [cursor=pointer]: All Departments
-            - listitem [ref=e42] [cursor=pointer]: Electronics
-            - listitem [ref=e43] [cursor=pointer]: Clothing
-            - listitem [ref=e44] [cursor=pointer]: Books
-        - separator [ref=e45]
-        - generic [ref=e46]:
-          - heading "Price" [level=5] [ref=e47]
-          - slider [ref=e48]: "2000"
-          - generic [ref=e49]:
-            - generic [ref=e50]: $0
-            - generic [ref=e51]: $2000
-        - separator [ref=e52]
-        - generic [ref=e53]:
-          - heading "Sort By" [level=5] [ref=e54]
-          - combobox [ref=e55]:
-            - option "Avg. Customer Review" [selected]
-            - 'option "Price: Low to High"'
-            - option "Newest Arrivals"
-      - generic [ref=e57]:
-        - generic [ref=e59]:
-          - img "Premium Cotton T-Shirt" [ref=e61]
-          - generic [ref=e62]:
-            - heading "Premium Cotton T-Shirt" [level=5] [ref=e63]:
-              - link "Premium Cotton T-Shirt" [ref=e64] [cursor=pointer]:
-                - /url: /products/4
-            - generic [ref=e65]:
-              - text: ★★★★★
-              - generic [ref=e66]: (5)
-            - paragraph [ref=e67]: $24.99
-            - generic [ref=e68]:
-              - button "Add to Cart" [ref=e69] [cursor=pointer]
-              - link "View Details" [ref=e70] [cursor=pointer]:
-                - /url: /products/4
-        - generic [ref=e72]:
-          - img "Smartphone 15 Pro" [ref=e74]
-          - generic [ref=e75]:
-            - heading "Smartphone 15 Pro" [level=5] [ref=e76]:
-              - link "Smartphone 15 Pro" [ref=e77] [cursor=pointer]:
-                - /url: /products/2
-            - generic [ref=e78]:
-              - generic [ref=e79]: ★★★★☆
-              - generic [ref=e80]: (5)
-            - paragraph [ref=e81]: $999.00
-            - generic [ref=e82]:
-              - button "Add to Cart" [ref=e83] [cursor=pointer]
-              - link "View Details" [ref=e84] [cursor=pointer]:
-                - /url: /products/2
-        - generic [ref=e86]:
-          - img "Denim Jacket" [ref=e88]
-          - generic [ref=e89]:
-            - heading "Denim Jacket" [level=5] [ref=e90]:
-              - link "Denim Jacket" [ref=e91] [cursor=pointer]:
-                - /url: /products/5
-            - generic [ref=e92]:
-              - text: ☆☆☆☆☆
-              - generic [ref=e93]: (0)
-            - paragraph [ref=e94]: $89.95
-            - generic [ref=e95]:
-              - button "Add to Cart" [ref=e96] [cursor=pointer]
-              - link "View Details" [ref=e97] [cursor=pointer]:
-                - /url: /products/5
-        - generic [ref=e99]:
-          - img "Clean Code" [ref=e101]
-          - generic [ref=e102]:
-            - heading "Clean Code" [level=5] [ref=e103]:
-              - link "Clean Code" [ref=e104] [cursor=pointer]:
-                - /url: /products/8
-            - generic [ref=e105]:
-              - text: ☆☆☆☆☆
-              - generic [ref=e106]: (0)
-            - paragraph [ref=e107]: $45.00
-            - generic [ref=e108]:
-              - button "Add to Cart" [ref=e109] [cursor=pointer]
-              - link "View Details" [ref=e110] [cursor=pointer]:
-                - /url: /products/8
-        - generic [ref=e112]:
-          - img "Running Sneakers" [ref=e114]
-          - generic [ref=e115]:
-            - heading "Running Sneakers" [level=5] [ref=e116]:
-              - link "Running Sneakers" [ref=e117] [cursor=pointer]:
-                - /url: /products/6
-            - generic [ref=e118]:
-              - text: ☆☆☆☆☆
-              - generic [ref=e119]: (0)
-            - paragraph [ref=e120]: $119.99
-            - generic [ref=e121]:
-              - button "Add to Cart" [ref=e122] [cursor=pointer]
-              - link "View Details" [ref=e123] [cursor=pointer]:
-                - /url: /products/6
-        - generic [ref=e125]:
-          - img "The Great Gatsby" [ref=e127]
-          - generic [ref=e128]:
-            - heading "The Great Gatsby" [level=5] [ref=e129]:
-              - link "The Great Gatsby" [ref=e130] [cursor=pointer]:
-                - /url: /products/7
-            - generic [ref=e131]:
-              - text: ☆☆☆☆☆
-              - generic [ref=e132]: (0)
-            - paragraph [ref=e133]: $12.50
-            - generic [ref=e134]:
-              - button "Add to Cart" [ref=e135] [cursor=pointer]
-              - link "View Details" [ref=e136] [cursor=pointer]:
-                - /url: /products/7
-        - generic [ref=e138]:
-          - img "Wireless Noise-Cancelling Headphones" [ref=e140]
-          - generic [ref=e141]:
-            - heading "Wireless Noise-Cancelling Headphones" [level=5] [ref=e142]:
-              - link "Wireless Noise-Cancelling Headphones" [ref=e143] [cursor=pointer]:
-                - /url: /products/1
-            - generic [ref=e144]:
-              - text: ☆☆☆☆☆
-              - generic [ref=e145]: (0)
-            - paragraph [ref=e146]: $299.99
-            - generic [ref=e147]:
-              - button "Add to Cart" [ref=e148] [cursor=pointer]
-              - link "View Details" [ref=e149] [cursor=pointer]:
-                - /url: /products/1
-        - generic [ref=e151]:
-          - img "4K Ultra HD Monitor" [ref=e153]
-          - generic [ref=e154]:
-            - heading "4K Ultra HD Monitor" [level=5] [ref=e155]:
-              - link "4K Ultra HD Monitor" [ref=e156] [cursor=pointer]:
-                - /url: /products/3
-            - generic [ref=e157]:
-              - text: ☆☆☆☆☆
-              - generic [ref=e158]: (0)
-            - paragraph [ref=e159]: $449.50
-            - generic [ref=e160]:
-              - button "Add to Cart" [ref=e161] [cursor=pointer]
-              - link "View Details" [ref=e162] [cursor=pointer]:
-                - /url: /products/3
+  - generic [ref=e32]:
+    - generic [ref=e33]:
+      - generic [ref=e34]:
+        - heading "Categories" [level=5] [ref=e35]
+        - list [ref=e36]:
+          - listitem [ref=e37] [cursor=pointer]: All Departments
+          - listitem [ref=e38] [cursor=pointer]: Electronics
+          - listitem [ref=e39] [cursor=pointer]: Clothing
+          - listitem [ref=e40] [cursor=pointer]: Books
+      - separator [ref=e41]
+      - generic [ref=e42]:
+        - heading "Price" [level=5] [ref=e43]
+        - slider [ref=e44]: "2000"
+        - generic [ref=e45]:
+          - generic [ref=e46]: $0
+          - generic [ref=e47]: $2000
+      - separator [ref=e48]
+      - generic [ref=e49]:
+        - heading "Sort By" [level=5] [ref=e50]
+        - combobox [ref=e51]:
+          - option "Avg. Customer Review" [selected]
+          - 'option "Price: Low to High"'
+          - option "Newest Arrivals"
+    - generic [ref=e53]:
+      - generic [ref=e55]:
+        - img "Premium Cotton T-Shirt" [ref=e57]
+        - generic [ref=e58]:
+          - heading "Premium Cotton T-Shirt" [level=5] [ref=e59]:
+            - link "Premium Cotton T-Shirt" [ref=e60] [cursor=pointer]:
+              - /url: /products/4
+          - generic [ref=e61]:
+            - text: ★★★★★
+            - generic [ref=e62]: (5)
+          - paragraph [ref=e63]: $24.99
+          - generic [ref=e64]:
+            - button "Add to Cart" [ref=e65] [cursor=pointer]
+            - link "View Details" [ref=e66] [cursor=pointer]:
+              - /url: /products/4
+      - generic [ref=e68]:
+        - img "Smartphone 15 Pro" [ref=e70]
+        - generic [ref=e71]:
+          - heading "Smartphone 15 Pro" [level=5] [ref=e72]:
+            - link "Smartphone 15 Pro" [ref=e73] [cursor=pointer]:
+              - /url: /products/2
+          - generic [ref=e74]:
+            - generic [ref=e75]: ★★★★☆
+            - generic [ref=e76]: (5)
+          - paragraph [ref=e77]: $999.00
+          - generic [ref=e78]:
+            - button "Add to Cart" [ref=e79] [cursor=pointer]
+            - link "View Details" [ref=e80] [cursor=pointer]:
+              - /url: /products/2
+      - generic [ref=e82]:
+        - img "Denim Jacket" [ref=e84]
+        - generic [ref=e85]:
+          - heading "Denim Jacket" [level=5] [ref=e86]:
+            - link "Denim Jacket" [ref=e87] [cursor=pointer]:
+              - /url: /products/5
+          - generic [ref=e88]:
+            - text: ☆☆☆☆☆
+            - generic [ref=e89]: (0)
+          - paragraph [ref=e90]: $89.95
+          - generic [ref=e91]:
+            - button "Add to Cart" [ref=e92] [cursor=pointer]
+            - link "View Details" [ref=e93] [cursor=pointer]:
+              - /url: /products/5
+      - generic [ref=e95]:
+        - img "Clean Code" [ref=e97]
+        - generic [ref=e98]:
+          - heading "Clean Code" [level=5] [ref=e99]:
+            - link "Clean Code" [ref=e100] [cursor=pointer]:
+              - /url: /products/8
+          - generic [ref=e101]:
+            - text: ☆☆☆☆☆
+            - generic [ref=e102]: (0)
+          - paragraph [ref=e103]: $45.00
+          - generic [ref=e104]:
+            - button "Add to Cart" [ref=e105] [cursor=pointer]
+            - link "View Details" [ref=e106] [cursor=pointer]:
+              - /url: /products/8
+      - generic [ref=e108]:
+        - img "Running Sneakers" [ref=e110]
+        - generic [ref=e111]:
+          - heading "Running Sneakers" [level=5] [ref=e112]:
+            - link "Running Sneakers" [ref=e113] [cursor=pointer]:
+              - /url: /products/6
+          - generic [ref=e114]:
+            - text: ☆☆☆☆☆
+            - generic [ref=e115]: (0)
+          - paragraph [ref=e116]: $119.99
+          - generic [ref=e117]:
+            - button "Add to Cart" [ref=e118] [cursor=pointer]
+            - link "View Details" [ref=e119] [cursor=pointer]:
+              - /url: /products/6
+      - generic [ref=e121]:
+        - img "The Great Gatsby" [ref=e123]
+        - generic [ref=e124]:
+          - heading "The Great Gatsby" [level=5] [ref=e125]:
+            - link "The Great Gatsby" [ref=e126] [cursor=pointer]:
+              - /url: /products/7
+          - generic [ref=e127]:
+            - text: ☆☆☆☆☆
+            - generic [ref=e128]: (0)
+          - paragraph [ref=e129]: $12.50
+          - generic [ref=e130]:
+            - button "Add to Cart" [ref=e131] [cursor=pointer]
+            - link "View Details" [ref=e132] [cursor=pointer]:
+              - /url: /products/7
+      - generic [ref=e134]:
+        - img "Wireless Noise-Cancelling Headphones" [ref=e136]
+        - generic [ref=e137]:
+          - heading "Wireless Noise-Cancelling Headphones" [level=5] [ref=e138]:
+            - link "Wireless Noise-Cancelling Headphones" [ref=e139] [cursor=pointer]:
+              - /url: /products/1
+          - generic [ref=e140]:
+            - text: ☆☆☆☆☆
+            - generic [ref=e141]: (0)
+          - paragraph [ref=e142]: $299.99
+          - generic [ref=e143]:
+            - button "Add to Cart" [ref=e144] [cursor=pointer]
+            - link "View Details" [ref=e145] [cursor=pointer]:
+              - /url: /products/1
+      - generic [ref=e147]:
+        - img "4K Ultra HD Monitor" [ref=e149]
+        - generic [ref=e150]:
+          - heading "4K Ultra HD Monitor" [level=5] [ref=e151]:
+            - link "4K Ultra HD Monitor" [ref=e152] [cursor=pointer]:
+              - /url: /products/3
+          - generic [ref=e153]:
+            - text: ☆☆☆☆☆
+            - generic [ref=e154]: (0)
+          - paragraph [ref=e155]: $449.50
+          - generic [ref=e156]:
+            - button "Add to Cart" [ref=e157] [cursor=pointer]
+            - link "View Details" [ref=e158] [cursor=pointer]:
+              - /url: /products/3
 ```

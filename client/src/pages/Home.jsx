@@ -57,16 +57,8 @@ const Home = () => {
 
     return (
         <div className="container-fluid px-0">
-            {/* Hero Section */}
-            {!searchQuery && (
-                <div className="hero-container">
-                    <div className="hero-content">
-                        <h1 className="fade-in">Summer Sale is Live!</h1>
-                        <p className="lead slide-in">Up to 50% off on all Electronics</p>
-                        <button className="btn btn-warning btn-lg mt-3" onClick={() => setSelectedCategory('Electronics')}>Shop Now</button>
-                    </div>
-                </div>
-            )}
+            {/* Top Spacing */}
+            <div className="pt-4"></div>
 
             <div className="container-fluid ps-4 pe-4">
                 <div className="row">

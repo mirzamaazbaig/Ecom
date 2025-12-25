@@ -35,7 +35,7 @@
           - text: Clothing
         - paragraph [ref=e31]:
           - strong [ref=e32]: "Stock:"
-          - text: "96"
+          - text: "92"
         - generic [ref=e33]:
           - spinbutton [ref=e34]: "1"
           - button "Add to Cart" [ref=e35] [cursor=pointer]

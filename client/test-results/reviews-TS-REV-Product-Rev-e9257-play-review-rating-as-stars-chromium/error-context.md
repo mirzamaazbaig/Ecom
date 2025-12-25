@@ -28,8 +28,8 @@
               - /url: /cart
               - generic [ref=e24]: 🛒
           - listitem [ref=e25]:
-            - button "Hello, test_user_1766687379125_k9f3q Account" [ref=e26] [cursor=pointer]:
-              - generic [ref=e27]: Hello, test_user_1766687379125_k9f3q
+            - button "Hello, test_user_1766688334053_e2qod Account" [ref=e26] [cursor=pointer]:
+              - generic [ref=e27]: Hello, test_user_1766688334053_e2qod
               - generic [ref=e28]: Account
   - generic [ref=e29]:
     - generic [ref=e30]:
@@ -43,7 +43,7 @@
           - text: Clothing
         - paragraph [ref=e39]:
           - strong [ref=e40]: "Stock:"
-          - text: "96"
+          - text: "92"
         - generic [ref=e41]:
           - spinbutton [ref=e42]: "1"
           - button "Add to Cart" [ref=e43] [cursor=pointer]

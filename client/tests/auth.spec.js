@@ -89,7 +89,7 @@ test.describe('TS_AUTH: Authentication Test Suite', () => {
 
             // Logout
             await PageActions.logout(page);
-            await expect(page.locator('text=Login')).toBeVisible();
+            await TestAssertions.assertLoggedOut(page);
 
             // Test: Login
             await page.goto('/login');
@@ -122,9 +122,9 @@ test.describe('TS_AUTH: Authentication Test Suite', () => {
             // Test: Click logout
             await PageActions.logout(authenticatedPage);
 
-            // Verify: Login button visible, Account dropdown hidden
-            await expect(authenticatedPage.locator('text=Login')).toBeVisible();
-            await expect(authenticatedPage.locator('text=Account')).not.toBeVisible();
+            // Verify: Logged out state
+            await TestAssertions.assertLoggedOut(authenticatedPage);
+            await expect(authenticatedPage.locator('.nav-link.dropdown-toggle:has-text("Account")')).not.toBeVisible();
         });
     });
 

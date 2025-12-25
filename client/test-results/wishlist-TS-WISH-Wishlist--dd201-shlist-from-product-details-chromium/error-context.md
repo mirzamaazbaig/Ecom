@@ -14,7 +14,7 @@
           - button "🔍" [ref=e11] [cursor=pointer]
         - list [ref=e12]:
           - listitem [ref=e13]:
-            - link "Your Wishlist" [ref=e14] [cursor=pointer]:
+            - link "Your Wishlist" [active] [ref=e14] [cursor=pointer]:
               - /url: /wishlist
               - generic [ref=e15]: Your
               - generic [ref=e16]: Wishlist
@@ -28,25 +28,11 @@
               - /url: /cart
               - generic [ref=e24]: 🛒
           - listitem [ref=e25]:
-            - button "Hello, test_user_1766688222234_4cior Account" [ref=e26] [cursor=pointer]:
-              - generic [ref=e27]: Hello, test_user_1766688222234_4cior
+            - button "Hello, test_user_1766688354699_p1nwf Account" [ref=e26] [cursor=pointer]:
+              - generic [ref=e27]: Hello, test_user_1766688354699_p1nwf
               - generic [ref=e28]: Account
   - generic [ref=e29]:
-    - heading "My Orders" [level=2] [ref=e30]
-    - generic [ref=e32]:
-      - 'heading "Order #19 12/25/2025 PENDING $24.99" [level=2] [ref=e33]':
-        - 'button "Order #19 12/25/2025 PENDING $24.99" [ref=e34] [cursor=pointer]':
-          - generic [ref=e35]:
-            - generic [ref=e36]: "Order #19"
-            - generic [ref=e37]: 12/25/2025
-            - generic [ref=e38]: PENDING
-            - generic [ref=e39]: $24.99
-      - generic [ref=e41]:
-        - list [ref=e42]:
-          - listitem [ref=e43]:
-            - generic [ref=e44]:
-              - img "Premium Cotton T-Shirt" [ref=e45]
-              - generic [ref=e46]: Premium Cotton T-Shirt (x1)
-            - generic [ref=e47]: $24.99
-        - generic [ref=e49]: "Transaction Hash: Pending Chain Sync"
+    - heading "Your Wishlist is Empty" [level=2] [ref=e30]
+    - paragraph [ref=e31]: Save your favorite items here!
+    - button "Browse Products" [ref=e32] [cursor=pointer]
 ```

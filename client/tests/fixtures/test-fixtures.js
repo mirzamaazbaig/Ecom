@@ -85,6 +85,14 @@ export const TestAssertions = {
     },
 
     /**
+     * Verify user is logged out
+     */
+    assertLoggedOut: async (page) => {
+        // Login link shows "Account & Lists" when logged out
+        await expect(page.locator('a[href="/login"]')).toBeVisible({ timeout: 10000 });
+    },
+
+    /**
      * Verify user is on home page with products
      */
     assertOnHomePage: async (page) => {
@@ -118,30 +126,34 @@ export const PageActions = {
     goToFirstProduct: async (page) => {
         await page.goto('/');
         await page.waitForSelector('.card');
+        // Click "View Details" or use the image/title link
         await page.locator('.card .btn-outline-secondary').first().click();
-        await page.waitForSelector('h2');
+        await expect(page).toHaveURL(/\/products\//);
+        await expect(page.locator('h2')).toBeVisible({ timeout: 10000 });
     },
 
     /**
-     * Add product to cart from product details page
+     * Navigate to wishlist page
      */
-    addProductToCart: async (page) => {
-        await page.click('text=Add to Cart');
+    goToWishlist: async (page) => {
+        await page.click('a[href="/wishlist"]');
+        await expect(page).toHaveURL('/wishlist');
     },
 
     /**
-     * Add product to wishlist from product details page
+     * Navigate to orders page
      */
-    addProductToWishlist: async (page) => {
-        await page.click('button:has-text("Wishlist")');
+    goToOrders: async (page) => {
+        await page.click('a[href="/my-orders"]');
+        await expect(page).toHaveURL('/my-orders');
     },
 
     /**
-     * Perform search
+     * Navigate to home page
      */
-    searchForProduct: async (page, searchTerm) => {
-        await page.fill('input[placeholder="Search products..."]', searchTerm);
-        await page.click('.search-btn');
+    goToHome: async (page) => {
+        await page.goto('/');
+        await expect(page.locator('.card').first()).toBeVisible({ timeout: 10000 });
     },
 
     /**
@@ -156,16 +168,17 @@ export const PageActions = {
      * Logout user
      */
     logout: async (page) => {
-        // Find and click the Account dropdown toggle
         const accountToggle = page.locator('.nav-link.dropdown-toggle:has-text("Account")');
+        await expect(accountToggle).toBeVisible({ timeout: 10000 });
         await accountToggle.click();
 
         // Wait for the Logout link to be visible in the dropdown
         const logoutBtn = page.locator('.dropdown-item:has-text("Logout")');
-        await logoutBtn.waitFor({ state: 'visible', timeout: 5000 });
-        await logoutBtn.click();
+        await expect(logoutBtn).toBeVisible({ timeout: 5000 });
+        await logoutBtn.click({ force: true });
 
-        await expect(page.locator('text=Login')).toBeVisible();
+        // Verify we are back to the logged out state
+        await expect(page.locator('a[href="/login"]')).toBeVisible({ timeout: 10000 });
     },
 
     /**
