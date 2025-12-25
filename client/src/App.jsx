@@ -11,6 +11,7 @@ import ProductDetails from './pages/ProductDetails';
 import Cart from './pages/Cart';
 import MyOrders from './pages/MyOrders';
 import Wishlist from './pages/Wishlist';
+import Profile from './pages/Profile';
 
 
 import AdminDashboard from './pages/AdminDashboard';
@@ -51,6 +52,11 @@ function App() {
             <Route path="/wishlist" element={
               <ProtectedRoute>
                 <Wishlist />
+              </ProtectedRoute>
+            } />
+            <Route path="/profile" element={
+              <ProtectedRoute>
+                <Profile />
               </ProtectedRoute>
             } />
             <Route path="/admin" element={
