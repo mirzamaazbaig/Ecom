@@ -49,12 +49,12 @@ const ProductDetails = () => {
     if (!product) return <div className="text-center mt-5">Product not found</div>;
 
     return (
-        <div className="container mt-5">
+        <div className="container mt-5 fade-in">
             <div className="row">
                 <div className="col-md-6">
                     <img
                         src={product.image_url || 'https://via.placeholder.com/400'}
-                        className="img-fluid rounded"
+                        className="img-fluid rounded shadow-lg card-img-top"
                         alt={product.name}
                     />
                 </div>
@@ -68,8 +68,8 @@ const ProductDetails = () => {
                     <div className="d-flex align-items-center mt-4">
                         <input
                             type="number"
-                            className="form-control"
-                            style={{ width: '80px', marginRight: '10px' }}
+                            className="form-control me-2"
+                            style={{ width: '80px' }}
                             value={quantity}
                             min="1"
                             max={product.stock}
