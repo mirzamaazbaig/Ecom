@@ -19,8 +19,10 @@
         - listitem [ref=e14]:
           - button "Logout" [ref=e15] [cursor=pointer]
         - listitem [ref=e16]:
-          - generic: Hi, checkout_test_1766674050015@example.com
+          - generic: Hi, checkout_test_1766674059334@example.com
         - listitem [ref=e17]:
           - button "Connect Wallet" [ref=e19] [cursor=pointer]
-  - generic [ref=e20]: Loading...
+  - generic [ref=e20]:
+    - heading "Your Cart is Empty" [level=2] [ref=e21]
+    - button "Browse Products" [ref=e22] [cursor=pointer]
 ```

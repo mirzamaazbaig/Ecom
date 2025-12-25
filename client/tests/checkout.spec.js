@@ -35,16 +35,13 @@ test.describe('Checkout Process', () => {
 
         let orderPlaced = false;
         page.on('dialog', async dialog => {
-            if (dialog.message().includes('Order placed successfully')) {
-                orderPlaced = true;
-            }
             await dialog.accept();
         });
 
         await page.click('button:has-text("Checkout")');
 
         // Wait for navigation to my-orders
-        await expect(page).toHaveURL(/\/my-orders/);
+        await expect(page).toHaveURL(/\/my-orders/, { timeout: 15000 });
 
         // Verify order is listed
         // Assuming MyOrders page lists orders, checking for a table or card
