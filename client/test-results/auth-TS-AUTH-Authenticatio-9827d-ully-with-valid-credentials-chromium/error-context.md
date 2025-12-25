@@ -29,7 +29,7 @@
     - generic [ref=e28]:
       - generic [ref=e29]:
         - generic [ref=e30]: Email address
-        - textbox "Email address" [ref=e31]: test_user_1766691600105_0vgpi@example.com
+        - textbox "Email address" [ref=e31]: test_user_1766692011346_qtu5q@example.com
       - generic [ref=e32]:
         - generic [ref=e33]: Password
         - textbox "Password" [ref=e34]: TestPass123!
