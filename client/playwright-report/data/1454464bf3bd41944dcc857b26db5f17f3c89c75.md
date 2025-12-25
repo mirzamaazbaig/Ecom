@@ -1,0 +1,52 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - navigation [ref=e3]:
+    - generic [ref=e4]:
+      - link "E-Com" [ref=e5] [cursor=pointer]:
+        - /url: /
+      - generic [ref=e6]:
+        - generic [ref=e8]:
+          - combobox [ref=e9]:
+            - option "All" [selected]
+          - textbox "Search products..." [ref=e10]: XyzNonexistentProduct12345
+          - button "🔍" [active] [ref=e11] [cursor=pointer]
+        - list [ref=e12]:
+          - listitem [ref=e13]:
+            - link "Your Wishlist" [ref=e14] [cursor=pointer]:
+              - /url: /wishlist
+              - generic [ref=e15]: Your
+              - generic [ref=e16]: Wishlist
+          - listitem [ref=e17]:
+            - link "Hello, sign in Account & Lists" [ref=e18] [cursor=pointer]:
+              - /url: /login
+              - generic [ref=e19]: Hello, sign in
+              - generic [ref=e20]: Account & Lists
+  - generic [ref=e23]:
+    - generic [ref=e24]:
+      - generic [ref=e25]:
+        - heading "Categories" [level=5] [ref=e26]
+        - list [ref=e27]:
+          - listitem [ref=e28] [cursor=pointer]: All Departments
+          - listitem [ref=e29] [cursor=pointer]: Electronics
+          - listitem [ref=e30] [cursor=pointer]: Clothing
+          - listitem [ref=e31] [cursor=pointer]: Books
+      - separator [ref=e32]
+      - generic [ref=e33]:
+        - heading "Price" [level=5] [ref=e34]
+        - slider [ref=e35]: "2000"
+        - generic [ref=e36]:
+          - generic [ref=e37]: $0
+          - generic [ref=e38]: $2000
+      - separator [ref=e39]
+      - generic [ref=e40]:
+        - heading "Sort By" [level=5] [ref=e41]
+        - combobox [ref=e42]:
+          - option "Avg. Customer Review" [selected]
+          - 'option "Price: Low to High"'
+          - option "Newest Arrivals"
+    - generic [ref=e43]:
+      - heading "Results for \"XyzNonexistentProduct12345\"" [level=3] [ref=e44]
+      - paragraph [ref=e46]: No products found.
+```
