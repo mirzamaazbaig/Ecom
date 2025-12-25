@@ -29,8 +29,9 @@ const Login = () => {
                             {error && <div className="alert alert-danger">{error}</div>}
                             <form onSubmit={handleSubmit}>
                                 <div className="mb-3">
-                                    <label>Email address</label>
+                                    <label htmlFor="email">Email address</label>
                                     <input
+                                        id="email"
                                         type="email"
                                         className="form-control"
                                         value={email}
@@ -39,8 +40,9 @@ const Login = () => {
                                     />
                                 </div>
                                 <div className="mb-3">
-                                    <label>Password</label>
+                                    <label htmlFor="password">Password</label>
                                     <input
+                                        id="password"
                                         type="password"
                                         className="form-control"
                                         value={password}

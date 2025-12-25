@@ -1,0 +1,544 @@
+﻿{
+  "config": {
+    "configFile": "C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\playwright.config.js",
+    "rootDir": "C:/Users/MaazBaig/repo/antiGravityProjects/Ecom/client/tests",
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 6
+    },
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "C:/Users/MaazBaig/repo/antiGravityProjects/Ecom/client/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 6
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "C:/Users/MaazBaig/repo/antiGravityProjects/Ecom/client/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "C:/Users/MaazBaig/repo/antiGravityProjects/Ecom/client/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 6
+        },
+        "id": "firefox",
+        "name": "firefox",
+        "testDir": "C:/Users/MaazBaig/repo/antiGravityProjects/Ecom/client/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "C:/Users/MaazBaig/repo/antiGravityProjects/Ecom/client/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 6
+        },
+        "id": "webkit",
+        "name": "webkit",
+        "testDir": "C:/Users/MaazBaig/repo/antiGravityProjects/Ecom/client/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.57.0",
+    "workers": 7,
+    "webServer": {
+      "command": "npm run dev",
+      "url": "http://localhost:5173",
+      "reuseExistingServer": true
+    }
+  },
+  "suites": [
+    {
+      "title": "wishlist.spec.js",
+      "file": "wishlist.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "TS_WISH: Wishlist Test Suite",
+          "file": "wishlist.spec.js",
+          "line": 12,
+          "column": 6,
+          "specs": [],
+          "suites": [
+            {
+              "title": "Add to Wishlist",
+              "file": "wishlist.spec.js",
+              "line": 14,
+              "column": 10,
+              "specs": [
+                {
+                  "title": "TC_WISH_001: Should add product to wishlist from product details",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 0,
+                          "parallelIndex": 0,
+                          "status": "failed",
+                          "duration": 3784,
+                          "error": {
+                            "message": "Error: dialog.accept: Cannot accept dialog which is already handled!",
+                            "stack": "Error: dialog.accept: Cannot accept dialog which is already handled!\n    at Page.<anonymous> (C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\fixtures\\test-fixtures.js:132:46)",
+                            "location": {
+                              "file": "C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\fixtures\\test-fixtures.js",
+                              "column": 46,
+                              "line": 132
+                            },
+                            "snippet": "\u001b[90m   at \u001b[39mfixtures\\test-fixtures.js:132\n\n\u001b[0m \u001b[90m 130 |\u001b[39m \u001b[90m     */\u001b[39m\n \u001b[90m 131 |\u001b[39m     addProductToWishlist\u001b[33m:\u001b[39m \u001b[36masync\u001b[39m (page) \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 132 |\u001b[39m         page\u001b[33m.\u001b[39monce(\u001b[32m'dialog'\u001b[39m\u001b[33m,\u001b[39m dialog \u001b[33m=>\u001b[39m dialog\u001b[33m.\u001b[39maccept())\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                              \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 133 |\u001b[39m         \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mclick(\u001b[32m'button:has-text(\"Wishlist\")'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 134 |\u001b[39m     }\u001b[33m,\u001b[39m\n \u001b[90m 135 |\u001b[39m\u001b[0m"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\fixtures\\test-fixtures.js",
+                                "column": 46,
+                                "line": 132
+                              },
+                              "message": "Error: dialog.accept: Cannot accept dialog which is already handled!\n\n   at fixtures\\test-fixtures.js:132\n\n  130 |      */\n  131 |     addProductToWishlist: async (page) => {\n> 132 |         page.once('dialog', dialog => dialog.accept());\n      |                                              ^\n  133 |         await page.click('button:has-text(\"Wishlist\")');\n  134 |     },\n  135 |\n    at Page.<anonymous> (C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\fixtures\\test-fixtures.js:132:46)"
+                            },
+                            {
+                              "location": {
+                                "file": "C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\wishlist.spec.js",
+                                "column": 37,
+                                "line": 26
+                              },
+                              "message": "Error: page.click: Test ended.\nCall log:\n\u001b[2m  - waiting for locator('a:has-text(\"Wishlist\")')\u001b[22m\n\n\n  24 |\n  25 |             // Navigate to wishlist and verify\n> 26 |             await authenticatedPage.click('a:has-text(\"Wishlist\")');\n     |                                     ^\n  27 |             await expect(authenticatedPage).toHaveURL('/wishlist');\n  28 |\n  29 |             // Should show at least one item\n    at C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\wishlist.spec.js:26:37"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-12-25T17:38:53.592Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\test-results\\wishlist-TS-WISH-Wishlist--dd201-shlist-from-product-details-chromium\\error-context.md"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\fixtures\\test-fixtures.js",
+                            "column": 46,
+                            "line": 132
+                          }
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "03d075d5011141baba46-586ffcd88a9d6a2c3818",
+                  "file": "wishlist.spec.js",
+                  "line": 16,
+                  "column": 9
+                }
+              ]
+            },
+            {
+              "title": "View Wishlist",
+              "file": "wishlist.spec.js",
+              "line": 34,
+              "column": 10,
+              "specs": [
+                {
+                  "title": "TC_WISH_002: Should display wishlist page correctly",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 1,
+                          "parallelIndex": 1,
+                          "status": "failed",
+                          "duration": 3347,
+                          "error": {
+                            "message": "Error: dialog.accept: Cannot accept dialog which is already handled!",
+                            "stack": "Error: dialog.accept: Cannot accept dialog which is already handled!\n    at Page.<anonymous> (C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\fixtures\\test-fixtures.js:132:46)",
+                            "location": {
+                              "file": "C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\fixtures\\test-fixtures.js",
+                              "column": 46,
+                              "line": 132
+                            },
+                            "snippet": "\u001b[90m   at \u001b[39mfixtures\\test-fixtures.js:132\n\n\u001b[0m \u001b[90m 130 |\u001b[39m \u001b[90m     */\u001b[39m\n \u001b[90m 131 |\u001b[39m     addProductToWishlist\u001b[33m:\u001b[39m \u001b[36masync\u001b[39m (page) \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 132 |\u001b[39m         page\u001b[33m.\u001b[39monce(\u001b[32m'dialog'\u001b[39m\u001b[33m,\u001b[39m dialog \u001b[33m=>\u001b[39m dialog\u001b[33m.\u001b[39maccept())\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                              \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 133 |\u001b[39m         \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mclick(\u001b[32m'button:has-text(\"Wishlist\")'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 134 |\u001b[39m     }\u001b[33m,\u001b[39m\n \u001b[90m 135 |\u001b[39m\u001b[0m"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\fixtures\\test-fixtures.js",
+                                "column": 46,
+                                "line": 132
+                              },
+                              "message": "Error: dialog.accept: Cannot accept dialog which is already handled!\n\n   at fixtures\\test-fixtures.js:132\n\n  130 |      */\n  131 |     addProductToWishlist: async (page) => {\n> 132 |         page.once('dialog', dialog => dialog.accept());\n      |                                              ^\n  133 |         await page.click('button:has-text(\"Wishlist\")');\n  134 |     },\n  135 |\n    at Page.<anonymous> (C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\fixtures\\test-fixtures.js:132:46)"
+                            },
+                            {
+                              "location": {
+                                "file": "C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\wishlist.spec.js",
+                                "column": 37,
+                                "line": 43
+                              },
+                              "message": "Error: page.click: Test ended.\nCall log:\n\u001b[2m  - waiting for locator('a:has-text(\"Wishlist\")')\u001b[22m\n\n\n  41 |\n  42 |             // Navigate to wishlist\n> 43 |             await authenticatedPage.click('a:has-text(\"Wishlist\")');\n     |                                     ^\n  44 |\n  45 |             // Verify wishlist elements\n  46 |             await expect(authenticatedPage.locator('h2:has-text(\"My Wishlist\")')).toBeVisible();\n    at C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\wishlist.spec.js:43:37"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-12-25T17:38:53.450Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\test-results\\wishlist-TS-WISH-Wishlist--cffd5-lay-wishlist-page-correctly-chromium\\error-context.md"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\fixtures\\test-fixtures.js",
+                            "column": 46,
+                            "line": 132
+                          }
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "03d075d5011141baba46-3b0637ee354053e3ef21",
+                  "file": "wishlist.spec.js",
+                  "line": 36,
+                  "column": 9
+                },
+                {
+                  "title": "TC_WISH_003: Should show empty wishlist message",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 2,
+                          "parallelIndex": 2,
+                          "status": "passed",
+                          "duration": 1581,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-12-25T17:38:53.696Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "03d075d5011141baba46-0885adf66839bb1f3b59",
+                  "file": "wishlist.spec.js",
+                  "line": 52,
+                  "column": 9
+                }
+              ]
+            },
+            {
+              "title": "Wishlist Actions",
+              "file": "wishlist.spec.js",
+              "line": 60,
+              "column": 10,
+              "specs": [
+                {
+                  "title": "TC_WISH_004: Should add wishlist item to cart",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 3,
+                          "parallelIndex": 3,
+                          "status": "failed",
+                          "duration": 3456,
+                          "error": {
+                            "message": "Error: dialog.accept: Cannot accept dialog which is already handled!",
+                            "stack": "Error: dialog.accept: Cannot accept dialog which is already handled!\n    at Page.<anonymous> (C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\fixtures\\test-fixtures.js:132:46)",
+                            "location": {
+                              "file": "C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\fixtures\\test-fixtures.js",
+                              "column": 46,
+                              "line": 132
+                            },
+                            "snippet": "\u001b[90m   at \u001b[39mfixtures\\test-fixtures.js:132\n\n\u001b[0m \u001b[90m 130 |\u001b[39m \u001b[90m     */\u001b[39m\n \u001b[90m 131 |\u001b[39m     addProductToWishlist\u001b[33m:\u001b[39m \u001b[36masync\u001b[39m (page) \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 132 |\u001b[39m         page\u001b[33m.\u001b[39monce(\u001b[32m'dialog'\u001b[39m\u001b[33m,\u001b[39m dialog \u001b[33m=>\u001b[39m dialog\u001b[33m.\u001b[39maccept())\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                              \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 133 |\u001b[39m         \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mclick(\u001b[32m'button:has-text(\"Wishlist\")'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 134 |\u001b[39m     }\u001b[33m,\u001b[39m\n \u001b[90m 135 |\u001b[39m\u001b[0m"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\fixtures\\test-fixtures.js",
+                                "column": 46,
+                                "line": 132
+                              },
+                              "message": "Error: dialog.accept: Cannot accept dialog which is already handled!\n\n   at fixtures\\test-fixtures.js:132\n\n  130 |      */\n  131 |     addProductToWishlist: async (page) => {\n> 132 |         page.once('dialog', dialog => dialog.accept());\n      |                                              ^\n  133 |         await page.click('button:has-text(\"Wishlist\")');\n  134 |     },\n  135 |\n    at Page.<anonymous> (C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\fixtures\\test-fixtures.js:132:46)"
+                            },
+                            {
+                              "location": {
+                                "file": "C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\wishlist.spec.js",
+                                "column": 37,
+                                "line": 69
+                              },
+                              "message": "Error: page.click: Test ended.\nCall log:\n\u001b[2m  - waiting for locator('a:has-text(\"Wishlist\")')\u001b[22m\n\u001b[2m    - locator resolved to <a class=\"nav-link\" href=\"/wishlist\" data-discover=\"true\">ΓÇª</a>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    - waiting for element to be visible, enabled and stable\u001b[22m\n\n\n  67 |\n  68 |             // Go to wishlist\n> 69 |             await authenticatedPage.click('a:has-text(\"Wishlist\")');\n     |                                     ^\n  70 |             await authenticatedPage.waitForSelector('.card');\n  71 |\n  72 |             // Add to cart from wishlist\n    at C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\wishlist.spec.js:69:37"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-12-25T17:38:53.527Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\test-results\\wishlist-TS-WISH-Wishlist--125fa-d-add-wishlist-item-to-cart-chromium\\error-context.md"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\fixtures\\test-fixtures.js",
+                            "column": 46,
+                            "line": 132
+                          }
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "03d075d5011141baba46-34700baf8d2ed3b19977",
+                  "file": "wishlist.spec.js",
+                  "line": 62,
+                  "column": 9
+                },
+                {
+                  "title": "TC_WISH_005: Should remove item from wishlist",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 4,
+                          "parallelIndex": 4,
+                          "status": "failed",
+                          "duration": 2929,
+                          "error": {
+                            "message": "Error: dialog.accept: Cannot accept dialog which is already handled!",
+                            "stack": "Error: dialog.accept: Cannot accept dialog which is already handled!\n    at Page.<anonymous> (C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\fixtures\\test-fixtures.js:132:46)",
+                            "location": {
+                              "file": "C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\fixtures\\test-fixtures.js",
+                              "column": 46,
+                              "line": 132
+                            },
+                            "snippet": "\u001b[90m   at \u001b[39mfixtures\\test-fixtures.js:132\n\n\u001b[0m \u001b[90m 130 |\u001b[39m \u001b[90m     */\u001b[39m\n \u001b[90m 131 |\u001b[39m     addProductToWishlist\u001b[33m:\u001b[39m \u001b[36masync\u001b[39m (page) \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 132 |\u001b[39m         page\u001b[33m.\u001b[39monce(\u001b[32m'dialog'\u001b[39m\u001b[33m,\u001b[39m dialog \u001b[33m=>\u001b[39m dialog\u001b[33m.\u001b[39maccept())\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                              \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 133 |\u001b[39m         \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mclick(\u001b[32m'button:has-text(\"Wishlist\")'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 134 |\u001b[39m     }\u001b[33m,\u001b[39m\n \u001b[90m 135 |\u001b[39m\u001b[0m"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\fixtures\\test-fixtures.js",
+                                "column": 46,
+                                "line": 132
+                              },
+                              "message": "Error: dialog.accept: Cannot accept dialog which is already handled!\n\n   at fixtures\\test-fixtures.js:132\n\n  130 |      */\n  131 |     addProductToWishlist: async (page) => {\n> 132 |         page.once('dialog', dialog => dialog.accept());\n      |                                              ^\n  133 |         await page.click('button:has-text(\"Wishlist\")');\n  134 |     },\n  135 |\n    at Page.<anonymous> (C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\fixtures\\test-fixtures.js:132:46)"
+                            },
+                            {
+                              "location": {
+                                "file": "C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\wishlist.spec.js",
+                                "column": 37,
+                                "line": 88
+                              },
+                              "message": "Error: page.click: Test ended.\nCall log:\n\u001b[2m  - waiting for locator('a:has-text(\"Wishlist\")')\u001b[22m\n\u001b[2m    - locator resolved to <a class=\"nav-link\" href=\"/wishlist\" data-discover=\"true\">ΓÇª</a>\u001b[22m\n\n\n  86 |\n  87 |             // Go to wishlist\n> 88 |             await authenticatedPage.click('a:has-text(\"Wishlist\")');\n     |                                     ^\n  89 |             await authenticatedPage.waitForSelector('.card');\n  90 |\n  91 |             // Remove from wishlist\n    at C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\wishlist.spec.js:88:37"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-12-25T17:38:53.694Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\test-results\\wishlist-TS-WISH-Wishlist--9537f-d-remove-item-from-wishlist-chromium\\error-context.md"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\fixtures\\test-fixtures.js",
+                            "column": 46,
+                            "line": 132
+                          }
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "03d075d5011141baba46-0d543e7d33719a74b750",
+                  "file": "wishlist.spec.js",
+                  "line": 81,
+                  "column": 9
+                }
+              ]
+            },
+            {
+              "title": "Wishlist Navigation",
+              "file": "wishlist.spec.js",
+              "line": 99,
+              "column": 10,
+              "specs": [
+                {
+                  "title": "TC_WISH_006: Should navigate to product from wishlist",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 5,
+                          "parallelIndex": 5,
+                          "status": "failed",
+                          "duration": 3326,
+                          "error": {
+                            "message": "Error: dialog.accept: Cannot accept dialog which is already handled!",
+                            "stack": "Error: dialog.accept: Cannot accept dialog which is already handled!\n    at Page.<anonymous> (C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\fixtures\\test-fixtures.js:132:46)",
+                            "location": {
+                              "file": "C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\fixtures\\test-fixtures.js",
+                              "column": 46,
+                              "line": 132
+                            },
+                            "snippet": "\u001b[90m   at \u001b[39mfixtures\\test-fixtures.js:132\n\n\u001b[0m \u001b[90m 130 |\u001b[39m \u001b[90m     */\u001b[39m\n \u001b[90m 131 |\u001b[39m     addProductToWishlist\u001b[33m:\u001b[39m \u001b[36masync\u001b[39m (page) \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 132 |\u001b[39m         page\u001b[33m.\u001b[39monce(\u001b[32m'dialog'\u001b[39m\u001b[33m,\u001b[39m dialog \u001b[33m=>\u001b[39m dialog\u001b[33m.\u001b[39maccept())\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                              \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 133 |\u001b[39m         \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mclick(\u001b[32m'button:has-text(\"Wishlist\")'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 134 |\u001b[39m     }\u001b[33m,\u001b[39m\n \u001b[90m 135 |\u001b[39m\u001b[0m"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\fixtures\\test-fixtures.js",
+                                "column": 46,
+                                "line": 132
+                              },
+                              "message": "Error: dialog.accept: Cannot accept dialog which is already handled!\n\n   at fixtures\\test-fixtures.js:132\n\n  130 |      */\n  131 |     addProductToWishlist: async (page) => {\n> 132 |         page.once('dialog', dialog => dialog.accept());\n      |                                              ^\n  133 |         await page.click('button:has-text(\"Wishlist\")');\n  134 |     },\n  135 |\n    at Page.<anonymous> (C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\fixtures\\test-fixtures.js:132:46)"
+                            },
+                            {
+                              "location": {
+                                "file": "C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\wishlist.spec.js",
+                                "column": 37,
+                                "line": 108
+                              },
+                              "message": "Error: page.click: Test ended.\nCall log:\n\u001b[2m  - waiting for locator('a:has-text(\"Wishlist\")')\u001b[22m\n\n\n  106 |\n  107 |             // Go to wishlist\n> 108 |             await authenticatedPage.click('a:has-text(\"Wishlist\")');\n      |                                     ^\n  109 |             await authenticatedPage.waitForSelector('.card');\n  110 |\n  111 |             // Click on product link\n    at C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\wishlist.spec.js:108:37"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-12-25T17:38:53.668Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\test-results\\wishlist-TS-WISH-Wishlist--e9e0e-te-to-product-from-wishlist-chromium\\error-context.md"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\fixtures\\test-fixtures.js",
+                            "column": 46,
+                            "line": 132
+                          }
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "03d075d5011141baba46-2c614834b7c5834f6d9b",
+                  "file": "wishlist.spec.js",
+                  "line": 101,
+                  "column": 9
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2025-12-25T17:38:51.503Z",
+    "duration": 6351.4439999999995,
+    "expected": 1,
+    "skipped": 0,
+    "unexpected": 5,
+    "flaky": 0
+  }
+}

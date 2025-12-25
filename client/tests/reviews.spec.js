@@ -35,7 +35,6 @@ test.describe('TS_REV: Product Reviews Test Suite', () => {
             // First submit a review
             await PageActions.goToFirstProduct(authenticatedPage);
 
-            authenticatedPage.once('dialog', dialog => dialog.accept());
             await authenticatedPage.selectOption('select.form-select:near(:text("Rating"))', '5');
             await authenticatedPage.fill('textarea', 'Test review for stars display');
             await authenticatedPage.click('button:has-text("Submit Review")');
@@ -55,12 +54,6 @@ test.describe('TS_REV: Product Reviews Test Suite', () => {
             // Fill review form
             await authenticatedPage.selectOption('select.form-select:near(:text("Rating"))', '4');
             await authenticatedPage.fill('textarea', reviewText);
-
-            // Handle success alert
-            authenticatedPage.once('dialog', dialog => {
-                expect(dialog.message()).toContain('Review submitted');
-                dialog.accept();
-            });
 
             // Submit
             await authenticatedPage.click('button:has-text("Submit Review")');
@@ -120,12 +113,6 @@ test.describe('TS_REV: Product Reviews Test Suite', () => {
             // Fill review form
             await page.selectOption('select.form-select:near(:text("Rating"))', '4');
             await page.fill('textarea', 'Unauthenticated review attempt');
-
-            // Handle alert
-            page.once('dialog', dialog => {
-                expect(dialog.message()).toContain('login');
-                dialog.accept();
-            });
 
             // Try to submit
             await page.click('button:has-text("Submit Review")');

@@ -18,15 +18,11 @@ test.describe('TS_CART: Shopping Cart Test Suite', () => {
             await authenticatedPage.goto('/');
             await authenticatedPage.waitForSelector('.card');
 
-            // Handle alert
-            authenticatedPage.once('dialog', dialog => dialog.accept());
-
             // Click Add to Cart on first product
             await authenticatedPage.locator('.card .btn-primary').first().click();
 
             // Verify cart (navigate to cart page)
-            await authenticatedPage.click('text=Cart');
-            await expect(authenticatedPage).toHaveURL('/cart');
+            await PageActions.goToCart(authenticatedPage);
 
             // Cart should have items
             await TestAssertions.assertCartHasItems(authenticatedPage);
@@ -35,15 +31,11 @@ test.describe('TS_CART: Shopping Cart Test Suite', () => {
         test('TC_CART_002: Should add product to cart from product details page', async ({ authenticatedPage }) => {
             await PageActions.goToFirstProduct(authenticatedPage);
 
-            // Handle alert
-            authenticatedPage.once('dialog', dialog => dialog.accept());
-
             // Add to cart
             await PageActions.addProductToCart(authenticatedPage);
 
             // Navigate to cart and verify
-            await authenticatedPage.click('text=Cart');
-            await expect(authenticatedPage).toHaveURL('/cart');
+            await PageActions.goToCart(authenticatedPage);
             await TestAssertions.assertCartHasItems(authenticatedPage);
         });
 
@@ -53,13 +45,10 @@ test.describe('TS_CART: Shopping Cart Test Suite', () => {
             // Set quantity to 2
             await authenticatedPage.fill('input[type="number"]', '2');
 
-            // Handle alert
-            authenticatedPage.once('dialog', dialog => dialog.accept());
-
             await PageActions.addProductToCart(authenticatedPage);
 
             // Verify
-            await authenticatedPage.click('text=Cart');
+            await PageActions.goToCart(authenticatedPage);
             await expect(authenticatedPage.locator('text=Quantity: 2')).toBeVisible();
         });
     });
@@ -70,11 +59,10 @@ test.describe('TS_CART: Shopping Cart Test Suite', () => {
             // Add item first
             await authenticatedPage.goto('/');
             await authenticatedPage.waitForSelector('.card');
-            authenticatedPage.once('dialog', dialog => dialog.accept());
             await authenticatedPage.locator('.card .btn-primary').first().click();
 
             // Go to cart
-            await authenticatedPage.click('text=Cart');
+            await PageActions.goToCart(authenticatedPage);
 
             // Verify cart elements
             await expect(authenticatedPage.locator('h2:has-text("Shopping Cart")')).toBeVisible();
@@ -99,11 +87,10 @@ test.describe('TS_CART: Shopping Cart Test Suite', () => {
             // Add item
             await authenticatedPage.goto('/');
             await authenticatedPage.waitForSelector('.card');
-            authenticatedPage.once('dialog', dialog => dialog.accept());
             await authenticatedPage.locator('.card .btn-primary').first().click();
 
             // Go to cart
-            await authenticatedPage.click('text=Cart');
+            await PageActions.goToCart(authenticatedPage);
             await TestAssertions.assertCartHasItems(authenticatedPage);
 
             // Remove item
@@ -125,11 +112,10 @@ test.describe('TS_CART: Shopping Cart Test Suite', () => {
             const priceText = await authenticatedPage.locator('.card-text.fw-bold').first().innerText();
             const price = parseFloat(priceText.replace('$', ''));
 
-            authenticatedPage.once('dialog', dialog => dialog.accept());
             await authenticatedPage.locator('.card .btn-primary').first().click();
 
             // Go to cart and verify total
-            await authenticatedPage.click('text=Cart');
+            await PageActions.goToCart(authenticatedPage);
 
             const totalText = await authenticatedPage.locator('.list-group-item:has-text("Total (USD)") strong').innerText();
             const total = parseFloat(totalText.replace('$', ''));

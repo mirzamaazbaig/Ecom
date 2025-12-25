@@ -9,7 +9,7 @@
  * - Comprehensive coverage of authentication flows
  */
 
-import { test, expect, TestData, TestAssertions } from './fixtures/test-fixtures.js';
+import { test, expect, TestData, TestAssertions, PageActions } from './fixtures/test-fixtures.js';
 
 test.describe('TS_AUTH: Authentication Test Suite', () => {
 
@@ -24,13 +24,13 @@ test.describe('TS_AUTH: Authentication Test Suite', () => {
             await expect(page.locator('h2:has-text("Register")')).toBeVisible();
 
             // Test Actions
-            await page.fill('input[type="email"]', user.email);
-            await page.locator('input[type="password"]').first().fill(user.password);
-            await page.locator('input[type="password"]').nth(1).fill(user.password);
-            await page.click('button[type="submit"]');
+            await page.fill('#email', user.email);
+            await page.fill('#password', user.password);
+            await page.fill('#confirmPassword', user.password);
+            await page.click('button:has-text("Register")');
 
             // Expected Results: User is redirected to home and logged in
-            await expect(page).toHaveURL('/register', { timeout: 10000 });
+            await expect(page).toHaveURL('/', { timeout: 10000 });
             await TestAssertions.assertLoggedIn(page);
         });
 
@@ -38,10 +38,10 @@ test.describe('TS_AUTH: Authentication Test Suite', () => {
             const user = TestData.generateUser();
 
             await page.goto('/register');
-            await page.fill('input[type="email"]', user.email);
-            await page.locator('input[type="password"]').first().fill(user.password);
-            await page.locator('input[type="password"]').nth(1).fill('DifferentPassword123');
-            await page.click('button[type="submit"]');
+            await page.fill('#email', user.email);
+            await page.fill('#password', user.password);
+            await page.fill('#confirmPassword', 'DifferentPassword123');
+            await page.click('button:has-text("Register")');
 
             // Should show error and stay on register page
             await expect(page.locator('.alert-danger')).toBeVisible({ timeout: 5000 });
@@ -53,21 +53,21 @@ test.describe('TS_AUTH: Authentication Test Suite', () => {
 
             // First registration
             await page.goto('/register');
-            await page.fill('input[type="email"]', user.email);
-            await page.locator('input[type="password"]').first().fill(user.password);
-            await page.locator('input[type="password"]').nth(1).fill(user.password);
-            await page.click('button[type="submit"]');
+            await page.fill('#email', user.email);
+            await page.fill('#password', user.password);
+            await page.fill('#confirmPassword', user.password);
+            await page.click('button:has-text("Register")');
             await expect(page).toHaveURL('/', { timeout: 10000 });
 
             // Logout
-            await page.click('text=Logout');
+            await PageActions.logout(page);
 
             // Attempt second registration with same email
             await page.goto('/register');
-            await page.fill('input[type="email"]', user.email);
-            await page.locator('input[type="password"]').first().fill(user.password);
-            await page.locator('input[type="password"]').nth(1).fill(user.password);
-            await page.click('button[type="submit"]');
+            await page.fill('#email', user.email);
+            await page.fill('#password', user.password);
+            await page.fill('#confirmPassword', user.password);
+            await page.click('button:has-text("Register")');
 
             // Should show error
             await expect(page.locator('.alert-danger')).toBeVisible({ timeout: 5000 });
@@ -81,21 +81,21 @@ test.describe('TS_AUTH: Authentication Test Suite', () => {
 
             // Setup: Register user first
             await page.goto('/register');
-            await page.fill('input[type="email"]', user.email);
-            await page.locator('input[type="password"]').first().fill(user.password);
-            await page.locator('input[type="password"]').nth(1).fill(user.password);
-            await page.click('button[type="submit"]');
+            await page.fill('#email', user.email);
+            await page.fill('#password', user.password);
+            await page.fill('#confirmPassword', user.password);
+            await page.click('button:has-text("Register")');
             await expect(page).toHaveURL('/', { timeout: 10000 });
 
             // Logout
-            await page.click('text=Logout');
+            await PageActions.logout(page);
             await expect(page.locator('text=Login')).toBeVisible();
 
             // Test: Login
             await page.goto('/login');
-            await page.fill('input[type="email"]', user.email);
-            await page.fill('input[type="password"]', user.password);
-            await page.click('button[type="submit"]');
+            await page.fill('#email', user.email);
+            await page.fill('#password', user.password);
+            await page.click('button:has-text("Login")');
 
             // Verify
             await expect(page).toHaveURL('/', { timeout: 10000 });
@@ -104,9 +104,9 @@ test.describe('TS_AUTH: Authentication Test Suite', () => {
 
         test('TC_AUTH_005: Should show error for invalid credentials', async ({ page }) => {
             await page.goto('/login');
-            await page.fill('input[type="email"]', 'nonexistent@example.com');
-            await page.fill('input[type="password"]', 'WrongPassword123');
-            await page.click('button[type="submit"]');
+            await page.fill('#email', 'nonexistent@example.com');
+            await page.fill('#password', 'WrongPassword123');
+            await page.click('button:has-text("Login")');
 
             await expect(page.locator('.alert-danger')).toBeVisible({ timeout: 5000 });
             await expect(page).toHaveURL('/login');
@@ -120,11 +120,11 @@ test.describe('TS_AUTH: Authentication Test Suite', () => {
             await TestAssertions.assertLoggedIn(authenticatedPage);
 
             // Test: Click logout
-            await authenticatedPage.click('text=Logout');
+            await PageActions.logout(authenticatedPage);
 
-            // Verify: Login button visible, Logout hidden
+            // Verify: Login button visible, Account dropdown hidden
             await expect(authenticatedPage.locator('text=Login')).toBeVisible();
-            await expect(authenticatedPage.locator('text=Logout')).not.toBeVisible();
+            await expect(authenticatedPage.locator('text=Account')).not.toBeVisible();
         });
     });
 

@@ -40,12 +40,18 @@ export const test = base.extend({
     authenticatedPage: async ({ page }, use) => {
         const user = TestData.generateUser();
 
+        // Auto-accept all dialogs for this page context
+        page.on('dialog', dialog => {
+            console.log(`Dialog: ${dialog.message()}`);
+            dialog.accept().catch(() => { });
+        });
+
         // Register new user
         await page.goto('/register');
-        await page.fill('input[type="email"]', user.email);
-        await page.locator('input[type="password"]').first().fill(user.password);
-        await page.locator('input[type="password"]').nth(1).fill(user.password);
-        await page.click('button[type="submit"]');
+        await page.fill('#email', user.email);
+        await page.fill('#password', user.password);
+        await page.fill('#confirmPassword', user.password);
+        await page.click('button:has-text("Register")');
 
         // Wait for successful registration and redirect
         await expect(page).toHaveURL('/', { timeout: 10000 });
@@ -74,7 +80,8 @@ export const TestAssertions = {
      * Verify user is logged in by checking for Logout button
      */
     assertLoggedIn: async (page) => {
-        await expect(page.locator('text=Logout')).toBeVisible({ timeout: 5000 });
+        // Dropdown toggle shows "Account" when logged in
+        await expect(page.locator('.nav-link.dropdown-toggle:has-text("Account")')).toBeVisible({ timeout: 10000 });
     },
 
     /**
@@ -119,8 +126,6 @@ export const PageActions = {
      * Add product to cart from product details page
      */
     addProductToCart: async (page) => {
-        // Handle alert dialog
-        page.once('dialog', dialog => dialog.accept());
         await page.click('text=Add to Cart');
     },
 
@@ -128,7 +133,6 @@ export const PageActions = {
      * Add product to wishlist from product details page
      */
     addProductToWishlist: async (page) => {
-        page.once('dialog', dialog => dialog.accept());
         await page.click('button:has-text("Wishlist")');
     },
 
@@ -138,6 +142,23 @@ export const PageActions = {
     searchForProduct: async (page, searchTerm) => {
         await page.fill('input[placeholder="Search products..."]', searchTerm);
         await page.click('.search-btn');
+    },
+
+    /**
+     * Navigate to cart page
+     */
+    goToCart: async (page) => {
+        await page.click('a[href="/cart"]');
+        await expect(page).toHaveURL('/cart');
+    },
+
+    /**
+     * Logout user
+     */
+    logout: async (page) => {
+        await page.click('text=Account');
+        await page.click('text=Logout');
+        await expect(page.locator('text=Login')).toBeVisible();
     },
 
     /**

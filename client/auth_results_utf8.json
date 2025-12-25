@@ -1,0 +1,598 @@
+﻿{
+  "config": {
+    "configFile": "C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\playwright.config.js",
+    "rootDir": "C:/Users/MaazBaig/repo/antiGravityProjects/Ecom/client/tests",
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 7
+    },
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "C:/Users/MaazBaig/repo/antiGravityProjects/Ecom/client/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 7
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "C:/Users/MaazBaig/repo/antiGravityProjects/Ecom/client/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "C:/Users/MaazBaig/repo/antiGravityProjects/Ecom/client/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 7
+        },
+        "id": "firefox",
+        "name": "firefox",
+        "testDir": "C:/Users/MaazBaig/repo/antiGravityProjects/Ecom/client/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "C:/Users/MaazBaig/repo/antiGravityProjects/Ecom/client/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 7
+        },
+        "id": "webkit",
+        "name": "webkit",
+        "testDir": "C:/Users/MaazBaig/repo/antiGravityProjects/Ecom/client/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.57.0",
+    "workers": 7,
+    "webServer": {
+      "command": "npm run dev",
+      "url": "http://localhost:5173",
+      "reuseExistingServer": true
+    }
+  },
+  "suites": [
+    {
+      "title": "auth.spec.js",
+      "file": "auth.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "TS_AUTH: Authentication Test Suite",
+          "file": "auth.spec.js",
+          "line": 14,
+          "column": 6,
+          "specs": [],
+          "suites": [
+            {
+              "title": "User Registration",
+              "file": "auth.spec.js",
+              "line": 16,
+              "column": 10,
+              "specs": [
+                {
+                  "title": "TC_AUTH_001: Should successfully register a new user",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 0,
+                          "parallelIndex": 0,
+                          "status": "failed",
+                          "duration": 11746,
+                          "error": {
+                            "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected: \u001b[32m\"http://localhost:5173/\"\u001b[39m\nReceived: \u001b[31m\"http://localhost:5173/\u001b[7mregister\u001b[27m\"\u001b[39m\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 10000ms\u001b[22m\n\u001b[2m    14 ├ù unexpected value \"http://localhost:5173/register\"\u001b[22m\n",
+                            "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected: \u001b[32m\"http://localhost:5173/\"\u001b[39m\nReceived: \u001b[31m\"http://localhost:5173/\u001b[7mregister\u001b[27m\"\u001b[39m\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 10000ms\u001b[22m\n\u001b[2m    14 ├ù unexpected value \"http://localhost:5173/register\"\u001b[22m\n\n    at C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\auth.spec.js:33:32",
+                            "location": {
+                              "file": "C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\auth.spec.js",
+                              "column": 32,
+                              "line": 33
+                            },
+                            "snippet": "\u001b[0m \u001b[90m 31 |\u001b[39m\n \u001b[90m 32 |\u001b[39m             \u001b[90m// Expected Results: User is redirected to home and logged in\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 33 |\u001b[39m             \u001b[36mawait\u001b[39m expect(page)\u001b[33m.\u001b[39mtoHaveURL(\u001b[32m'/'\u001b[39m\u001b[33m,\u001b[39m { timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 34 |\u001b[39m             \u001b[36mawait\u001b[39m \u001b[33mTestAssertions\u001b[39m\u001b[33m.\u001b[39massertLoggedIn(page)\u001b[33m;\u001b[39m\n \u001b[90m 35 |\u001b[39m         })\u001b[33m;\u001b[39m\n \u001b[90m 36 |\u001b[39m\u001b[0m"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\auth.spec.js",
+                                "column": 32,
+                                "line": 33
+                              },
+                              "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected: \u001b[32m\"http://localhost:5173/\"\u001b[39m\nReceived: \u001b[31m\"http://localhost:5173/\u001b[7mregister\u001b[27m\"\u001b[39m\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 10000ms\u001b[22m\n\u001b[2m    14 ├ù unexpected value \"http://localhost:5173/register\"\u001b[22m\n\n\n  31 |\n  32 |             // Expected Results: User is redirected to home and logged in\n> 33 |             await expect(page).toHaveURL('/', { timeout: 10000 });\n     |                                ^\n  34 |             await TestAssertions.assertLoggedIn(page);\n  35 |         });\n  36 |\n    at C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\auth.spec.js:33:32"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-12-25T17:25:24.764Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\test-results\\auth-TS-AUTH-Authenticatio-b7bb1-ssfully-register-a-new-user-chromium\\error-context.md"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\auth.spec.js",
+                            "column": 32,
+                            "line": 33
+                          }
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "d5ed79a6b333c2ba7209-670fd87ee94c5c4f0276",
+                  "file": "auth.spec.js",
+                  "line": 18,
+                  "column": 9
+                },
+                {
+                  "title": "TC_AUTH_002: Should show error for mismatched passwords",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 1,
+                          "parallelIndex": 1,
+                          "status": "failed",
+                          "duration": 6218,
+                          "error": {
+                            "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.alert-danger')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.alert-danger')\u001b[22m\n",
+                            "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.alert-danger')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.alert-danger')\u001b[22m\n\n    at C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\auth.spec.js:47:57",
+                            "location": {
+                              "file": "C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\auth.spec.js",
+                              "column": 57,
+                              "line": 47
+                            },
+                            "snippet": "\u001b[0m \u001b[90m 45 |\u001b[39m\n \u001b[90m 46 |\u001b[39m             \u001b[90m// Should show error and stay on register page\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 47 |\u001b[39m             \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'.alert-danger'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible({ timeout\u001b[33m:\u001b[39m \u001b[35m5000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                         \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 48 |\u001b[39m             \u001b[36mawait\u001b[39m expect(page)\u001b[33m.\u001b[39mtoHaveURL(\u001b[32m'/register'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 49 |\u001b[39m         })\u001b[33m;\u001b[39m\n \u001b[90m 50 |\u001b[39m\u001b[0m"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\auth.spec.js",
+                                "column": 57,
+                                "line": 47
+                              },
+                              "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.alert-danger')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.alert-danger')\u001b[22m\n\n\n  45 |\n  46 |             // Should show error and stay on register page\n> 47 |             await expect(page.locator('.alert-danger')).toBeVisible({ timeout: 5000 });\n     |                                                         ^\n  48 |             await expect(page).toHaveURL('/register');\n  49 |         });\n  50 |\n    at C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\auth.spec.js:47:57"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-12-25T17:25:24.681Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\test-results\\auth-TS-AUTH-Authenticatio-9303c-or-for-mismatched-passwords-chromium\\error-context.md"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\auth.spec.js",
+                            "column": 57,
+                            "line": 47
+                          }
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "d5ed79a6b333c2ba7209-b7a1ceca2e24fc1dad51",
+                  "file": "auth.spec.js",
+                  "line": 37,
+                  "column": 9
+                },
+                {
+                  "title": "TC_AUTH_003: Should prevent duplicate email registration",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 2,
+                          "parallelIndex": 2,
+                          "status": "failed",
+                          "duration": 11217,
+                          "error": {
+                            "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected: \u001b[32m\"http://localhost:5173/\"\u001b[39m\nReceived: \u001b[31m\"http://localhost:5173/\u001b[7mregister\u001b[27m\"\u001b[39m\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 10000ms\u001b[22m\n\u001b[2m    14 ├ù unexpected value \"http://localhost:5173/register\"\u001b[22m\n",
+                            "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected: \u001b[32m\"http://localhost:5173/\"\u001b[39m\nReceived: \u001b[31m\"http://localhost:5173/\u001b[7mregister\u001b[27m\"\u001b[39m\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 10000ms\u001b[22m\n\u001b[2m    14 ├ù unexpected value \"http://localhost:5173/register\"\u001b[22m\n\n    at C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\auth.spec.js:60:32",
+                            "location": {
+                              "file": "C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\auth.spec.js",
+                              "column": 32,
+                              "line": 60
+                            },
+                            "snippet": "\u001b[0m \u001b[90m 58 |\u001b[39m             \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'input[type=\"password\"]'\u001b[39m)\u001b[33m.\u001b[39mnth(\u001b[35m1\u001b[39m)\u001b[33m.\u001b[39mfill(user\u001b[33m.\u001b[39mpassword)\u001b[33m;\u001b[39m\n \u001b[90m 59 |\u001b[39m             \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mclick(\u001b[32m'button[type=\"submit\"]'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 60 |\u001b[39m             \u001b[36mawait\u001b[39m expect(page)\u001b[33m.\u001b[39mtoHaveURL(\u001b[32m'/'\u001b[39m\u001b[33m,\u001b[39m { timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 61 |\u001b[39m\n \u001b[90m 62 |\u001b[39m             \u001b[90m// Logout\u001b[39m\n \u001b[90m 63 |\u001b[39m             \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mclick(\u001b[32m'text=Logout'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\auth.spec.js",
+                                "column": 32,
+                                "line": 60
+                              },
+                              "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected: \u001b[32m\"http://localhost:5173/\"\u001b[39m\nReceived: \u001b[31m\"http://localhost:5173/\u001b[7mregister\u001b[27m\"\u001b[39m\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 10000ms\u001b[22m\n\u001b[2m    14 ├ù unexpected value \"http://localhost:5173/register\"\u001b[22m\n\n\n  58 |             await page.locator('input[type=\"password\"]').nth(1).fill(user.password);\n  59 |             await page.click('button[type=\"submit\"]');\n> 60 |             await expect(page).toHaveURL('/', { timeout: 10000 });\n     |                                ^\n  61 |\n  62 |             // Logout\n  63 |             await page.click('text=Logout');\n    at C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\auth.spec.js:60:32"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-12-25T17:25:24.689Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\test-results\\auth-TS-AUTH-Authenticatio-b59dc-uplicate-email-registration-chromium\\error-context.md"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\auth.spec.js",
+                            "column": 32,
+                            "line": 60
+                          }
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "d5ed79a6b333c2ba7209-7a37ee922bd4a20f455b",
+                  "file": "auth.spec.js",
+                  "line": 51,
+                  "column": 9
+                }
+              ]
+            },
+            {
+              "title": "User Login",
+              "file": "auth.spec.js",
+              "line": 77,
+              "column": 10,
+              "specs": [
+                {
+                  "title": "TC_AUTH_004: Should login successfully with valid credentials",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 3,
+                          "parallelIndex": 3,
+                          "status": "failed",
+                          "duration": 11881,
+                          "error": {
+                            "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected: \u001b[32m\"http://localhost:5173/\"\u001b[39m\nReceived: \u001b[31m\"http://localhost:5173/\u001b[7mregister\u001b[27m\"\u001b[39m\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 10000ms\u001b[22m\n\u001b[2m    14 ├ù unexpected value \"http://localhost:5173/register\"\u001b[22m\n",
+                            "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected: \u001b[32m\"http://localhost:5173/\"\u001b[39m\nReceived: \u001b[31m\"http://localhost:5173/\u001b[7mregister\u001b[27m\"\u001b[39m\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 10000ms\u001b[22m\n\u001b[2m    14 ├ù unexpected value \"http://localhost:5173/register\"\u001b[22m\n\n    at C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\auth.spec.js:88:32",
+                            "location": {
+                              "file": "C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\auth.spec.js",
+                              "column": 32,
+                              "line": 88
+                            },
+                            "snippet": "\u001b[0m \u001b[90m 86 |\u001b[39m             \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'input[type=\"password\"]'\u001b[39m)\u001b[33m.\u001b[39mnth(\u001b[35m1\u001b[39m)\u001b[33m.\u001b[39mfill(user\u001b[33m.\u001b[39mpassword)\u001b[33m;\u001b[39m\n \u001b[90m 87 |\u001b[39m             \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mclick(\u001b[32m'button[type=\"submit\"]'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 88 |\u001b[39m             \u001b[36mawait\u001b[39m expect(page)\u001b[33m.\u001b[39mtoHaveURL(\u001b[32m'/'\u001b[39m\u001b[33m,\u001b[39m { timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 89 |\u001b[39m\n \u001b[90m 90 |\u001b[39m             \u001b[90m// Logout\u001b[39m\n \u001b[90m 91 |\u001b[39m             \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mclick(\u001b[32m'text=Logout'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\auth.spec.js",
+                                "column": 32,
+                                "line": 88
+                              },
+                              "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected: \u001b[32m\"http://localhost:5173/\"\u001b[39m\nReceived: \u001b[31m\"http://localhost:5173/\u001b[7mregister\u001b[27m\"\u001b[39m\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 10000ms\u001b[22m\n\u001b[2m    14 ├ù unexpected value \"http://localhost:5173/register\"\u001b[22m\n\n\n  86 |             await page.locator('input[type=\"password\"]').nth(1).fill(user.password);\n  87 |             await page.click('button[type=\"submit\"]');\n> 88 |             await expect(page).toHaveURL('/', { timeout: 10000 });\n     |                                ^\n  89 |\n  90 |             // Logout\n  91 |             await page.click('text=Logout');\n    at C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\auth.spec.js:88:32"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-12-25T17:25:24.723Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\test-results\\auth-TS-AUTH-Authenticatio-9827d-ully-with-valid-credentials-chromium\\error-context.md"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\auth.spec.js",
+                            "column": 32,
+                            "line": 88
+                          }
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "d5ed79a6b333c2ba7209-f4a3ea46615629ae6147",
+                  "file": "auth.spec.js",
+                  "line": 79,
+                  "column": 9
+                },
+                {
+                  "title": "TC_AUTH_005: Should show error for invalid credentials",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 4,
+                          "parallelIndex": 4,
+                          "status": "failed",
+                          "duration": 6474,
+                          "error": {
+                            "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.alert-danger')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.alert-danger')\u001b[22m\n",
+                            "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.alert-danger')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.alert-danger')\u001b[22m\n\n    at C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\auth.spec.js:111:57",
+                            "location": {
+                              "file": "C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\auth.spec.js",
+                              "column": 57,
+                              "line": 111
+                            },
+                            "snippet": "\u001b[0m \u001b[90m 109 |\u001b[39m             \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mclick(\u001b[32m'button[type=\"submit\"]'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 110 |\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 111 |\u001b[39m             \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'.alert-danger'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible({ timeout\u001b[33m:\u001b[39m \u001b[35m5000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                                         \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 112 |\u001b[39m             \u001b[36mawait\u001b[39m expect(page)\u001b[33m.\u001b[39mtoHaveURL(\u001b[32m'/login'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 113 |\u001b[39m         })\u001b[33m;\u001b[39m\n \u001b[90m 114 |\u001b[39m     })\u001b[33m;\u001b[39m\u001b[0m"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\auth.spec.js",
+                                "column": 57,
+                                "line": 111
+                              },
+                              "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.alert-danger')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.alert-danger')\u001b[22m\n\n\n  109 |             await page.click('button[type=\"submit\"]');\n  110 |\n> 111 |             await expect(page.locator('.alert-danger')).toBeVisible({ timeout: 5000 });\n      |                                                         ^\n  112 |             await expect(page).toHaveURL('/login');\n  113 |         });\n  114 |     });\n    at C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\auth.spec.js:111:57"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-12-25T17:25:24.777Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\test-results\\auth-TS-AUTH-Authenticatio-74826-ror-for-invalid-credentials-chromium\\error-context.md"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\auth.spec.js",
+                            "column": 57,
+                            "line": 111
+                          }
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "d5ed79a6b333c2ba7209-0043a2cba58ec17a8ce1",
+                  "file": "auth.spec.js",
+                  "line": 105,
+                  "column": 9
+                }
+              ]
+            },
+            {
+              "title": "User Logout",
+              "file": "auth.spec.js",
+              "line": 116,
+              "column": 10,
+              "specs": [
+                {
+                  "title": "TC_AUTH_006: Should logout successfully",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 5,
+                          "parallelIndex": 5,
+                          "status": "failed",
+                          "duration": 11512,
+                          "error": {
+                            "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected: \u001b[32m\"http://localhost:5173/\"\u001b[39m\nReceived: \u001b[31m\"http://localhost:5173/\u001b[7mregister\u001b[27m\"\u001b[39m\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 10000ms\u001b[22m\n\u001b[2m    14 ├ù unexpected value \"http://localhost:5173/register\"\u001b[22m\n",
+                            "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected: \u001b[32m\"http://localhost:5173/\"\u001b[39m\nReceived: \u001b[31m\"http://localhost:5173/\u001b[7mregister\u001b[27m\"\u001b[39m\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 10000ms\u001b[22m\n\u001b[2m    14 ├ù unexpected value \"http://localhost:5173/register\"\u001b[22m\n\n    at Object.authenticatedPage (C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\fixtures\\test-fixtures.js:51:28)",
+                            "location": {
+                              "file": "C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\fixtures\\test-fixtures.js",
+                              "column": 28,
+                              "line": 51
+                            },
+                            "snippet": "\u001b[90m   at \u001b[39mfixtures\\test-fixtures.js:51\n\n\u001b[0m \u001b[90m 49 |\u001b[39m\n \u001b[90m 50 |\u001b[39m         \u001b[90m// Wait for successful registration and redirect\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 51 |\u001b[39m         \u001b[36mawait\u001b[39m expect(page)\u001b[33m.\u001b[39mtoHaveURL(\u001b[32m'/'\u001b[39m\u001b[33m,\u001b[39m { timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                            \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 52 |\u001b[39m\n \u001b[90m 53 |\u001b[39m         \u001b[90m// Attach user info for test reference\u001b[39m\n \u001b[90m 54 |\u001b[39m         page\u001b[33m.\u001b[39mtestUser \u001b[33m=\u001b[39m user\u001b[33m;\u001b[39m\u001b[0m"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\fixtures\\test-fixtures.js",
+                                "column": 28,
+                                "line": 51
+                              },
+                              "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected: \u001b[32m\"http://localhost:5173/\"\u001b[39m\nReceived: \u001b[31m\"http://localhost:5173/\u001b[7mregister\u001b[27m\"\u001b[39m\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 10000ms\u001b[22m\n\u001b[2m    14 ├ù unexpected value \"http://localhost:5173/register\"\u001b[22m\n\n\n   at fixtures\\test-fixtures.js:51\n\n  49 |\n  50 |         // Wait for successful registration and redirect\n> 51 |         await expect(page).toHaveURL('/', { timeout: 10000 });\n     |                            ^\n  52 |\n  53 |         // Attach user info for test reference\n  54 |         page.testUser = user;\n    at Object.authenticatedPage (C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\fixtures\\test-fixtures.js:51:28)"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-12-25T17:25:24.740Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\test-results\\auth-TS-AUTH-Authenticatio-94335--Should-logout-successfully-chromium\\error-context.md"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\fixtures\\test-fixtures.js",
+                            "column": 28,
+                            "line": 51
+                          }
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "d5ed79a6b333c2ba7209-ea90d7dea5ae56e66871",
+                  "file": "auth.spec.js",
+                  "line": 118,
+                  "column": 9
+                }
+              ]
+            },
+            {
+              "title": "Session Persistence",
+              "file": "auth.spec.js",
+              "line": 131,
+              "column": 10,
+              "specs": [
+                {
+                  "title": "TC_AUTH_007: Should maintain session after page refresh",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 6,
+                          "parallelIndex": 6,
+                          "status": "failed",
+                          "duration": 11712,
+                          "error": {
+                            "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected: \u001b[32m\"http://localhost:5173/\"\u001b[39m\nReceived: \u001b[31m\"http://localhost:5173/\u001b[7mregister\u001b[27m\"\u001b[39m\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 10000ms\u001b[22m\n\u001b[2m    14 ├ù unexpected value \"http://localhost:5173/register\"\u001b[22m\n",
+                            "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected: \u001b[32m\"http://localhost:5173/\"\u001b[39m\nReceived: \u001b[31m\"http://localhost:5173/\u001b[7mregister\u001b[27m\"\u001b[39m\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 10000ms\u001b[22m\n\u001b[2m    14 ├ù unexpected value \"http://localhost:5173/register\"\u001b[22m\n\n    at Object.authenticatedPage (C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\fixtures\\test-fixtures.js:51:28)",
+                            "location": {
+                              "file": "C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\fixtures\\test-fixtures.js",
+                              "column": 28,
+                              "line": 51
+                            },
+                            "snippet": "\u001b[90m   at \u001b[39mfixtures\\test-fixtures.js:51\n\n\u001b[0m \u001b[90m 49 |\u001b[39m\n \u001b[90m 50 |\u001b[39m         \u001b[90m// Wait for successful registration and redirect\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 51 |\u001b[39m         \u001b[36mawait\u001b[39m expect(page)\u001b[33m.\u001b[39mtoHaveURL(\u001b[32m'/'\u001b[39m\u001b[33m,\u001b[39m { timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                            \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 52 |\u001b[39m\n \u001b[90m 53 |\u001b[39m         \u001b[90m// Attach user info for test reference\u001b[39m\n \u001b[90m 54 |\u001b[39m         page\u001b[33m.\u001b[39mtestUser \u001b[33m=\u001b[39m user\u001b[33m;\u001b[39m\u001b[0m"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\fixtures\\test-fixtures.js",
+                                "column": 28,
+                                "line": 51
+                              },
+                              "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected: \u001b[32m\"http://localhost:5173/\"\u001b[39m\nReceived: \u001b[31m\"http://localhost:5173/\u001b[7mregister\u001b[27m\"\u001b[39m\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 10000ms\u001b[22m\n\u001b[2m    14 ├ù unexpected value \"http://localhost:5173/register\"\u001b[22m\n\n\n   at fixtures\\test-fixtures.js:51\n\n  49 |\n  50 |         // Wait for successful registration and redirect\n> 51 |         await expect(page).toHaveURL('/', { timeout: 10000 });\n     |                            ^\n  52 |\n  53 |         // Attach user info for test reference\n  54 |         page.testUser = user;\n    at Object.authenticatedPage (C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\fixtures\\test-fixtures.js:51:28)"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-12-25T17:25:24.754Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\test-results\\auth-TS-AUTH-Authenticatio-e9791--session-after-page-refresh-chromium\\error-context.md"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "C:\\Users\\MaazBaig\\repo\\antiGravityProjects\\Ecom\\client\\tests\\fixtures\\test-fixtures.js",
+                            "column": 28,
+                            "line": 51
+                          }
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "d5ed79a6b333c2ba7209-ef69d9fa73ab94adf83c",
+                  "file": "auth.spec.js",
+                  "line": 133,
+                  "column": 9
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2025-12-25T17:25:23.115Z",
+    "duration": 14291.929,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 7,
+    "flaky": 0
+  }
+}

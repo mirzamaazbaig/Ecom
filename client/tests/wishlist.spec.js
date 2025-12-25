@@ -16,9 +16,6 @@ test.describe('TS_WISH: Wishlist Test Suite', () => {
         test('TC_WISH_001: Should add product to wishlist from product details', async ({ authenticatedPage }) => {
             await PageActions.goToFirstProduct(authenticatedPage);
 
-            // Handle alert
-            authenticatedPage.once('dialog', dialog => dialog.accept());
-
             // Add to wishlist
             await PageActions.addProductToWishlist(authenticatedPage);
 
@@ -36,7 +33,6 @@ test.describe('TS_WISH: Wishlist Test Suite', () => {
         test('TC_WISH_002: Should display wishlist page correctly', async ({ authenticatedPage }) => {
             // Add item to wishlist first
             await PageActions.goToFirstProduct(authenticatedPage);
-            authenticatedPage.once('dialog', dialog => dialog.accept());
             await PageActions.addProductToWishlist(authenticatedPage);
 
             // Navigate to wishlist
@@ -62,7 +58,6 @@ test.describe('TS_WISH: Wishlist Test Suite', () => {
         test('TC_WISH_004: Should add wishlist item to cart', async ({ authenticatedPage }) => {
             // Add to wishlist
             await PageActions.goToFirstProduct(authenticatedPage);
-            authenticatedPage.once('dialog', dialog => dialog.accept());
             await PageActions.addProductToWishlist(authenticatedPage);
 
             // Go to wishlist
@@ -70,18 +65,16 @@ test.describe('TS_WISH: Wishlist Test Suite', () => {
             await authenticatedPage.waitForSelector('.card');
 
             // Add to cart from wishlist
-            authenticatedPage.once('dialog', dialog => dialog.accept());
             await authenticatedPage.click('button:has-text("Add to Cart")');
 
             // Verify in cart
-            await authenticatedPage.click('text=Cart');
+            await PageActions.goToCart(authenticatedPage);
             await expect(authenticatedPage.locator('.list-group-item').first()).toBeVisible({ timeout: 5000 });
         });
 
         test('TC_WISH_005: Should remove item from wishlist', async ({ authenticatedPage }) => {
             // Add to wishlist
             await PageActions.goToFirstProduct(authenticatedPage);
-            authenticatedPage.once('dialog', dialog => dialog.accept());
             await PageActions.addProductToWishlist(authenticatedPage);
 
             // Go to wishlist
@@ -101,7 +94,6 @@ test.describe('TS_WISH: Wishlist Test Suite', () => {
         test('TC_WISH_006: Should navigate to product from wishlist', async ({ authenticatedPage }) => {
             // Add to wishlist
             await PageActions.goToFirstProduct(authenticatedPage);
-            authenticatedPage.once('dialog', dialog => dialog.accept());
             await PageActions.addProductToWishlist(authenticatedPage);
 
             // Go to wishlist

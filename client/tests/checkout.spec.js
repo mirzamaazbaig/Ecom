@@ -18,15 +18,11 @@ test.describe('TS_ORDER: Checkout & Orders Test Suite', () => {
             // Add item to cart
             await authenticatedPage.goto('/');
             await authenticatedPage.waitForSelector('.card');
-            authenticatedPage.once('dialog', dialog => dialog.accept());
             await authenticatedPage.locator('.card .btn-primary').first().click();
 
             // Go to cart
-            await authenticatedPage.click('text=Cart');
+            await PageActions.goToCart(authenticatedPage);
             await expect(authenticatedPage.locator('.list-group-item').first()).toBeVisible();
-
-            // Handle checkout alert
-            authenticatedPage.on('dialog', dialog => dialog.accept());
 
             // Click checkout
             await authenticatedPage.click('button:has-text("Checkout")');
@@ -49,12 +45,10 @@ test.describe('TS_ORDER: Checkout & Orders Test Suite', () => {
             // Add item
             await authenticatedPage.goto('/');
             await authenticatedPage.waitForSelector('.card');
-            authenticatedPage.once('dialog', dialog => dialog.accept());
             await authenticatedPage.locator('.card .btn-primary').first().click();
 
             // Checkout
-            await authenticatedPage.click('text=Cart');
-            authenticatedPage.on('dialog', dialog => dialog.accept());
+            await PageActions.goToCart(authenticatedPage);
             await authenticatedPage.click('button:has-text("Checkout")');
             await expect(authenticatedPage).toHaveURL(/\/my-orders/, { timeout: 15000 });
 
@@ -70,11 +64,9 @@ test.describe('TS_ORDER: Checkout & Orders Test Suite', () => {
             // First complete a checkout
             await authenticatedPage.goto('/');
             await authenticatedPage.waitForSelector('.card');
-            authenticatedPage.once('dialog', dialog => dialog.accept());
             await authenticatedPage.locator('.card .btn-primary').first().click();
 
-            await authenticatedPage.click('text=Cart');
-            authenticatedPage.on('dialog', dialog => dialog.accept());
+            await PageActions.goToCart(authenticatedPage);
             await authenticatedPage.click('button:has-text("Checkout")');
 
             // Verify orders page
@@ -86,11 +78,9 @@ test.describe('TS_ORDER: Checkout & Orders Test Suite', () => {
             // Complete checkout
             await authenticatedPage.goto('/');
             await authenticatedPage.waitForSelector('.card');
-            authenticatedPage.once('dialog', dialog => dialog.accept());
             await authenticatedPage.locator('.card .btn-primary').first().click();
 
-            await authenticatedPage.click('text=Cart');
-            authenticatedPage.on('dialog', dialog => dialog.accept());
+            await PageActions.goToCart(authenticatedPage);
             await authenticatedPage.click('button:has-text("Checkout")');
             await expect(authenticatedPage).toHaveURL(/\/my-orders/, { timeout: 15000 });
 
