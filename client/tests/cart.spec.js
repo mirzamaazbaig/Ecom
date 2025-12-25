@@ -6,17 +6,13 @@ test.describe('Shopping Cart', () => {
         const uniqueEmail = `cart_test_${Date.now()}@example.com`;
         const password = 'password123';
 
-        // Register
+        // Register (which auto-logins)
         await page.goto('/register');
         await page.fill('input[type="email"]', uniqueEmail);
-        await page.fill('input[type="password"]', password);
+        await page.fill('input[type="password"] >> nth=0', password);
+        await page.fill('input[type="password"] >> nth=1', password);
         await page.click('button[type="submit"]');
 
-        // Login
-        await page.goto('/login');
-        await page.fill('input[type="email"]', uniqueEmail);
-        await page.fill('input[type="password"]', password);
-        await page.click('button[type="submit"]');
         await expect(page).toHaveURL('/');
     });
 
