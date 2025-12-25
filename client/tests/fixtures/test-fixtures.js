@@ -133,6 +133,28 @@ export const PageActions = {
     },
 
     /**
+     * Add product to cart from product details page
+     */
+    addProductToCart: async (page) => {
+        await page.click('text=Add to Cart');
+    },
+
+    /**
+     * Add product to wishlist from product details page
+     */
+    addProductToWishlist: async (page) => {
+        await page.click('button:has-text("Wishlist")');
+    },
+
+    /**
+     * Perform search
+     */
+    searchForProduct: async (page, searchTerm) => {
+        await page.fill('input[placeholder="Search products..."]', searchTerm);
+        await page.click('.search-btn');
+    },
+
+    /**
      * Navigate to wishlist page
      */
     goToWishlist: async (page) => {

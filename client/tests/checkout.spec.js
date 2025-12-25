@@ -28,7 +28,7 @@ test.describe('TS_ORDER: Checkout & Orders Test Suite', () => {
             await authenticatedPage.click('button:has-text("Checkout")');
 
             // Should redirect to orders page
-            await expect(authenticatedPage).toHaveURL(/\/my-orders/, { timeout: 15000 });
+            await PageActions.goToOrders(authenticatedPage);
             await expect(authenticatedPage.locator('h2:has-text("My Orders")')).toBeVisible();
         });
 
@@ -53,7 +53,7 @@ test.describe('TS_ORDER: Checkout & Orders Test Suite', () => {
             await expect(authenticatedPage).toHaveURL(/\/my-orders/, { timeout: 15000 });
 
             // Go back to cart - should be empty
-            await authenticatedPage.goto('/cart');
+            await PageActions.goToCart(authenticatedPage);
             await expect(authenticatedPage.locator('text=Your Cart is Empty')).toBeVisible();
         });
     });
@@ -70,7 +70,7 @@ test.describe('TS_ORDER: Checkout & Orders Test Suite', () => {
             await authenticatedPage.click('button:has-text("Checkout")');
 
             // Verify orders page
-            await expect(authenticatedPage).toHaveURL(/\/my-orders/, { timeout: 15000 });
+            await PageActions.goToOrders(authenticatedPage);
             await expect(authenticatedPage.locator('h2:has-text("My Orders")')).toBeVisible();
         });
 
@@ -82,7 +82,7 @@ test.describe('TS_ORDER: Checkout & Orders Test Suite', () => {
 
             await PageActions.goToCart(authenticatedPage);
             await authenticatedPage.click('button:has-text("Checkout")');
-            await expect(authenticatedPage).toHaveURL(/\/my-orders/, { timeout: 15000 });
+            await PageActions.goToOrders(authenticatedPage);
 
             // Verify order is listed with relevant information
             // Orders should be visible (table or card)

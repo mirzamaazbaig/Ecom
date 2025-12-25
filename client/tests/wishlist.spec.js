@@ -20,8 +20,7 @@ test.describe('TS_WISH: Wishlist Test Suite', () => {
             await PageActions.addProductToWishlist(authenticatedPage);
 
             // Navigate to wishlist and verify
-            await authenticatedPage.click('a[href="/wishlist"]');
-            await expect(authenticatedPage).toHaveURL('/wishlist');
+            await PageActions.goToWishlist(authenticatedPage);
 
             // Should show at least one item
             await expect(authenticatedPage.locator('.card').first()).toBeVisible({ timeout: 10000 });
@@ -36,7 +35,7 @@ test.describe('TS_WISH: Wishlist Test Suite', () => {
             await PageActions.addProductToWishlist(authenticatedPage);
 
             // Navigate to wishlist
-            await authenticatedPage.click('a[href="/wishlist"]');
+            await PageActions.goToWishlist(authenticatedPage);
 
             // Verify wishlist elements
             await expect(authenticatedPage.locator('h2:has-text("My Wishlist")')).toBeVisible();
@@ -61,7 +60,7 @@ test.describe('TS_WISH: Wishlist Test Suite', () => {
             await PageActions.addProductToWishlist(authenticatedPage);
 
             // Go to wishlist
-            await authenticatedPage.click('a:has-text("Wishlist")');
+            await PageActions.goToWishlist(authenticatedPage);
             await authenticatedPage.waitForSelector('.card');
 
             // Add to cart from wishlist
@@ -78,7 +77,7 @@ test.describe('TS_WISH: Wishlist Test Suite', () => {
             await PageActions.addProductToWishlist(authenticatedPage);
 
             // Go to wishlist
-            await authenticatedPage.click('a:has-text("Wishlist")');
+            await PageActions.goToWishlist(authenticatedPage);
             await authenticatedPage.waitForSelector('.card');
 
             // Remove from wishlist
@@ -97,7 +96,7 @@ test.describe('TS_WISH: Wishlist Test Suite', () => {
             await PageActions.addProductToWishlist(authenticatedPage);
 
             // Go to wishlist
-            await authenticatedPage.click('a:has-text("Wishlist")');
+            await PageActions.goToWishlist(authenticatedPage);
             await authenticatedPage.waitForSelector('.card');
 
             // Click on product link

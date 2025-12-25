@@ -28,8 +28,8 @@
               - /url: /cart
               - generic [ref=e24]: 🛒
           - listitem [ref=e25]:
-            - button "Hello, test_user_1766688161655_9mmxn Account" [active] [ref=e26] [cursor=pointer]:
-              - generic [ref=e27]: Hello, test_user_1766688161655_9mmxn
+            - button "Hello, test_user_1766688686836_3maji Account" [active] [ref=e26] [cursor=pointer]:
+              - generic [ref=e27]: Hello, test_user_1766688686836_3maji
               - generic [ref=e28]: Account
   - generic [ref=e32]:
     - generic [ref=e33]:
