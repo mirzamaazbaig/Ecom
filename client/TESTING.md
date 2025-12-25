@@ -23,7 +23,7 @@ To run the automated tests, open a terminal in the `client` directory:
 npm run test:e2e
 
 # Run tests with UI mode (interactive)
-npx playwright test --ui
+npm run test:e2e:ui
 
 # View the last test report
 npx playwright show-report

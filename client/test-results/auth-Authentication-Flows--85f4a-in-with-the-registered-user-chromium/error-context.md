@@ -18,11 +18,11 @@
             - /url: /register
   - generic [ref=e18]:
     - heading "Login" [level=2] [ref=e19]
-    - generic [ref=e20]: Login failed
+    - generic [ref=e20]: Invalid credentials
     - generic [ref=e21]:
       - generic [ref=e22]:
         - generic [ref=e23]: Email address
-        - textbox [ref=e24]: testuser_1766672411219@example.com
+        - textbox [ref=e24]: testuser_1766672798716@example.com
       - generic [ref=e25]:
         - generic [ref=e26]: Password
         - textbox [ref=e27]: password123
