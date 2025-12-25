@@ -35,16 +35,21 @@ export const TestData = {
  */
 export const test = base.extend({
     /**
-     * Authenticated page fixture - logs in a new user before each test
+     * Base page fixture - auto-handles dialogs
      */
-    authenticatedPage: async ({ page }, use) => {
-        const user = TestData.generateUser();
-
-        // Auto-accept all dialogs for this page context
+    page: async ({ page }, use) => {
         page.on('dialog', dialog => {
             console.log(`Dialog: ${dialog.message()}`);
             dialog.accept().catch(() => { });
         });
+        await use(page);
+    },
+
+    /**
+     * Authenticated page fixture - logs in a new user before each test
+     */
+    authenticatedPage: async ({ page }, use) => {
+        const user = TestData.generateUser();
 
         // Register new user
         await page.goto('/register');
