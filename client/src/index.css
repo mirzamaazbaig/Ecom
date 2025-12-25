@@ -7,6 +7,53 @@
   --card-bg: #1f2937;
   --text-primary: #f9fafb;
   --text-secondary: #d1d5db;
+  --amazon-blue: #232f3e;
+  --amazon-light: #37475a;
+}
+
+/* Sidebar */
+.sidebar {
+  background: white;
+  padding: 1rem;
+  border-right: 1px solid #ddd;
+  min-height: 100vh;
+}
+
+.filter-section h5 {
+  font-weight: 700;
+  margin-bottom: 10px;
+  font-size: 1rem;
+}
+
+.filter-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.filter-section li {
+  margin-bottom: 5px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.filter-section li:hover {
+  color: var(--primary-color);
+  text-decoration: underline;
+}
+
+/* Hero */
+.hero-container {
+  background: linear-gradient(to right, #232f3e, #37475a);
+  color: white;
+  padding: 2rem;
+  text-align: center;
+  margin-bottom: 2rem;
+  width: 100%;
+}
+
+.hero-content h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
 }
 
 body {
@@ -20,13 +67,27 @@ body {
 
 /* Animations */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes slideIn {
-  from { opacity: 0; transform: translateX(-20px); }
-  to { opacity: 1; transform: translateX(0); }
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 .fade-in {
@@ -73,11 +134,68 @@ body {
 
 /* Navbar */
 .navbar {
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-  background: linear-gradient(to right, #1f2937, #111827) !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background: #131921 !important;
+  /* Amazon dark blue */
+  padding: 0.5rem 1rem;
 }
 
 .navbar-brand {
   font-weight: 700;
   letter-spacing: -0.5px;
+  color: white !important;
+  font-size: 1.5rem;
+}
+
+.navbar-search {
+  flex-grow: 1;
+  max-width: 600px;
+  margin: 0 2rem;
+}
+
+.search-input-group {
+  display: flex;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.search-input-group input {
+  border: none;
+  padding: 10px;
+  width: 100%;
+}
+
+.search-input-group input:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px #f90;
+  /* Amazon orange focus */
+}
+
+.search-btn {
+  background-color: #febd69;
+  border: none;
+  padding: 0 15px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.search-btn:hover {
+  background-color: #f3a847;
+}
+
+.nav-link {
+  color: white !important;
+  font-size: 0.9rem;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.nav-link small {
+  font-size: 0.75rem;
+  color: #ccc;
+}
+
+.nav-link span {
+  font-weight: 700;
 }

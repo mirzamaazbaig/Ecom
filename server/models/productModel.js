@@ -1,26 +1,47 @@
 const db = require('../db');
 
 class ProductModel {
-    static async findAll({ categoryId, limit = 20, offset = 0, sortBy = 'created_at', order = 'DESC' }) {
+    static async findAll({ categoryId, limit = 20, offset = 0, sortBy = 'created_at', order = 'DESC', search = '', maxPrice = null }) {
         let query = `
-      SELECT p.*, c.name as category_name 
+      SELECT p.*, c.name as category_name, COALESCE(AVG(r.rating), 0)::FLOAT as avg_rating, COUNT(r.id)::INT as review_count
       FROM products p
       LEFT JOIN categories c ON p.category_id = c.id
+      LEFT JOIN reviews r ON p.id = r.product_id
+      WHERE 1=1
     `;
         const params = [];
 
+        // Search
+        if (search) {
+            query += ` AND (p.name ILIKE $${params.length + 1} OR p.description ILIKE $${params.length + 1})`;
+            params.push(`%${search}%`);
+        }
+
         // Filtering
         if (categoryId) {
-            query += ` WHERE p.category_id = $1`;
+            query += ` AND p.category_id = $${params.length + 1}`;
             params.push(categoryId);
         }
 
+        if (maxPrice) {
+            query += ` AND p.price <= $${params.length + 1}`;
+            params.push(maxPrice);
+        }
+
+        // Group By for Aggregates
+        query += ` GROUP BY p.id, c.name`;
+
         // Sorting 
-        const allowedSorts = ['price', 'created_at', 'name'];
-        const sortCol = allowedSorts.includes(sortBy) ? sortBy : 'created_at';
+        const allowedSorts = ['price', 'created_at', 'name', 'avg_rating'];
+        let sortCol = allowedSorts.includes(sortBy) ? sortBy : 'created_at';
+        if (sortCol === 'price' || sortCol === 'created_at' || sortCol === 'name') {
+            sortCol = `p.${sortCol}`;
+        }
+        // avg_rating is an alias, so we use it directly in ORDER BY (Postgres supports alias in ORDER BY)
+
         const sortOrder = order.toUpperCase() === 'ASC' ? 'ASC' : 'DESC';
 
-        query += ` ORDER BY p.${sortCol} ${sortOrder}`;
+        query += ` ORDER BY ${sortCol} ${sortOrder}`;
 
         // Pagination
         query += ` LIMIT $${params.length + 1} OFFSET $${params.length + 2}`;

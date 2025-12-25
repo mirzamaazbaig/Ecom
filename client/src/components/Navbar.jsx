@@ -1,4 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import WalletConnect from './WalletConnect';
@@ -16,57 +17,95 @@ const Navbar = () => {
     // To make it useful in Checkout, we need to know the address there.
     // I'll assume users connect in Navbar, and we might need to "re-verify" or access window.ethereum directly in Cart.
 
+    const [searchTerm, setSearchTerm] = useState('');
+
+    const handleSearch = (e) => {
+        e.preventDefault();
+        if (searchTerm.trim()) {
+            navigate(`/?search=${encodeURIComponent(searchTerm)}`);
+        }
+    };
+
     const handleLogout = async () => {
         await logout();
         navigate('/login');
     };
 
     return (
-        <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-            <div className="container">
-                <Link className="navbar-brand" to="/">E-Com Portfolio</Link>
+        <nav className="navbar navbar-expand-lg navbar-dark">
+            <div className="container-fluid">
+                <Link className="navbar-brand me-4" to="/">E-Com</Link>
+
                 <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                     <span className="navbar-toggler-icon"></span>
                 </button>
+
                 <div className="collapse navbar-collapse" id="navbarNav">
-                    <ul className="navbar-nav ms-auto">
-                        <li className="nav-item">
-                            <Link className="nav-link" to="/">Products</Link>
+                    {/* Search Bar */}
+                    <form className="navbar-search d-flex" onSubmit={handleSearch}>
+                        <div className="search-input-group w-100">
+                            <select className="form-select" style={{ maxWidth: '80px', borderRadius: '4px 0 0 4px', fontSize: '0.8rem', backgroundColor: '#f3f3f3', border: 'none' }}>
+                                <option>All</option>
+                            </select>
+                            <input
+                                type="text"
+                                placeholder="Search products..."
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                            />
+                            <button className="search-btn" type="submit">
+                                🔍
+                            </button>
+                        </div>
+                    </form>
+
+                    <ul className="navbar-nav ms-auto align-items-center">
+                        <li className="nav-item me-2">
+                            <Link className="nav-link" to="/wishlist">
+                                <small>Your</small>
+                                <span>Wishlist</span>
+                            </Link>
                         </li>
                         {user ? (
                             <>
-                                <li className="nav-item">
-                                    <Link className="nav-link" to="/cart">
-                                        Cart {cartCount > 0 && <span className="badge bg-secondary ms-1">{cartCount}</span>}
+                                <li className="nav-item me-2">
+                                    <Link className="nav-link" to="/my-orders">
+                                        <small>Returns</small>
+                                        <span>& Orders</span>
                                     </Link>
                                 </li>
-                                <li className="nav-item">
-                                    <Link className="nav-link" to="/my-orders">My Orders</Link>
+                                <li className="nav-item me-2">
+                                    <Link className="nav-link position-relative" to="/cart">
+                                        <div className="d-flex flex-column align-items-center">
+                                            <span style={{ fontSize: '1.2rem' }}>🛒</span>
+                                            {cartCount > 0 && (
+                                                <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning text-dark">
+                                                    {cartCount}
+                                                </span>
+                                            )}
+                                        </div>
+                                    </Link>
                                 </li>
-                                {user.role === 'admin' && (
-                                    <li className="nav-item">
-                                        <Link className="nav-link" to="/admin">Admin</Link>
-                                    </li>
-                                )}
-                                <li className="nav-item">
-                                    <button className="btn btn-link nav-link" onClick={handleLogout}>Logout</button>
-                                </li>
-                                <li className="nav-item">
-                                    <span className="nav-link disabled">Hi, {user.email}</span>
-                                </li>
-                                <li className="nav-item ms-2">
-                                    <WalletConnect />
+                                <li className="nav-item dropdown">
+                                    <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                        <small>Hello, {user.email.split('@')[0]}</small>
+                                        <span>Account</span>
+                                    </a>
+                                    <ul className="dropdown-menu dropdown-menu-end">
+                                        {user.role === 'admin' && (
+                                            <li><Link className="dropdown-item" to="/admin">Admin Dashboard</Link></li>
+                                        )}
+                                        <li><button className="dropdown-item" onClick={handleLogout}>Logout</button></li>
+                                    </ul>
                                 </li>
                             </>
                         ) : (
-                            <>
-                                <li className="nav-item">
-                                    <Link className="nav-link" to="/login">Login</Link>
-                                </li>
-                                <li className="nav-item">
-                                    <Link className="nav-link" to="/register">Register</Link>
-                                </li>
-                            </>
+                            <li className="nav-item">
+                                <Link className="nav-link" to="/login">
+                                    <small>Hello, sign in</small>
+                                    <span>Account & Lists</span>
+                                </Link>
+                            </li>
                         )}
                     </ul>
                 </div>

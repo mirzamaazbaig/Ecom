@@ -20,10 +20,9 @@ test.describe('Shopping Cart', () => {
         // Go to Home
         await page.goto('/');
 
-        // Click on the first product's "View" button
-        // Wait for products to load
+        // Click on the first product's "View Details" button
         await page.waitForSelector('.card');
-        await page.locator('.card .btn-primary').first().click();
+        await page.click('text=View Details');
 
         // On Product Details Page
         // Handle alert dialog that appears after adding to cart

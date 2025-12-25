@@ -2,13 +2,15 @@ const ProductModel = require('../models/productModel');
 
 exports.getAllProducts = async (req, res) => {
     try {
-        const { category_id, limit, offset, sort_by, order } = req.query;
+        const { category_id, limit, offset, sort_by, order, search, max_price } = req.query;
         const products = await ProductModel.findAll({
             categoryId: category_id,
             limit: limit ? parseInt(limit) : 20,
             offset: offset ? parseInt(offset) : 0,
             sortBy: sort_by,
-            order: order
+            order: order,
+            search: search,
+            maxPrice: max_price ? parseFloat(max_price) : null
         });
         res.json(products);
     } catch (error) {
