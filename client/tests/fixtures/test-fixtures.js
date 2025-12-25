@@ -156,8 +156,15 @@ export const PageActions = {
      * Logout user
      */
     logout: async (page) => {
-        await page.click('text=Account');
-        await page.click('text=Logout');
+        // Find and click the Account dropdown toggle
+        const accountToggle = page.locator('.nav-link.dropdown-toggle:has-text("Account")');
+        await accountToggle.click();
+
+        // Wait for the Logout link to be visible in the dropdown
+        const logoutBtn = page.locator('.dropdown-item:has-text("Logout")');
+        await logoutBtn.waitFor({ state: 'visible', timeout: 5000 });
+        await logoutBtn.click();
+
         await expect(page.locator('text=Login')).toBeVisible();
     },
 
