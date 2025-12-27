@@ -86,8 +86,9 @@ test.describe('TS_ORDER: Checkout & Orders Test Suite', () => {
 
             // Verify order is listed with relevant information
             // Orders should be visible (table or card)
+            // Orders should be visible (accordion items)
             await expect(
-                authenticatedPage.locator('table').or(authenticatedPage.locator('.card'))
+                authenticatedPage.locator('.accordion-item')
             ).toBeVisible({ timeout: 5000 });
         });
     });
