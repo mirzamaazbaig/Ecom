@@ -35,12 +35,22 @@ test.describe('TS_REV: Product Reviews Test Suite', () => {
             // First submit a review
             await PageActions.goToFirstProduct(authenticatedPage);
 
-            await authenticatedPage.selectOption('select.form-select:near(:text("Rating"))', '5');
-            await authenticatedPage.fill('textarea', 'Test review for stars display');
+            // Use more robust locator strategy or by specific option text
+            // Assumes "Rating" label is associated or close enough. 
+            // Better: find the select inside the form
+            await authenticatedPage.locator('select.form-select').filter({ hasText: '5 - Excellent' }).selectOption('5');
+
+            // Use unique text to avoid strict mode violations if multiple tests run against the same persistent DB
+            const reviewText = `Test review for stars display ${Date.now()}`;
+            await authenticatedPage.fill('textarea', reviewText);
             await authenticatedPage.click('button:has-text("Submit Review")');
 
-            // Verify stars are shown
-            await expect(authenticatedPage.locator('.text-warning:has-text("★")')).toBeVisible({ timeout: 5000 });
+            // Wait for the review text to appear first (confirms data trip)
+            await expect(authenticatedPage.locator(`text=${reviewText}`)).toBeVisible({ timeout: 10000 });
+
+            // Verify stars are shown specifically in the card that contains our review text
+            const reviewCard = authenticatedPage.locator('.card', { hasText: reviewText });
+            await expect(reviewCard.locator('.text-warning:has-text("★")')).toBeVisible({ timeout: 5000 });
         });
     });
 
