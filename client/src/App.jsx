@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 import Navbar from './components/Navbar';
+import Breadcrumbs from './components/Breadcrumbs';
 
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -33,6 +34,7 @@ function App() {
       <AuthProvider>
         <CartProvider>
           <Navbar />
+          <Breadcrumbs />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/products/:id" element={<ProductDetails />} />
