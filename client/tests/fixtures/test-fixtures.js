@@ -219,7 +219,8 @@ export const PageActions = {
      * Sort products
      */
     sortProducts: async (page, sortValue) => {
-        await page.selectOption('select.form-select', sortValue);
+        // Use :has() pseudo-class to find the specific filter section containing the 'Sort By' header
+        await page.locator('.filter-section:has(h5:has-text("Sort By")) select').selectOption(sortValue);
     }
 };
 

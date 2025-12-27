@@ -39,6 +39,9 @@ const Home = () => {
         setLoading(true);
         try {
             let query = `/products?sort_by=${sortBy}`;
+            if (sortBy === 'price') {
+                query += '&order=ASC';
+            }
             if (selectedCategory) {
                 const catMap = { 'Electronics': 1, 'Clothing': 2, 'Books': 3 };
                 query += `&category_id=${catMap[selectedCategory] || ''}`;

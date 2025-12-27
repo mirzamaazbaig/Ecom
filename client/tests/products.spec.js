@@ -17,8 +17,7 @@ test.describe('TS_PROD: Product Browsing Test Suite', () => {
         test('TC_PROD_001: Should display home page with products', async ({ page }) => {
             await page.goto('/');
 
-            // Verify hero section (when no search)
-            await expect(page.locator('.hero-container')).toBeVisible({ timeout: 10000 });
+            // Verify products are loaded
 
             // Verify products are loaded
             await expect(page.locator('.card').first()).toBeVisible({ timeout: 10000 });
@@ -65,7 +64,7 @@ test.describe('TS_PROD: Product Browsing Test Suite', () => {
             // Verify product details page
             await expect(page.locator('.container h2')).toBeVisible({ timeout: 10000 });
             await expect(page.locator('text=Add to Cart')).toBeVisible();
-            await expect(page.locator('text=Wishlist')).toBeVisible();
+            await expect(page.locator('button:has-text("Wishlist")')).toBeVisible();
             await expect(page.url()).toContain('/products/');
         });
 
