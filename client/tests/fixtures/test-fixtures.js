@@ -52,7 +52,10 @@ export const test = base.extend({
         const user = TestData.generateUser();
 
         // Register new user
-        await page.goto('/register');
+        // Use domcontentloaded for faster navigation in SPAs, avoiding timeouts on external resources
+        await page.goto('/register', { waitUntil: 'domcontentloaded' });
+        // Ensure the form is actually rendered before interacting (catches React hydration delays)
+        await expect(page.locator('h2:has-text("Register")')).toBeVisible({ timeout: 15000 });
         await page.fill('#email', user.email);
         await page.fill('#password', user.password);
         await page.fill('#confirmPassword', user.password);
@@ -219,7 +222,8 @@ export const PageActions = {
      * Sort products
      */
     sortProducts: async (page, sortValue) => {
-        await page.selectOption('select.form-select', sortValue);
+        // Use :has() pseudo-class to find the specific filter section containing the 'Sort By' header
+        await page.locator('.filter-section:has(h5:has-text("Sort By")) select').selectOption(sortValue);
     }
 };
 
