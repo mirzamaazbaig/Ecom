@@ -62,7 +62,11 @@ const Breadcrumbs = () => {
                         </li>
                     ) : (
                         <li key={to} className="breadcrumb-item">
-                            <Link to={to}>{displayName}</Link>
+                            {value === 'products' ? (
+                                <span>{displayName}</span>
+                            ) : (
+                                <Link to={to}>{displayName}</Link>
+                            )}
                         </li>
                     );
                 })}
