@@ -9,26 +9,34 @@ const Breadcrumbs = () => {
     // Split path into segments, remove empty strings
     const pathnames = location.pathname.split('/').filter((x) => x);
 
-    // Don't show breadcrumbs on Home page (root)
-    if (pathnames.length === 0) {
-        return null;
-    }
-
     // Fetch product name if on product details page
+    // IMPORTANT: All hooks must be called before any conditional returns
     useEffect(() => {
+        const pathSegments = location.pathname.split('/').filter((x) => x);
+
         const fetchProductName = async () => {
             // Check if we're on a product details page (e.g., /products/4)
-            if (pathnames[0] === 'products' && pathnames[1]) {
+            if (pathSegments[0] === 'products' && pathSegments[1]) {
                 try {
-                    const { data } = await api.get(`/products/${pathnames[1]}`);
+                    const { data } = await api.get(`/products/${pathSegments[1]}`);
                     setProductName(data.name);
                 } catch (error) {
                     console.error('Failed to fetch product name for breadcrumb', error);
+                    setProductName(null);
                 }
+            } else {
+                // Reset product name when not on a product page
+                setProductName(null);
             }
         };
         fetchProductName();
     }, [location.pathname]);
+
+    // Don't show breadcrumbs on Home page (root)
+    // This conditional return comes AFTER all hooks
+    if (pathnames.length === 0) {
+        return null;
+    }
 
     return (
         <nav aria-label="breadcrumb" className="container mt-3" style={{ userSelect: 'none' }}>

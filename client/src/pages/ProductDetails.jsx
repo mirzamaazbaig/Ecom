@@ -15,6 +15,9 @@ const ProductDetails = () => {
     const [wishlistLoading, setWishlistLoading] = useState(false);
 
     useEffect(() => {
+        setLoading(true); // Reset loading state when navigating to a new product
+        setProduct(null); // Clear previous product data
+
         const fetchProduct = async () => {
             try {
                 const { data } = await api.get(`/products/${id}`);
