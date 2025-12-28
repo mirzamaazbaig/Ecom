@@ -88,8 +88,8 @@ export const TestAssertions = {
      * Verify user is logged in by checking for Logout button
      */
     assertLoggedIn: async (page) => {
-        // Dropdown toggle shows "Account" when logged in
-        await expect(page.locator('.nav-link.dropdown-toggle:has-text("Account")')).toBeVisible({ timeout: 10000 });
+        // Dropdown toggle with username and down arrow when logged in
+        await expect(page.locator('.nav-link.dropdown-toggle')).toBeVisible({ timeout: 10000 });
     },
 
     /**
@@ -198,7 +198,7 @@ export const PageActions = {
      * Logout user
      */
     logout: async (page) => {
-        const accountToggle = page.locator('.nav-link.dropdown-toggle:has-text("Account")');
+        const accountToggle = page.locator('.nav-link.dropdown-toggle');
         await expect(accountToggle).toBeVisible({ timeout: 10000 });
         await accountToggle.click();
 

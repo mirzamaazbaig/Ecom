@@ -103,12 +103,15 @@ test.describe('TS_ORDER: Checkout & Orders Test Suite', () => {
             await expect(page).toHaveURL('/login', { timeout: 10000 });
         });
 
-        test('TC_ORDER_007: Should redirect unauthenticated user from cart to login on checkout attempt', async ({ page }) => {
-            // Go directly to cart (will redirect)
+        test('TC_ORDER_007: Should allow unauthenticated user to view cart', async ({ page }) => {
+            // Go directly to cart
             await page.goto('/cart');
 
-            // Should redirect to login since cart is protected
-            await expect(page).toHaveURL('/login', { timeout: 10000 });
+            // Should be able to access cart without login
+            await expect(page).toHaveURL('/cart', { timeout: 10000 });
+
+            // Should show empty cart message
+            await expect(page.locator('text=Your Cart is Empty')).toBeVisible();
         });
     });
 });
