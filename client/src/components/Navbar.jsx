@@ -66,46 +66,44 @@ const Navbar = () => {
                                 <span>Wishlist</span>
                             </Link>
                         </li>
+                        {user && (
+                            <li className="nav-item me-2">
+                                <Link className="nav-link" to="/my-orders">
+                                    <small>Returns</small>
+                                    <span>& Orders</span>
+                                </Link>
+                            </li>
+                        )}
+                        <li className="nav-item me-2">
+                            <Link className="nav-link position-relative" to="/cart">
+                                <div className="d-flex flex-column align-items-center">
+                                    <span style={{ fontSize: '1.2rem' }}>🛒</span>
+                                    {cartCount > 0 && (
+                                        <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning text-dark">
+                                            {cartCount}
+                                        </span>
+                                    )}
+                                </div>
+                            </Link>
+                        </li>
                         {user ? (
-                            <>
-                                <li className="nav-item me-2">
-                                    <Link className="nav-link" to="/my-orders">
-                                        <small>Returns</small>
-                                        <span>& Orders</span>
-                                    </Link>
-                                </li>
-                                <li className="nav-item me-2">
-                                    <Link className="nav-link position-relative" to="/cart">
-                                        <div className="d-flex flex-column align-items-center">
-                                            <span style={{ fontSize: '1.2rem' }}>🛒</span>
-                                            {cartCount > 0 && (
-                                                <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning text-dark">
-                                                    {cartCount}
-                                                </span>
-                                            )}
-                                        </div>
-                                    </Link>
-                                </li>
-                                <li className="nav-item dropdown">
-                                    <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                        <small>Hello, {user.email.split('@')[0]}</small>
-                                        <span>Account</span>
-                                    </a>
-                                    <ul className="dropdown-menu dropdown-menu-end">
-                                        <li><Link className="dropdown-item" to="/profile">Profile</Link></li>
-                                        {user.role === 'admin' && (
-                                            <li><Link className="dropdown-item" to="/admin">Admin Dashboard</Link></li>
-                                        )}
-                                        <li><hr className="dropdown-divider" /></li>
-                                        <li><button className="dropdown-item" onClick={handleLogout}>Logout</button></li>
-                                    </ul>
-                                </li>
-                            </>
+                            <li className="nav-item dropdown">
+                                <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                    <span>{user.email.split('@')[0]} ▼</span>
+                                </a>
+                                <ul className="dropdown-menu dropdown-menu-end">
+                                    <li><Link className="dropdown-item" to="/profile">Profile</Link></li>
+                                    {user.role === 'admin' && (
+                                        <li><Link className="dropdown-item" to="/admin">Admin Dashboard</Link></li>
+                                    )}
+                                    <li><hr className="dropdown-divider" /></li>
+                                    <li><button className="dropdown-item" onClick={handleLogout}>Logout</button></li>
+                                </ul>
+                            </li>
                         ) : (
                             <li className="nav-item">
                                 <Link className="nav-link" to="/login">
-                                    <small>Hello, sign in</small>
-                                    <span>Account & Lists</span>
+                                    <span>Sign In</span>
                                 </Link>
                             </li>
                         )}
