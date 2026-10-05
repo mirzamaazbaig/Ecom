@@ -1,40 +1,35 @@
 # E2E Testing with Playwright
 
-This project uses [Playwright](https://playwright.dev/) for End-to-End (E2E) testing.
+The suite is in `client/tests`, 49 cases across six files. See the root [README](../README.md) for the overview and setup.
 
-## Prerequisites
-1.  **Backend Server**: The backend server must be running on `http://localhost:5000`.
-    ```bash
-    cd server
-    npm run dev
-    ```
-2.  **Dependencies**: Ensure dependencies are installed in the `client` directory.
-    ```bash
-    cd client
-    npm install
-    npx playwright install
-    ```
+## Layout
 
-## Running Tests
-To run the automated tests, open a terminal in the `client` directory:
+| File | Suite ID | Focus |
+|---|---|---|
+| `tests/auth.spec.js` | `TS_AUTH` | Registration, login, logout, session persistence |
+| `tests/products.spec.js` | `TS_PROD` | Listing, details, category filter, sort, search |
+| `tests/cart.spec.js` | `TS_CART` | Add, remove, quantity, totals |
+| `tests/checkout.spec.js` | `TS_ORDER` | Checkout, order history, protected routes |
+| `tests/reviews.spec.js` | `TS_REV` | Viewing and submitting reviews |
+| `tests/wishlist.spec.js` | `TS_WISH` | Wishlist add, remove, move to cart |
+| `tests/fixtures/test-fixtures.js` | | `authenticatedPage` fixture, `TestData`, `TestAssertions`, `PageActions`, `API_URL` |
 
-```bash
-# Run all tests
-npm run test:e2e
+## Conventions
 
-# Run tests with UI mode (interactive)
-npm run test:e2e:ui
-
-# View the last test report
-npx playwright show-report
-```
-
-## Test Structure
-- **`tests/auth.spec.js`**: Verifies Registration and Login flows.
-- **`tests/cart.spec.js`**: Verifies adding items to the cart and checking the item count.
-- **`tests/checkout.spec.js`**: Verifies the full checkout process.
+- Case titles start with a stable ID: `TC_<AREA>_<NNN>: Should ...`.
+- Use the `authenticatedPage` fixture when a logged-in user is needed; use `page` for anonymous flows. Each use creates a unique user.
+- Do not use `waitForTimeout`. Wait for the element, the response, or poll for the state.
+- Assert the outcome, not that "something is visible". An assertion that passes in both the success and the failure state (for example `a.or(b)`) is a defect in the test.
 
 ## Configuration
-The Playwright configuration is located in `playwright.config.js`. It is set to:
-- Launch the React client using `npm run dev` (Port 5173).
-- Test against Chromium, Firefox, and WebKit.
+
+`playwright.config.js`:
+
+- Runs headless on Chromium (Firefox and WebKit are present but commented out).
+- Starts the API (`../server`, port 5000) and the Vite client (port 5173) and reuses them if already running.
+- Screenshot and video on failure, trace on first retry, 2 retries and 1 worker when `CI` is set.
+- `PW_CHROMIUM_PATH` overrides the browser executable.
+
+## Prerequisites for a run
+
+The database must exist and be seeded (`server/db/setup.js`, `scripts/migrate.js`, `scripts/seedProducts.js`). Tests rely on the seeded catalogue: 8 products, 3 of them in Electronics.

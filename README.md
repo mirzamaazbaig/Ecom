@@ -1,93 +1,88 @@
-# Professional Full-Stack E-Commerce Portfolio
+# E-Commerce Application with Playwright E2E Test Suite
 
-A robust, production-graded E-Commerce application built to demonstrate mastery of full-stack fundamentals: **React, Node.js + Express, and PostgreSQL** (without ORMs).
+A full-stack shop (React, Express, PostgreSQL) built as the system under test for an end-to-end test automation suite. The application is deliberately small; the focus of this repository is the **test suite in [`client/tests`](client/tests)** and how it is structured, run and maintained.
 
-## 🚀 Key Features
+## What is tested
 
-*   **Full-Stack Architecture**: Clean MVC Backend and Component-based Frontend (Vite).
-*   **Database Design**: Relational schema with PostgreSQL (Users, Products, Orders, OrderItems).
-*   **Authentication**: Secure session-based authentication using `express-session`, `cookie`, and `bcrypt` encryption.
-*   **Transaction Management**: ACID-compliant order processing using SQL transactions (BEGIN/COMMIT/ROLLBACK) to ensure data integrity.
-*   **State Management**: React Context API for Global Auth and Shopping Cart state.
-*   **Web3 Integration**: "Digital Receipt" feature using **MetaMask** and mock blockchain hashing to demonstrate Web3 concepts.
-*   **Admin Dashboard**: Protected routes for product and order management.
+| Suite | Cases | Coverage |
+|---|---|---|
+| `TS_AUTH` | 7 | Registration, duplicate email, password mismatch, login, invalid credentials, logout, session persistence after reload |
+| `TS_PROD` | 13 | Listing, prices and ratings, navigation, category filter, sorting, search, empty search |
+| `TS_CART` | 7 | Add from list and details page, quantity, empty cart, remove, total calculation |
+| `TS_ORDER` | 7 | Checkout, cart cleared after order, order history, protected routes redirect to login |
+| `TS_REV` | 9 | Viewing reviews, submitting a review, rating options and default, validation, unauthenticated user |
+| `TS_WISH` | 6 | Add, view, empty state, remove, add to cart from wishlist, navigate to product |
 
-## 🛠 Tech Stack & Design Decisions
+49 cases in total. Test IDs (`TC_CART_003`) map one to one to test titles so failures can be traced to a requirement area.
 
-### Frontend: React.js (Vite)
-*   **Why Vite?**: Faster build times and modern ESM support compared to CRA.
-*   **No Redux?**: Used **Context API** because the state requirements (Auth, Cart) are global but not complex enough to warrant the boilerplate of Redux. This reduces bundle size and complexity.
-*   **Bootstrap 5**: Chosen for rapid, responsive UI development without the build overhead of Tailwind (per project constraints).
+## Test approach
 
-### Backend: Node.js + Express
-*   **MVC Pattern**: Separated concerns into `Models` (DB), `Controllers` (Logic), and `Routes` (API Definition) for maintainability.
-*   **Raw SQL (pg)**: Deliberately chose `pg` over an ORM (like Sequelize/TypeORM) to demonstrate **SQL proficiency**, performance optimization control, and understanding of underlying database interactions.
+- **Isolation:** every test that needs a user registers a fresh one through the `authenticatedPage` fixture (unique email per test), so tests are order-independent and run in parallel.
+- **Reusable layer:** shared fixtures, assertions and UI actions live in [`client/tests/fixtures/test-fixtures.js`](client/tests/fixtures/test-fixtures.js), keeping selectors out of the test bodies.
+- **Web-first assertions, no fixed sleeps:** tests wait on conditions (`expect(...).toHaveCount`, `expect.poll`, `waitForResponse`) instead of `waitForTimeout`.
+- **UI checked against the API:** for example the category filter test compares the cards on screen with the products returned by `GET /api/products?category_id=1`.
+- **Failure evidence:** screenshots and video are kept on failure and a trace is recorded on the first retry. The HTML report is written to `client/playwright-report`.
 
-### Database: PostgreSQL
-*   **Relational Schema**: Perfectly suited for structured transactional data like Orders and Inventory.
-*   **Data Integrity**: Foreign keys and constraints ensure robust data relationships.
+Known limitations are listed under [Roadmap](#roadmap).
 
-## ⚙️ Setup & Installation
+## Running the tests
 
-### Prerequisites
-*   Node.js (v18+)
-*   PostgreSQL installed and running locally.
+Prerequisites: Node.js 18+, PostgreSQL running locally.
 
-### 1. Database Setup
-Create the database and seed initial data:
 ```bash
-# In the root directory (or /server)
+# 1. Install
+npm run install-all
+cd client && npx playwright install chromium && cd ..
+
+# 2. Configure and prepare the database
+cp server/.env.example server/.env      # then set DATABASE_URL and SESSION_SECRET
 cd server
-cp .env.example .env # (Create .env based on example)
-node db/setup.js
-```
-*Note: Ensure your `.env` contains correct DB credentials (`DATABASE_URL`).*
+node db/setup.js                         # creates the database and tables
+node scripts/migrate.js                  # applies db/migrations
+node scripts/seedProducts.js             # inserts the product catalogue
+cd ..
 
-### 2. Backend Setup
-```bash
-cd server
-npm install
-npm run dev
-```
-Server runs on `http://localhost:5000`.
-
-### 3. Frontend Setup
-```bash
+# 3. Run (Playwright starts the API on :5000 and the client on :5173 itself)
 cd client
-npm install
-npm run dev
+npm run test:e2e                         # headless
+npm run test:e2e:headed                  # watch it run
+npm run test:e2e:ui                      # interactive UI mode
+npm run test:report                      # open the last HTML report
 ```
-Client runs on `http://localhost:5173`.
 
-### 4. Admin Access
-To promote a user to admin:
+Run one suite or one case:
+
 ```bash
-node server/scripts/setAdmin.js <user-email>
+npx playwright test tests/cart.spec.js
+npx playwright test -g "TC_CART_003"
 ```
 
-## 🧠 Interview Q&A (The "Why")
+Environment variables: `API_URL` (default `http://localhost:5000/api`) points the tests at a different API; `PW_CHROMIUM_PATH` uses an existing Chromium binary instead of Playwright's download.
 
-### Q: Why did you choose Session Auth over JWT?
-**A:** Sessions are stateful and stored on the server (via Redis/Memory), allowing instant revocation (e.g., banning a user). JWTs are stateless; once issued, they are valid until expiration unless complex blocklisting is implemented. For a secure e-commerce site, session control is often preferred.
+## Application under test
 
-### Q: How does data flow from React to the Database?
-**A:** 
-1.  **User Action**: User clicks "Checkout" in React.
-2.  **API Call**: Axios sends a POST request to `/api/orders` with cart data.
-3.  **Route/Controller**: Express receives the request; Controller validates input.
-4.  **Transaction**: Model opens a Postgres client, starts a transaction (`BEGIN`).
-5.  **SQL Execution**: Inserts Order -> Inserts Items -> Updates Stock.
-6.  **Commit**: If all succeed, `COMMIT`. If any fail, `ROLLBACK`.
-7.  **Response**: Server sends success status back to React to update UI.
+- **Client:** React 19, Vite, Bootstrap 5, Context API for auth and cart state.
+- **Server:** Express 5 with controllers, models and routes; session authentication with `express-session` and `bcrypt`.
+- **Database:** PostgreSQL via `pg` with parameterised SQL. Orders are created in a transaction (insert order, insert items, update stock, commit or roll back).
+- **Admin:** Protected admin dashboard. Promote a user with `node server/scripts/setAdmin.js <email>`.
 
-### Q: How would you scale this application?
-**A:** 
-*   **Database**: Implement Read Replicas for `SELECT` heavy queries (Catalog browsing). Use Connection Pooling (`pg-pool`).
-*   **Backend**: Stateless (if switched to JWT or external Session Store like Redis) allows horizontal scaling behind a Load Balancer (Nginx).
-*   **Frontend**: CDN for serving static assets and images.
-*   **Caching**: Redis for caching frequent product queries.
+```
+client/            React app and the Playwright suite
+  src/             Pages, components, contexts
+  tests/           *.spec.js suites and fixtures/
+  playwright.config.js
+server/            Express API
+  controllers/ models/ routes/ middleware/
+  db/              setup.js and SQL migrations
+  scripts/         migrate, seed, setAdmin
+```
 
-## 🔒 Security Measures
-*   **Password Hashing**: `bcrypt` with salt.
-*   **Route Protection**: Middleware (`isAuthenticated`, `isAdmin`) verifies session before access.
-*   **Input Handling**: Parameterized queries prevent SQL Injection.
+More detail on the suites: [`client/TESTING.md`](client/TESTING.md).
+
+## Roadmap
+
+- CI: GitHub Actions workflow with a PostgreSQL service container, running the suite and publishing the HTML report.
+- API-level tests for auth, products and order endpoints, including the checkout transaction and its rollback path.
+- Page Object classes to replace the `PageActions` helper object.
+- Admin dashboard coverage (currently untested).
+- Firefox and WebKit projects (configured but disabled).
