@@ -1,5 +1,7 @@
 # E-Commerce Application with Playwright E2E Test Suite
 
+[![E2E tests](https://github.com/mirzamaazbaig/Ecom/actions/workflows/e2e.yml/badge.svg)](https://github.com/mirzamaazbaig/Ecom/actions/workflows/e2e.yml)
+
 A full-stack shop (React, Express, PostgreSQL) built as the system under test for an end-to-end test automation suite. The application is deliberately small; the focus of this repository is the **test suite in [`client/tests`](client/tests)** and how it is structured, run and maintained.
 
 ## What is tested
@@ -22,6 +24,16 @@ A full-stack shop (React, Express, PostgreSQL) built as the system under test fo
 - **Web-first assertions, no fixed sleeps:** tests wait on conditions (`expect(...).toHaveCount`, `expect.poll`, `waitForResponse`) instead of `waitForTimeout`.
 - **UI checked against the API:** for example the category filter test compares the cards on screen with the products returned by `GET /api/products?category_id=1`.
 - **Failure evidence:** screenshots and video are kept on failure and a trace is recorded on the first retry. The HTML report is written to `client/playwright-report`.
+
+## Continuous integration
+
+[`.github/workflows/e2e.yml`](.github/workflows/e2e.yml) runs on every push, pull request and manual dispatch:
+
+1. Starts a PostgreSQL 16 service container.
+2. Installs server and client dependencies with `npm ci` (cached) and Playwright Chromium.
+3. Creates, migrates and seeds the database (`db/setup.js`, `scripts/migrate.js`, `scripts/seedProducts.js`).
+4. Runs the 49 cases headless. With `CI` set, Playwright uses 2 retries and one worker.
+5. Uploads the HTML report as the `playwright-report` artifact; traces, screenshots and videos are uploaded as `test-results` when a run fails.
 
 Known limitations are listed under [Roadmap](#roadmap).
 
@@ -81,7 +93,6 @@ More detail on the suites: [`client/TESTING.md`](client/TESTING.md).
 
 ## Roadmap
 
-- CI: GitHub Actions workflow with a PostgreSQL service container, running the suite and publishing the HTML report.
 - API-level tests for auth, products and order endpoints, including the checkout transaction and its rollback path.
 - Page Object classes to replace the `PageActions` helper object.
 - Admin dashboard coverage (currently untested).
