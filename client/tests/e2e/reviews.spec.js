@@ -8,7 +8,7 @@
  * - Data persistence verification
  */
 
-import { test, expect, PageActions } from './fixtures/test-fixtures.js';
+import { test, expect, PageActions } from '../fixtures/test-fixtures.js';
 
 test.describe('TS_REV: Product Reviews Test Suite', () => {
 

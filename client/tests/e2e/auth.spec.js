@@ -9,7 +9,7 @@
  * - Comprehensive coverage of authentication flows
  */
 
-import { test, expect, TestData, TestAssertions, PageActions } from './fixtures/test-fixtures.js';
+import { test, expect, TestData, TestAssertions, PageActions } from '../fixtures/test-fixtures.js';
 
 test.describe('TS_AUTH: Authentication Test Suite', () => {
 

@@ -8,10 +8,12 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test:e2e": "playwright test",
-    "test:e2e:ui": "playwright test --ui",
-    "test:e2e:headed": "playwright test --headed",
-    "test:report": "playwright show-report"
+    "test:e2e": "playwright test --project=chromium",
+    "test:e2e:ui": "playwright test --project=chromium --ui",
+    "test:e2e:headed": "playwright test --project=chromium --headed",
+    "test:report": "playwright show-report",
+    "test:api": "playwright test --project=api",
+    "test": "playwright test"
   },
   "dependencies": {
     "axios": "^1.13.2",
@@ -30,6 +32,7 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.24",
     "globals": "^16.5.0",
+    "pg": "^8.23.1",
     "vite": "^5.4.0"
   }
 }

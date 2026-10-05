@@ -68,7 +68,7 @@ jobs:
           node scripts/seedProducts.js
 
       - name: Run E2E tests
-        run: npm run test:e2e
+        run: npm test
         working-directory: client
         env:
           CI: 'true'

@@ -9,8 +9,9 @@
  */
 
 import { test as base, expect } from '@playwright/test';
+import { API_URL } from '../support/env.js';
 
-export const API_URL = process.env.API_URL || 'http://localhost:5000/api';
+export { API_URL };
 
 // Test Data Generator
 export const TestData = {

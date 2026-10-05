@@ -8,7 +8,7 @@
  * - Clear test objectives and expected results
  */
 
-import { test, expect, API_URL, TestData, TestAssertions, PageActions } from './fixtures/test-fixtures.js';
+import { test, expect, API_URL, TestData, TestAssertions, PageActions } from '../fixtures/test-fixtures.js';
 
 test.describe('TS_PROD: Product Browsing Test Suite', () => {
 

@@ -8,7 +8,7 @@
  * - State transition testing
  */
 
-import { test, expect, PageActions } from './fixtures/test-fixtures.js';
+import { test, expect, PageActions } from '../fixtures/test-fixtures.js';
 
 test.describe('TS_ORDER: Checkout & Orders Test Suite', () => {
 

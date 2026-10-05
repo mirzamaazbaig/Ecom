@@ -1,4 +1,8 @@
 import { defineConfig, devices } from '@playwright/test';
+import { API_URL } from './tests/support/env.js';
+
+// Pick up DATABASE_URL etc. from server/.env for local runs (CI sets real env vars; existing values win)
+try { process.loadEnvFile('../server/.env'); } catch { /* no .env file, rely on the environment */ }
 
 export default defineConfig({
     testDir: './tests',
@@ -23,7 +27,13 @@ export default defineConfig({
     /* Configure projects for major browsers */
     projects: [
         {
+            name: 'api',
+            testMatch: 'api/**/*.spec.js',
+            use: { baseURL: `${API_URL}/` },
+        },
+        {
             name: 'chromium',
+            testMatch: 'e2e/**/*.spec.js',
             use: { ...devices['Desktop Chrome'] },
         },
         // {

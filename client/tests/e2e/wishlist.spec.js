@@ -7,7 +7,7 @@
  * - Integration with product and cart functionality
  */
 
-import { test, expect, PageActions } from './fixtures/test-fixtures.js';
+import { test, expect, PageActions } from '../fixtures/test-fixtures.js';
 
 test.describe('TS_WISH: Wishlist Test Suite', () => {
 

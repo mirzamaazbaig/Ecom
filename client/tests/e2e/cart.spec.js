@@ -8,7 +8,7 @@
  * - Clear verification points
  */
 
-import { test, expect, TestAssertions, PageActions } from './fixtures/test-fixtures.js';
+import { test, expect, TestAssertions, PageActions } from '../fixtures/test-fixtures.js';
 
 test.describe('TS_CART: Shopping Cart Test Suite', () => {
 
