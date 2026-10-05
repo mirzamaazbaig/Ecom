@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Build output
+dist/
+dist-ssr/
+
+# Test output
+playwright-report/
+test-results/
+blob-report/
+client/test-*.json
+client/test_*.txt
+client/*_results*.json
+client/full_error.txt
+
+# Logs / OS / editor
+*.log
+.DS_Store
+.idea/
