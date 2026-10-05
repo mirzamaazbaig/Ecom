@@ -2,15 +2,12 @@ const { Pool } = require('pg');
 const dotenv = require('dotenv');
 dotenv.config();
 
-const config = {
-    user: 'postgres',
-    password: 'password', // Default/Dev password
-    host: 'localhost',
-    port: 5432,
-    database: 'postgres' // Connect to default DB first to create ecom_db
-};
+const targetUrl = new URL(process.env.DATABASE_URL);
+const dbName = targetUrl.pathname.slice(1);
 
-const createDbQuery = `CREATE DATABASE ecom_db;`;
+// Admin connection: same server and credentials, but the default 'postgres' database
+const adminUrl = new URL(targetUrl);
+adminUrl.pathname = '/postgres';
 
 const createTablesQuery = `
     CREATE TABLE IF NOT EXISTS users (
@@ -61,52 +58,34 @@ const seedDataQuery = `
     ON CONFLICT (name) DO NOTHING;
 `;
 
-// Seed Admin? Maybe later.
-
 async function setupDatabase() {
-    let pool = new Pool(config);
-
+    const adminPool = new Pool({ connectionString: adminUrl.toString() });
     try {
-        // 1. Create Database if strictly needed (Handling "already exists" is tricky in raw SQL without error catching)
-        // We will just try to connect to ecom_db directly first. If it fails, we create it.
-
-        // Actually simplest is check if db exists
-        const res = await pool.query("SELECT 1 FROM pg_database WHERE datname = 'ecom_db'");
+        const res = await adminPool.query('SELECT 1 FROM pg_database WHERE datname = $1', [dbName]);
         if (res.rowCount === 0) {
-            console.log('ecom_db does not exist. Creating...');
-            await pool.query(createDbQuery);
-            console.log('ecom_db created.');
+            console.log(`${dbName} does not exist. Creating...`);
+            // Identifiers cannot be parameterised; dbName comes from our own DATABASE_URL
+            await adminPool.query(`CREATE DATABASE "${dbName.replace(/"/g, '""')}"`);
         } else {
-            console.log('ecom_db already exists.');
+            console.log(`${dbName} already exists.`);
         }
-
-    } catch (err) {
-        console.error('Error during DB check/creation:', err);
     } finally {
-        await pool.end();
+        await adminPool.end();
     }
 
-    // 2. Connect to ecom_db and create tables
-    const appPool = new Pool({
-        connectionString: process.env.DATABASE_URL
-    });
-
+    const appPool = new Pool({ connectionString: targetUrl.toString() });
     try {
-        console.log('Connecting to ecom_db...');
-        await appPool.connect();
         console.log('Creating tables...');
         await appPool.query(createTablesQuery);
-        console.log('Tables created.');
-
         console.log('Seeding initial data...');
         await appPool.query(seedDataQuery);
-        console.log('Seed data inserted.');
-
-    } catch (err) {
-        console.error('Error creating tables:', err);
+        console.log('Database ready.');
     } finally {
         await appPool.end();
     }
 }
 
-setupDatabase();
+setupDatabase().catch((err) => {
+    console.error('Database setup failed:', err);
+    process.exit(1);
+});

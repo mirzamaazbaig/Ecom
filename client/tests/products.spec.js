@@ -8,7 +8,7 @@
  * - Clear test objectives and expected results
  */
 
-import { test, expect, TestData, TestAssertions, PageActions } from './fixtures/test-fixtures.js';
+import { test, expect, API_URL, TestData, TestAssertions, PageActions } from './fixtures/test-fixtures.js';
 
 test.describe('TS_PROD: Product Browsing Test Suite', () => {
 
@@ -94,36 +94,36 @@ test.describe('TS_PROD: Product Browsing Test Suite', () => {
 
     test.describe('Category Filtering', () => {
 
-        test('TC_PROD_007: Should filter products by category', async ({ authenticatedPage }) => {
+        test('TC_PROD_007: Should filter products by category', async ({ authenticatedPage, request }) => {
             await authenticatedPage.goto('/');
-            await authenticatedPage.waitForSelector('.card');
+            const cards = authenticatedPage.locator('.card');
+            await expect(cards.first()).toBeVisible();
+            const totalCount = await cards.count();
 
-            // Get initial count
-            const initialCount = await authenticatedPage.locator('.card').count();
+            // Ground truth from the API (category 1 = Electronics)
+            const expected = await (await request.get(`${API_URL}/products?category_id=1`)).json();
+            expect(expected.length).toBeGreaterThan(0);
+            expect(expected.length).toBeLessThan(totalCount);
 
-            // Click on Electronics category
             await PageActions.filterByCategory(authenticatedPage, 'Electronics');
-            await authenticatedPage.waitForTimeout(1000);
 
-            // Verify products are filtered (count may differ)
-            const filteredCards = authenticatedPage.locator('.card');
-            await expect(filteredCards.first()).toBeVisible({ timeout: 10000 });
+            // UI shows exactly the Electronics products
+            await expect(cards).toHaveCount(expected.length);
+            const titles = await authenticatedPage.locator('.card-title').allInnerTexts();
+            expect([...titles].sort()).toEqual(expected.map(p => p.name).sort());
         });
 
         test('TC_PROD_008: Should show all products when selecting All Departments', async ({ page }) => {
             await page.goto('/');
-            await page.waitForSelector('.card');
+            const cards = page.locator('.card');
+            await expect(cards.first()).toBeVisible();
+            const totalCount = await cards.count();
 
-            // Filter by category first
             await PageActions.filterByCategory(page, 'Electronics');
-            await page.waitForTimeout(500);
+            await expect(cards).not.toHaveCount(totalCount);
 
-            // Then select All Departments
             await page.click('li:has-text("All Departments")');
-            await page.waitForTimeout(500);
-
-            // Verify products are shown
-            await expect(page.locator('.card').first()).toBeVisible();
+            await expect(cards).toHaveCount(totalCount);
         });
     });
 
@@ -131,31 +131,36 @@ test.describe('TS_PROD: Product Browsing Test Suite', () => {
 
         test('TC_PROD_009: Should sort products by price low to high', async ({ page }) => {
             await page.goto('/');
-            await page.waitForSelector('.card');
+            await expect(page.locator('.card').first()).toBeVisible();
 
-            // Sort by price
             await PageActions.sortProducts(page, 'price');
-            await page.waitForTimeout(1000);
 
-            // Get all prices
-            const priceElements = await page.locator('.card .card-text.fw-bold').allInnerTexts();
-            const prices = priceElements.map(t => parseFloat(t.replace('$', '')));
+            const readPrices = async () => {
+                const texts = await page.locator('.card .card-text.fw-bold').allInnerTexts();
+                return texts.map(t => parseFloat(t.replace('$', '')));
+            };
 
-            // Verify ascending order
-            const sortedPrices = [...prices].sort((a, b) => a - b);
-            expect(prices).toEqual(sortedPrices);
+            // Poll until the re-fetched list is in ascending order (no fixed sleeps)
+            await expect.poll(async () => {
+                const prices = await readPrices();
+                return prices.length > 1 && prices.every((v, i) => i === 0 || prices[i - 1] <= v);
+            }).toBe(true);
         });
 
-        test('TC_PROD_010: Should sort products by newest arrivals', async ({ page }) => {
+        test('TC_PROD_010: Should request newest arrivals and keep all products listed', async ({ page }) => {
             await page.goto('/');
-            await page.waitForSelector('.card');
+            const cards = page.locator('.card');
+            await expect(cards.first()).toBeVisible();
+            const totalCount = await cards.count();
 
-            // Sort by created_at
-            await PageActions.sortProducts(page, 'created_at');
-            await page.waitForTimeout(1000);
-
-            // Verify products are still displayed
-            await expect(page.locator('.card').first()).toBeVisible();
+            // Seeded products share one created_at, so order cannot be asserted;
+            // verify the right query is sent and nothing is lost.
+            const [response] = await Promise.all([
+                page.waitForResponse(r => r.url().includes('sort_by=created_at')),
+                PageActions.sortProducts(page, 'created_at'),
+            ]);
+            expect(response.ok()).toBe(true);
+            await expect(cards).toHaveCount(totalCount);
         });
     });
 
@@ -190,8 +195,8 @@ test.describe('TS_PROD: Product Browsing Test Suite', () => {
 
             await PageActions.searchForProduct(page, 'XyzNonexistentProduct12345');
 
-            // Should show "No products found" or empty results
-            await expect(page.locator('text=No products found').or(page.locator('text=Results for'))).toBeVisible({ timeout: 10000 });
+            await expect(page.locator('text=No products found')).toBeVisible();
+            await expect(page.locator('.card')).toHaveCount(0);
         });
     });
 });

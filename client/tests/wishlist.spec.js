@@ -47,44 +47,40 @@ test.describe('TS_WISH: Wishlist Test Suite', () => {
         test('TC_WISH_003: Should show empty wishlist message', async ({ authenticatedPage }) => {
             await authenticatedPage.goto('/wishlist');
 
-            // Should show empty state
-            await expect(authenticatedPage.locator('text=Your Wishlist is Empty').or(authenticatedPage.locator('.card'))).toBeVisible({ timeout: 10000 });
+            // A freshly registered user has no wishlist items
+            await expect(authenticatedPage.locator('h2:has-text("Your Wishlist is Empty")')).toBeVisible();
+            await expect(authenticatedPage.locator('.card')).toHaveCount(0);
         });
     });
 
     test.describe('Wishlist Actions', () => {
 
         test('TC_WISH_004: Should add wishlist item to cart', async ({ authenticatedPage }) => {
-            // Add to wishlist
             await PageActions.goToFirstProduct(authenticatedPage);
+            const productName = (await authenticatedPage.locator('h2').innerText()).trim();
             await PageActions.addProductToWishlist(authenticatedPage);
 
-            // Go to wishlist
             await PageActions.goToWishlist(authenticatedPage);
-            await authenticatedPage.waitForSelector('.card');
+            await expect(authenticatedPage.locator('.card-title')).toHaveText(productName);
 
-            // Add to cart from wishlist
-            await authenticatedPage.click('button:has-text("Add to Cart")');
+            // Add to cart from the wishlist itself
+            await authenticatedPage.locator('.card button:has-text("Add to Cart")').click();
 
-            // Verify in cart
             await PageActions.goToCart(authenticatedPage);
-            await expect(authenticatedPage.locator('.list-group-item').first()).toBeVisible({ timeout: 5000 });
+            await expect(authenticatedPage.locator('.list-group-item h6', { hasText: productName })).toBeVisible();
         });
 
         test('TC_WISH_005: Should remove item from wishlist', async ({ authenticatedPage }) => {
-            // Add to wishlist
             await PageActions.goToFirstProduct(authenticatedPage);
             await PageActions.addProductToWishlist(authenticatedPage);
 
-            // Go to wishlist
             await PageActions.goToWishlist(authenticatedPage);
-            await authenticatedPage.waitForSelector('.card');
+            await expect(authenticatedPage.locator('.card')).toHaveCount(1);
 
-            // Remove from wishlist
             await authenticatedPage.click('button:has-text("Remove from Wishlist")');
 
-            // Verify removed (empty or refreshed)
-            await expect(authenticatedPage.locator('text=Your Wishlist is Empty').or(authenticatedPage.locator('.card'))).toBeVisible({ timeout: 10000 });
+            await expect(authenticatedPage.locator('h2:has-text("Your Wishlist is Empty")')).toBeVisible();
+            await expect(authenticatedPage.locator('.card')).toHaveCount(0);
         });
     });
 
