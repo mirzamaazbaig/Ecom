@@ -2,201 +2,171 @@
  * Product Browsing E2E Tests
  * ---------------------------
  * Test Suite ID: TS_PROD
- * Following ISTQB TAE Guidelines:
- * - Test case isolation
- * - Data-driven testing approach
- * - Clear test objectives and expected results
+ * What the page shows is checked against what the API returns where that gives a stronger assertion.
  */
+import { test, expect, API_URL } from '../fixtures/test-fixtures.js';
 
-import { test, expect, API_URL, TestData, TestAssertions, PageActions } from '../fixtures/test-fixtures.js';
+const PRICE_FORMAT = /^\$\d+\.\d{2}$/;
 
 test.describe('TS_PROD: Product Browsing Test Suite', () => {
 
     test.describe('Home Page & Product Listing', () => {
 
-        test('TC_PROD_001: Should display home page with products', async ({ page }) => {
-            await page.goto('/');
+        test('TC_PROD_001: Should display home page with products', async ({ app }) => {
+            await app.home.goto();
 
-            // Verify products are loaded
-
-            // Verify products are loaded
-            await expect(page.locator('.card').first()).toBeVisible({ timeout: 10000 });
-
-            // Verify product cards have essential elements
-            const firstCard = page.locator('.card').first();
+            const firstCard = app.home.cards.first();
             await expect(firstCard.locator('.card-title')).toBeVisible();
-            await expect(firstCard.locator('text=Add to Cart')).toBeVisible();
-            await expect(firstCard.locator('text=View Details')).toBeVisible();
+            await expect(firstCard.getByRole('button', { name: 'Add to Cart' })).toBeVisible();
+            await expect(firstCard.getByRole('link', { name: 'View Details' })).toBeVisible();
         });
 
-        test('TC_PROD_002: Should display product prices correctly', async ({ page }) => {
-            await page.goto('/');
-            await page.waitForSelector('.card');
+        test('TC_PROD_002: Should display product prices correctly', async ({ app }) => {
+            await app.home.goto();
 
-            // Verify price format ($XX.XX)
-            const priceElements = await page.locator('.card-text.fw-bold').allInnerTexts();
-            expect(priceElements.length).toBeGreaterThan(0);
-
-            for (const price of priceElements) {
-                expect(price).toMatch(/^\$\d+\.\d{2}$/);
+            const prices = await app.home.prices.allInnerTexts();
+            expect(prices.length).toBeGreaterThan(0);
+            for (const price of prices) {
+                expect(price).toMatch(PRICE_FORMAT);
             }
         });
 
-        test('TC_PROD_003: Should display product ratings', async ({ page }) => {
-            await page.goto('/');
-            await page.waitForSelector('.card');
+        test('TC_PROD_003: Should display product ratings', async ({ app }) => {
+            await app.home.goto();
 
-            // Verify rating stars are visible
-            const ratingElements = page.locator('.card .text-warning');
-            await expect(ratingElements.first()).toBeVisible();
+            const ratings = await app.home.ratings.allInnerTexts();
+            expect(ratings.length).toBe(await app.home.cards.count());
+            for (const rating of ratings) {
+                expect(rating).toMatch(/^[★☆]{5}$/);
+            }
         });
     });
 
     test.describe('Product Details Navigation', () => {
 
-        test('TC_PROD_004: Should navigate to product details via View Details button', async ({ page }) => {
-            await page.goto('/');
-            await page.waitForSelector('.card');
+        test('TC_PROD_004: Should navigate to product details via View Details button', async ({ app }) => {
+            await app.home.goto();
+            const name = await app.home.firstProductName();
 
-            // Click View Details on first product
-            await page.locator('.card .btn-outline-secondary').first().click();
+            await app.home.openDetails(name);
 
-            // Verify product details page
-            await expect(page.locator('.container h2')).toBeVisible({ timeout: 10000 });
-            await expect(page.locator('text=Add to Cart')).toBeVisible();
-            await expect(page.locator('button:has-text("Wishlist")')).toBeVisible();
-            await expect(page.url()).toContain('/products/');
+            await expect(app.product.name).toHaveText(name);
+            await expect(app.product.addToCartButton).toBeVisible();
+            await expect(app.product.wishlistButton).toBeVisible();
         });
 
-        test('TC_PROD_005: Should navigate to product details via product name link', async ({ page }) => {
-            await page.goto('/');
-            await page.waitForSelector('.card');
+        test('TC_PROD_005: Should navigate to product details via product name link', async ({ app }) => {
+            await app.home.goto();
+            const name = await app.home.firstProductName();
 
-            // Click product name
-            await page.locator('.card-title a').first().click();
+            await app.home.openDetailsViaTitle(name);
 
-            // Verify navigation
-            await expect(page.url()).toContain('/products/');
-            await TestAssertions.assertOnProductPage(page);
+            await expect(app.product.name).toHaveText(name);
+            await expect(app.product.addToCartButton).toBeVisible();
         });
 
-        test('TC_PROD_006: Should display product details correctly', async ({ page }) => {
-            await PageActions.goToFirstProduct(page);
+        test('TC_PROD_006: Should display product details correctly', async ({ app }) => {
+            await app.home.goto();
+            const name = await app.home.firstProductName();
+            const price = await app.home.priceOf(name);
 
-            // Verify all product info sections
-            await expect(page.locator('h2').first()).toBeVisible(); // Product name
-            await expect(page.locator('.text-muted').first()).toBeVisible(); // Price
-            await expect(page.locator('text=Category:')).toBeVisible();
-            await expect(page.locator('text=Stock:')).toBeVisible();
-            await expect(page.locator('text=Customer Reviews')).toBeVisible();
+            await app.home.openDetails(name);
+
+            await expect(app.product.name).toHaveText(name);
+            expect(await app.product.priceValue()).toBe(price);
+            await expect(app.page.getByText('Category:')).toBeVisible();
+            await expect(app.page.getByText('Stock:')).toBeVisible();
+            await expect(app.product.reviewsHeading).toBeVisible();
         });
     });
 
     test.describe('Category Filtering', () => {
 
-        test('TC_PROD_007: Should filter products by category', async ({ authenticatedPage, request }) => {
-            await authenticatedPage.goto('/');
-            const cards = authenticatedPage.locator('.card');
-            await expect(cards.first()).toBeVisible();
-            const totalCount = await cards.count();
+        test('TC_PROD_007: Should filter products by category', async ({ app, request }) => {
+            await app.home.goto();
+            const totalCount = await app.home.cards.count();
 
             // Ground truth from the API (category 1 = Electronics)
             const expected = await (await request.get(`${API_URL}/products?category_id=1`)).json();
             expect(expected.length).toBeGreaterThan(0);
             expect(expected.length).toBeLessThan(totalCount);
 
-            await PageActions.filterByCategory(authenticatedPage, 'Electronics');
+            await app.home.filterByCategory('Electronics');
 
-            // UI shows exactly the Electronics products
-            await expect(cards).toHaveCount(expected.length);
-            const titles = await authenticatedPage.locator('.card-title').allInnerTexts();
-            expect([...titles].sort()).toEqual(expected.map(p => p.name).sort());
+            await expect(app.home.cards).toHaveCount(expected.length);
+            expect([...(await app.home.productNames())].sort()).toEqual(expected.map(p => p.name).sort());
         });
 
-        test('TC_PROD_008: Should show all products when selecting All Departments', async ({ page }) => {
-            await page.goto('/');
-            const cards = page.locator('.card');
-            await expect(cards.first()).toBeVisible();
-            const totalCount = await cards.count();
+        test('TC_PROD_008: Should show all products when selecting All Departments', async ({ app }) => {
+            await app.home.goto();
+            const totalCount = await app.home.cards.count();
 
-            await PageActions.filterByCategory(page, 'Electronics');
-            await expect(cards).not.toHaveCount(totalCount);
+            await app.home.filterByCategory('Electronics');
+            await expect(app.home.cards).not.toHaveCount(totalCount);
 
-            await page.click('li:has-text("All Departments")');
-            await expect(cards).toHaveCount(totalCount);
+            await app.home.filterByCategory('All Departments');
+            await expect(app.home.cards).toHaveCount(totalCount);
         });
     });
 
     test.describe('Product Sorting', () => {
 
-        test('TC_PROD_009: Should sort products by price low to high', async ({ page }) => {
-            await page.goto('/');
-            await expect(page.locator('.card').first()).toBeVisible();
+        test('TC_PROD_009: Should sort products by price low to high', async ({ app }) => {
+            await app.home.goto();
 
-            await PageActions.sortProducts(page, 'price');
-
-            const readPrices = async () => {
-                const texts = await page.locator('.card .card-text.fw-bold').allInnerTexts();
-                return texts.map(t => parseFloat(t.replace('$', '')));
-            };
+            await app.home.sortBy('Price: Low to High');
 
             // Poll until the re-fetched list is in ascending order (no fixed sleeps)
             await expect.poll(async () => {
-                const prices = await readPrices();
+                const prices = (await app.home.prices.allInnerTexts()).map(t => parseFloat(t.replace('$', '')));
                 return prices.length > 1 && prices.every((v, i) => i === 0 || prices[i - 1] <= v);
             }).toBe(true);
         });
 
-        test('TC_PROD_010: Should request newest arrivals and keep all products listed', async ({ page }) => {
-            await page.goto('/');
-            const cards = page.locator('.card');
-            await expect(cards.first()).toBeVisible();
-            const totalCount = await cards.count();
+        test('TC_PROD_010: Should request newest arrivals and keep all products listed', async ({ app }) => {
+            await app.home.goto();
+            const totalCount = await app.home.cards.count();
 
             // Seeded products share one created_at, so order cannot be asserted;
             // verify the right query is sent and nothing is lost.
             const [response] = await Promise.all([
-                page.waitForResponse(r => r.url().includes('sort_by=created_at')),
-                PageActions.sortProducts(page, 'created_at'),
+                app.page.waitForResponse(r => r.url().includes('sort_by=created_at')),
+                app.home.sortBy('Newest Arrivals'),
             ]);
             expect(response.ok()).toBe(true);
-            await expect(cards).toHaveCount(totalCount);
+            await expect(app.home.cards).toHaveCount(totalCount);
         });
     });
 
     test.describe('Product Search', () => {
 
-        test('TC_PROD_011: Should search for products and display results', async ({ page }) => {
-            await page.goto('/');
-            await page.waitForSelector('.card');
+        test('TC_PROD_011: Should search for products and display results', async ({ app }) => {
+            await app.home.goto();
 
-            const searchTerm = TestData.getProducts().searchTerm;
+            await app.nav.search('T-Shirt');
 
-            // Perform search
-            await PageActions.searchForProduct(page, searchTerm);
-
-            // Verify search results header
-            await expect(page.locator(`text=Results for "${searchTerm}"`)).toBeVisible({ timeout: 10000 });
+            await expect(app.home.resultsHeading).toHaveText('Results for "T-Shirt"');
         });
 
-        test('TC_PROD_012: Should show matching products in search results', async ({ page }) => {
-            await page.goto('/');
-            await page.waitForSelector('.card');
+        test('TC_PROD_012: Should show matching products in search results', async ({ app }) => {
+            await app.home.goto();
 
-            await PageActions.searchForProduct(page, 'T-Shirt');
+            await app.nav.search('T-Shirt');
 
-            // Verify matching products are shown
-            await expect(page.locator('.card-title:has-text("T-Shirt")').first()).toBeVisible({ timeout: 10000 });
+            // The old cards stay on screen until the filtered list arrives, so wait for it instead of reading at once
+            await expect.poll(async () => {
+                const names = await app.home.productNames();
+                return names.length > 0 && names.every(name => name.toLowerCase().includes('shirt'));
+            }).toBe(true);
         });
 
-        test('TC_PROD_013: Should handle empty search results gracefully', async ({ page }) => {
-            await page.goto('/');
-            await page.waitForSelector('.card');
+        test('TC_PROD_013: Should handle empty search results gracefully', async ({ app }) => {
+            await app.home.goto();
 
-            await PageActions.searchForProduct(page, 'XyzNonexistentProduct12345');
+            await app.nav.search('XyzNonexistentProduct12345');
 
-            await expect(page.locator('text=No products found')).toBeVisible();
-            await expect(page.locator('.card')).toHaveCount(0);
+            await expect(app.home.noProducts).toBeVisible();
+            await expect(app.home.cards).toHaveCount(0);
         });
     });
 });

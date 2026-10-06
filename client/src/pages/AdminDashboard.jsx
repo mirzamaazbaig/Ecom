@@ -86,24 +86,24 @@ const AdminDashboard = () => {
                 <form onSubmit={handleFormSubmit}>
                     <div className="row">
                         <div className="col-md-6 mb-3">
-                            <label>Name</label>
-                            <input className="form-control" value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} required />
+                            <label htmlFor="product-name">Name</label>
+                            <input id="product-name" className="form-control" value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} required />
                         </div>
                         <div className="col-md-6 mb-3">
-                            <label>Price</label>
-                            <input type="number" step="0.01" className="form-control" value={formData.price} onChange={e => setFormData({ ...formData, price: e.target.value })} required />
+                            <label htmlFor="product-price">Price</label>
+                            <input id="product-price" type="number" step="0.01" className="form-control" value={formData.price} onChange={e => setFormData({ ...formData, price: e.target.value })} required />
                         </div>
                         <div className="col-12 mb-3">
-                            <label>Description</label>
-                            <textarea className="form-control" value={formData.description} onChange={e => setFormData({ ...formData, description: e.target.value })} />
+                            <label htmlFor="product-description">Description</label>
+                            <textarea id="product-description" className="form-control" value={formData.description} onChange={e => setFormData({ ...formData, description: e.target.value })} />
                         </div>
                         <div className="col-md-6 mb-3">
-                            <label>Stock</label>
-                            <input type="number" className="form-control" value={formData.stock} onChange={e => setFormData({ ...formData, stock: e.target.value })} required />
+                            <label htmlFor="product-stock">Stock</label>
+                            <input id="product-stock" type="number" className="form-control" value={formData.stock} onChange={e => setFormData({ ...formData, stock: e.target.value })} required />
                         </div>
                         <div className="col-md-6 mb-3">
-                            <label>Image URL</label>
-                            <input className="form-control" value={formData.image_url} onChange={e => setFormData({ ...formData, image_url: e.target.value })} />
+                            <label htmlFor="product-image-url">Image URL</label>
+                            <input id="product-image-url" className="form-control" value={formData.image_url} onChange={e => setFormData({ ...formData, image_url: e.target.value })} />
                         </div>
                     </div>
                     <button type="submit" className="btn btn-success me-2">Save</button>

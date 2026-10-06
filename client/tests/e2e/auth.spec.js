@@ -2,143 +2,88 @@
  * Authentication E2E Tests
  * -------------------------
  * Test Suite ID: TS_AUTH
- * Following ISTQB TAE Guidelines:
- * - Clear test case naming convention (TC_AUTH_XXX)
- * - Independent test execution
- * - Proper setup and teardown
- * - Comprehensive coverage of authentication flows
+ * The only suite that goes through the login and registration screens on purpose; every other suite signs in
+ * through the API (see fixtures/test-fixtures.js).
  */
-
-import { test, expect, TestData, TestAssertions, PageActions } from '../fixtures/test-fixtures.js';
+import { test, expect, API_URL, TestData } from '../fixtures/test-fixtures.js';
 
 test.describe('TS_AUTH: Authentication Test Suite', () => {
 
     test.describe('User Registration', () => {
 
-        test('TC_AUTH_001: Should successfully register a new user', async ({ page }) => {
-            // Test Data
-            const user = TestData.generateUser();
+        test('TC_AUTH_001: Should successfully register a new user', async ({ app }) => {
+            await app.register.goto();
+            await app.register.register(TestData.generateUser());
 
-            // Preconditions: Navigate to registration page
-            await page.goto('/register');
-            await expect(page.locator('h2:has-text("Register")')).toBeVisible();
-
-            // Test Actions
-            await page.fill('#email', user.email);
-            await page.fill('#password', user.password);
-            await page.fill('#confirmPassword', user.password);
-            await page.click('button:has-text("Register")');
-
-            // Expected Results: User is redirected to home and logged in
-            await expect(page).toHaveURL('/', { timeout: 10000 });
-            await TestAssertions.assertLoggedIn(page);
+            await expect(app.page).toHaveURL('/');
+            await app.nav.expectLoggedIn();
         });
 
-        test('TC_AUTH_002: Should show error for mismatched passwords', async ({ page }) => {
-            const user = TestData.generateUser();
+        test('TC_AUTH_002: Should show error for mismatched passwords', async ({ app }) => {
+            await app.register.goto();
+            await app.register.register(TestData.generateUser(), 'DifferentPassword123');
 
-            await page.goto('/register');
-            await page.fill('#email', user.email);
-            await page.fill('#password', user.password);
-            await page.fill('#confirmPassword', 'DifferentPassword123');
-            await page.click('button:has-text("Register")');
-
-            // Should show error and stay on register page
-            await expect(page.locator('.alert-danger')).toBeVisible({ timeout: 5000 });
-            await expect(page).toHaveURL('/register');
+            await expect(app.register.error).toHaveText('Passwords do not match');
+            await expect(app.page).toHaveURL('/register');
         });
 
-        test('TC_AUTH_003: Should prevent duplicate email registration', async ({ page }) => {
+        test('TC_AUTH_003: Should prevent duplicate email registration', async ({ app, request }) => {
             const user = TestData.generateUser();
+            const existing = await request.post(`${API_URL}/auth/register`, { data: user });
+            expect(existing.status()).toBe(201);
 
-            // First registration
-            await page.goto('/register');
-            await page.fill('#email', user.email);
-            await page.fill('#password', user.password);
-            await page.fill('#confirmPassword', user.password);
-            await page.click('button:has-text("Register")');
-            await expect(page).toHaveURL('/', { timeout: 10000 });
+            await app.register.goto();
+            await app.register.register(user);
 
-            // Logout
-            await PageActions.logout(page);
-
-            // Attempt second registration with same email
-            await page.goto('/register');
-            await page.fill('#email', user.email);
-            await page.fill('#password', user.password);
-            await page.fill('#confirmPassword', user.password);
-            await page.click('button:has-text("Register")');
-
-            // Should show error
-            await expect(page.locator('.alert-danger')).toBeVisible({ timeout: 5000 });
+            await expect(app.register.error).toHaveText('User already exists');
+            await expect(app.page).toHaveURL('/register');
         });
     });
 
     test.describe('User Login', () => {
 
-        test('TC_AUTH_004: Should login successfully with valid credentials', async ({ page }) => {
+        test('TC_AUTH_004: Should login successfully with valid credentials', async ({ app, request }) => {
             const user = TestData.generateUser();
+            expect((await request.post(`${API_URL}/auth/register`, { data: user })).status()).toBe(201);
 
-            // Setup: Register user first
-            await page.goto('/register');
-            await page.fill('#email', user.email);
-            await page.fill('#password', user.password);
-            await page.fill('#confirmPassword', user.password);
-            await page.click('button:has-text("Register")');
-            await expect(page).toHaveURL('/', { timeout: 10000 });
+            await app.login.goto();
+            await app.login.login(user);
 
-            // Logout
-            await PageActions.logout(page);
-            await TestAssertions.assertLoggedOut(page);
-
-            // Test: Login
-            await page.goto('/login');
-            await page.fill('#email', user.email);
-            await page.fill('#password', user.password);
-            await page.click('button:has-text("Login")');
-
-            // Verify
-            await expect(page).toHaveURL('/', { timeout: 10000 });
-            await TestAssertions.assertLoggedIn(page);
+            await expect(app.page).toHaveURL('/');
+            await app.nav.expectLoggedIn();
         });
 
-        test('TC_AUTH_005: Should show error for invalid credentials', async ({ page }) => {
-            await page.goto('/login');
-            await page.fill('#email', 'nonexistent@example.com');
-            await page.fill('#password', 'WrongPassword123');
-            await page.click('button:has-text("Login")');
+        test('TC_AUTH_005: Should show error for invalid credentials', async ({ app }) => {
+            await app.login.goto();
+            await app.login.login({ email: 'nonexistent@example.com', password: 'WrongPassword123' });
 
-            await expect(page.locator('.alert-danger')).toBeVisible({ timeout: 5000 });
-            await expect(page).toHaveURL('/login');
+            await expect(app.login.error).toHaveText('Invalid credentials');
+            await expect(app.page).toHaveURL('/login');
+            await app.nav.expectLoggedOut();
         });
     });
 
     test.describe('User Logout', () => {
 
-        test('TC_AUTH_006: Should logout successfully', async ({ authenticatedPage }) => {
-            // Precondition: User is logged in (handled by fixture)
-            await TestAssertions.assertLoggedIn(authenticatedPage);
+        test('TC_AUTH_006: Should logout successfully', async ({ shopper }) => {
+            await shopper.home.goto();
+            await shopper.nav.expectLoggedIn();
 
-            // Test: Click logout
-            await PageActions.logout(authenticatedPage);
+            await shopper.nav.logout();
 
-            // Verify: Logged out state
-            await TestAssertions.assertLoggedOut(authenticatedPage);
-            await expect(authenticatedPage.locator('.nav-link.dropdown-toggle:has-text("Account")')).not.toBeVisible();
+            await shopper.nav.expectLoggedOut();
         });
     });
 
     test.describe('Session Persistence', () => {
 
-        test('TC_AUTH_007: Should maintain session after page refresh', async ({ authenticatedPage }) => {
-            // Verify logged in
-            await TestAssertions.assertLoggedIn(authenticatedPage);
+        test('TC_AUTH_007: Should maintain session after page refresh', async ({ shopper }) => {
+            await shopper.home.goto();
+            await shopper.nav.expectLoggedIn();
 
-            // Refresh page
-            await authenticatedPage.reload();
+            await shopper.page.reload();
 
-            // Should still be logged in
-            await TestAssertions.assertLoggedIn(authenticatedPage);
+            await shopper.nav.expectLoggedIn();
         });
     });
 });

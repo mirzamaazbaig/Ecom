@@ -47,7 +47,7 @@ The API test suite found six defects in the application under test. All six have
 
 ## Accessibility defects (found with axe-core, fixed)
 
-The accessibility scan (`TS_A11Y`, WCAG 2.1 level A and AA) failed on all 11 pages when it was first run. Findings, grouped by cause:
+The accessibility scan (`TS_A11Y`, WCAG 2.1 level A and AA) failed on all 11 customer pages when it was first run, and on the admin dashboard when that was added (A5). A6 was found earlier, while writing the admin page object. Findings, grouped by cause:
 
 | ID | Impact | Where | Finding | Fix |
 |---|---|---|---|---|
@@ -56,7 +56,10 @@ The accessibility scan (`TS_A11Y`, WCAG 2.1 level A and AA) failed on all 11 pag
 | A3 | Critical | Home, product details | The price slider, the quantity input and the review text area have no label (`label`) | `aria-label="Maximum price"` and `"Quantity"`; the comment label is tied to its field |
 | A4 | Serious | Product details, cart, profile | Text contrast below 4.5:1: red outline buttons (4.11:1 on the grey page background), green buttons, the green "Active" text and green badges (`color-contrast`) | Darker shades of the same hues, defined once in `index.css` |
 
-Each page's test failed before the fix and passes after it. The scan covers what axe-core can detect automatically; it does not replace keyboard and screen reader testing (see [`TEST_STRATEGY.md`](TEST_STRATEGY.md)).
+| A5 | Serious | Admin dashboard | The inactive "Orders" / "Products" tab text is white on the light grey page (contrast 1.1:1, practically invisible). A rule meant for the dark navbar, `.nav-link { color: white !important }`, applied to every `.nav-link` | The rule is scoped to `.navbar .nav-link`; the inactive tab uses a darker blue |
+| A6 | Critical | Admin dashboard | The product form's labels are not tied to their inputs (Name, Price, Description, Stock, Image URL), so screen readers announce unnamed fields. Found when the page object could not locate the fields by label; fixed before the accessibility scan ran, so the scan never reported it | `htmlFor` and matching ids |
+
+Each customer page's scan failed before its fix and passes after it; the same is true of A5. The scan covers what axe-core can detect automatically; it does not replace keyboard and screen reader testing (see [`TEST_STRATEGY.md`](TEST_STRATEGY.md)).
 
 ## Not covered by these fixes
 

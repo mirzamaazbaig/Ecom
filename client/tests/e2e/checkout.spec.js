@@ -2,14 +2,20 @@
  * Checkout & Orders E2E Tests
  * ----------------------------
  * Test Suite ID: TS_ORDER
- * Following ISTQB TAE Guidelines:
- * - End-to-end transaction testing
- * - Critical path verification
- * - State transition testing
  */
-
-import { test, expect, PageActions } from '../fixtures/test-fixtures.js';
+import { test, expect } from '../fixtures/test-fixtures.js';
 import { sql } from '../support/db.js';
+
+/** Puts the first listed product in the cart and opens the cart; returns the product's name and price. */
+async function fillCart(shopper) {
+    await shopper.home.goto();
+    const name = await shopper.home.firstProductName();
+    const price = await shopper.home.priceOf(name);
+    await shopper.home.addToCart(name);
+    await shopper.nav.expectCartCount(1);
+    await shopper.nav.openCart();
+    return { name, price };
+}
 
 test.describe('TS_ORDER: Checkout & Orders Test Suite', () => {
 
@@ -20,101 +26,71 @@ test.describe('TS_ORDER: Checkout & Orders Test Suite', () => {
 
     test.describe('Checkout Process', () => {
 
-        test('TC_ORDER_001: Should complete checkout successfully', async ({ authenticatedPage }) => {
-            // Add item to cart
-            await authenticatedPage.goto('/');
-            await authenticatedPage.waitForSelector('.card');
-            await authenticatedPage.locator('.card .btn-primary').first().click();
+        test('TC_ORDER_001: Should complete checkout successfully', async ({ shopper }) => {
+            const { name } = await fillCart(shopper);
 
-            // Go to cart
-            await PageActions.goToCart(authenticatedPage);
-            await expect(authenticatedPage.locator('.list-group-item').first()).toBeVisible();
+            await shopper.cart.checkout();
 
-            // Click checkout
-            await authenticatedPage.click('button:has-text("Checkout")');
-
-            // Should redirect to orders page
-            await PageActions.goToOrders(authenticatedPage);
-            await expect(authenticatedPage.locator('h2:has-text("My Orders")')).toBeVisible();
+            await expect(shopper.orders.heading).toBeVisible();
+            await expect(shopper.orders.orders).toHaveCount(1);
+            await expect(shopper.orders.expandedOrderBody()).toContainText(name);
+            expect(shopper.dialogs.join(' ')).toContain('Order placed successfully');
         });
 
-        test('TC_ORDER_002: Should show checkout button only when cart has items', async ({ authenticatedPage }) => {
-            // Empty cart state
-            await authenticatedPage.goto('/cart');
+        test('TC_ORDER_002: Should show checkout button only when cart has items', async ({ shopper }) => {
+            await shopper.cart.goto();
 
-            // No checkout button when cart is empty
-            await expect(authenticatedPage.locator('text=Your Cart is Empty')).toBeVisible();
-            await expect(authenticatedPage.locator('button:has-text("Checkout")')).not.toBeVisible();
+            await expect(shopper.cart.emptyHeading).toBeVisible();
+            await expect(shopper.cart.checkoutButton).toHaveCount(0);
         });
 
-        test('TC_ORDER_003: Should clear cart after successful checkout', async ({ authenticatedPage }) => {
-            // Add item
-            await authenticatedPage.goto('/');
-            await authenticatedPage.waitForSelector('.card');
-            await authenticatedPage.locator('.card .btn-primary').first().click();
+        test('TC_ORDER_003: Should clear cart after successful checkout', async ({ shopper }) => {
+            await fillCart(shopper);
+            await shopper.cart.checkout();
 
-            // Checkout
-            await PageActions.goToCart(authenticatedPage);
-            await authenticatedPage.click('button:has-text("Checkout")');
-            await expect(authenticatedPage).toHaveURL(/\/my-orders/, { timeout: 15000 });
+            await shopper.nav.openCart();
 
-            // Go back to cart - should be empty
-            await PageActions.goToCart(authenticatedPage);
-            await expect(authenticatedPage.locator('text=Your Cart is Empty')).toBeVisible();
+            await expect(shopper.cart.emptyHeading).toBeVisible();
+            await expect(shopper.nav.cartBadge).toHaveCount(0);
         });
     });
 
     test.describe('Order History', () => {
 
-        test('TC_ORDER_004: Should display orders page', async ({ authenticatedPage }) => {
-            // First complete a checkout
-            await authenticatedPage.goto('/');
-            await authenticatedPage.waitForSelector('.card');
-            await authenticatedPage.locator('.card .btn-primary').first().click();
+        test('TC_ORDER_004: Should display orders page', async ({ shopper }) => {
+            await fillCart(shopper);
+            await shopper.cart.checkout();
 
-            await PageActions.goToCart(authenticatedPage);
-            await authenticatedPage.click('button:has-text("Checkout")');
+            await shopper.orders.goto();
 
-            // Verify orders page
-            await PageActions.goToOrders(authenticatedPage);
-            await expect(authenticatedPage.locator('h2:has-text("My Orders")')).toBeVisible();
+            await expect(shopper.orders.heading).toBeVisible();
+            await expect(shopper.orders.orders).toHaveCount(1);
         });
 
-        test('TC_ORDER_005: Should show order details', async ({ authenticatedPage }) => {
-            // Complete checkout
-            await authenticatedPage.goto('/');
-            await authenticatedPage.waitForSelector('.card');
-            await authenticatedPage.locator('.card .btn-primary').first().click();
+        test('TC_ORDER_005: Should show order details', async ({ shopper }) => {
+            const { name, price } = await fillCart(shopper);
+            await shopper.cart.checkout();
 
-            await PageActions.goToCart(authenticatedPage);
-            await authenticatedPage.click('button:has-text("Checkout")');
-            await PageActions.goToOrders(authenticatedPage);
-
-            // Verify order is listed with relevant information
-            // Orders should be visible (table or card)
-            // Orders should be visible (accordion items)
-            await expect(
-                authenticatedPage.locator('.accordion-item')
-            ).toBeVisible({ timeout: 5000 });
+            const order = shopper.orders.orders.first();
+            await expect(order).toContainText(/Order #\d+/);
+            await expect(order).toContainText('PENDING');
+            await expect(order).toContainText(`$${price.toFixed(2)}`);
+            await expect(shopper.orders.expandedOrderBody()).toContainText(name);
         });
     });
 
     test.describe('Protected Routes', () => {
 
-        test('TC_ORDER_006: Should redirect unauthenticated user to login', async ({ page }) => {
-            // Try to access orders without login
-            await page.goto('/my-orders');
+        test('TC_ORDER_006: Should redirect unauthenticated user to login', async ({ app }) => {
+            await app.page.goto('/my-orders');
 
-            // Should redirect to login
-            await expect(page).toHaveURL('/login', { timeout: 10000 });
+            await expect(app.page).toHaveURL('/login');
         });
 
-        test('TC_ORDER_007: Should redirect unauthenticated user from cart to login on checkout attempt', async ({ page }) => {
-            // Go directly to cart (will redirect)
-            await page.goto('/cart');
+        test('TC_ORDER_007: Should redirect unauthenticated user from cart to login on checkout attempt', async ({ app }) => {
+            await app.page.goto('/cart');
 
-            // Should redirect to login since cart is protected
-            await expect(page).toHaveURL('/login', { timeout: 10000 });
+            await expect(app.page).toHaveURL('/login');
         });
     });
 });

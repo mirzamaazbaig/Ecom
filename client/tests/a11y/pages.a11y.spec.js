@@ -5,8 +5,11 @@
  * Automated scanning finds only part of the accessibility problems (missing labels, contrast, names, roles).
  * It does not replace keyboard and screen reader testing; see docs/TEST_STRATEGY.md.
  */
-import { test, expect } from '@playwright/test';
+import { test as base, expect } from '@playwright/test';
+import { test as appTest } from '../fixtures/test-fixtures.js';
 import { API_URL } from '../support/env.js';
+
+const test = base;
 import { expectNoA11yViolations } from './a11y-support.js';
 
 /** Registers a user through the API and gives the browser that user's session. */
@@ -108,5 +111,26 @@ test.describe('TS_A11Y: Accessibility (WCAG 2.1 A and AA)', () => {
             await expect(page.locator('main, .container').first()).toBeVisible();
             await expectNoA11yViolations(page);
         });
+    });
+});
+
+appTest.describe('TS_A11Y: Accessibility, admin pages', () => {
+
+    appTest('TC_A11Y_012: admin dashboard, products tab', async ({ admin }) => {
+        await admin.admin.goto();
+        await expect(admin.admin.rows.first()).toBeVisible();
+        await expectNoA11yViolations(admin.page);
+    });
+
+    appTest('TC_A11Y_013: admin dashboard, add product form', async ({ admin }) => {
+        await admin.admin.goto();
+        await admin.admin.openAddForm();
+        await expectNoA11yViolations(admin.page);
+    });
+
+    appTest('TC_A11Y_014: admin dashboard, orders tab', async ({ admin }) => {
+        await admin.admin.goto();
+        await admin.admin.openOrdersTab();
+        await expectNoA11yViolations(admin.page);
     });
 });

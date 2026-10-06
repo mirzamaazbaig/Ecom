@@ -200,7 +200,7 @@ body {
   background-color: #f3a847;
 }
 
-.nav-link {
+.navbar .nav-link {
   color: white !important;
   font-size: 0.9rem;
   display: flex;
@@ -222,7 +222,7 @@ body {
   border: none !important;
 }
 
-.nav-link:hover {
+.navbar .nav-link:hover {
   text-decoration: none !important;
   background-color: rgba(255, 255, 255, 0.1);
 }
@@ -266,4 +266,10 @@ body {
 
 .badge.bg-success {
   background-color: #146c43 !important;
+}
+
+/* Admin tabs: the white link colour above is meant for the dark navbar only (it used to apply to every .nav-link,
+   which made the inactive tab white on light grey). Bootstrap's default link blue is below 4.5:1 on the grey page. */
+.nav-tabs .nav-link:not(.active) {
+  color: #0a58ca;
 }

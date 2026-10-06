@@ -2,130 +2,140 @@
  * Product Reviews E2E Tests
  * --------------------------
  * Test Suite ID: TS_REV
- * Following ISTQB TAE Guidelines:
- * - User interaction testing
- * - Form validation testing
- * - Data persistence verification
  */
+import { test, expect, API_URL } from '../fixtures/test-fixtures.js';
 
-import { test, expect, PageActions } from '../fixtures/test-fixtures.js';
+const REVIEW_REQUIRES_LOGIN = 'Failed to submit review. You might need to login.';
+
+/** Opens the details page of the first listed product. */
+async function openFirstProduct(app) {
+    await app.home.goto();
+    const name = await app.home.firstProductName();
+    await app.home.openDetails(name);
+    return name;
+}
+
+const uniqueComment = label => `${label} ${Date.now()}_${Math.random().toString(36).slice(2, 6)}`;
 
 test.describe('TS_REV: Product Reviews Test Suite', () => {
 
     test.describe('View Reviews', () => {
 
-        test('TC_REV_001: Should display reviews section on product page', async ({ page }) => {
-            await PageActions.goToFirstProduct(page);
+        test('TC_REV_001: Should display reviews section on product page', async ({ app }) => {
+            await openFirstProduct(app);
 
-            // Verify reviews section
-            await expect(page.locator('text=Customer Reviews')).toBeVisible();
-            await expect(page.locator('text=Write a Review')).toBeVisible();
+            await expect(app.product.reviewsHeading).toBeVisible();
+            await expect(app.product.writeReviewHeading).toBeVisible();
         });
 
-        test('TC_REV_002: Should display existing reviews if any', async ({ page }) => {
-            await PageActions.goToFirstProduct(page);
+        test('TC_REV_002: Should display existing reviews, or say there are none', async ({ app, adminSession, playwright }) => {
+            const api = adminSession.api;
+            const createProduct = async name => (await (await api.post('products', {
+                data: { name: `${name} ${Date.now()}`, price: 5, stock: 1, categoryId: 1 },
+            })).json());
+            const reviewed = await createProduct('Reviewed Product');
+            const unreviewed = await createProduct('Unreviewed Product');
+            const author = await playwright.request.newContext({ baseURL: `${API_URL}/` });
+            try {
+                const user = { email: `rev_${Date.now()}@example.com`, password: 'TestPass123!' };
+                expect((await author.post('auth/register', { data: user })).status()).toBe(201);
+                const comment = uniqueComment('Seeded review');
+                expect((await author.post('reviews', { data: { product_id: reviewed.id, rating: 3, comment } })).status()).toBe(201);
 
-            // Either reviews exist or "No reviews yet" message
-            await expect(
-                page.locator('.card.p-3').first().or(page.locator('text=No reviews yet'))
-            ).toBeVisible({ timeout: 10000 });
+                await app.product.goto(reviewed.id);
+                await expect(app.product.reviewCards).toHaveCount(1);
+                await expect(app.product.reviewCard(comment)).toContainText('★★★☆☆');
+                await expect(app.product.noReviews).toHaveCount(0);
+
+                await app.product.goto(unreviewed.id);
+                await expect(app.product.noReviews).toBeVisible();
+                await expect(app.product.reviewCards).toHaveCount(0);
+            } finally {
+                await api.delete(`products/${reviewed.id}`);
+                await api.delete(`products/${unreviewed.id}`);
+                await author.dispose();
+            }
         });
 
-        test('TC_REV_003: Should display review rating as stars', async ({ authenticatedPage }) => {
-            // First submit a review
-            await PageActions.goToFirstProduct(authenticatedPage);
+        test('TC_REV_003: Should display review rating as stars', async ({ shopper }) => {
+            await openFirstProduct(shopper);
+            const comment = uniqueComment('Stars display');
 
-            // Use more robust locator strategy or by specific option text
-            // Assumes "Rating" label is associated or close enough. 
-            // Better: find the select inside the form
-            await authenticatedPage.locator('select.form-select').filter({ hasText: '5 - Excellent' }).selectOption('5');
+            await shopper.product.submitReview({ rating: 5, comment });
 
-            // Use unique text to avoid strict mode violations if multiple tests run against the same persistent DB
-            const reviewText = `Test review for stars display ${Date.now()}`;
-            await authenticatedPage.fill('textarea', reviewText);
-            await authenticatedPage.click('button:has-text("Submit Review")');
-
-            // Wait for the review text to appear first (confirms data trip)
-            await expect(authenticatedPage.locator(`text=${reviewText}`)).toBeVisible({ timeout: 10000 });
-
-            // Verify stars are shown specifically in the card that contains our review text
-            const reviewCard = authenticatedPage.locator('.card', { hasText: reviewText });
-            await expect(reviewCard.locator('.text-warning:has-text("★")')).toBeVisible({ timeout: 5000 });
+            const card = shopper.product.reviewCard(comment);
+            await expect(card).toBeVisible();
+            await expect(card.locator('.text-warning')).toHaveText('★★★★★');
         });
     });
 
     test.describe('Submit Review', () => {
 
-        test('TC_REV_004: Should submit a review successfully', async ({ authenticatedPage }) => {
-            await PageActions.goToFirstProduct(authenticatedPage);
+        test('TC_REV_004: Should submit a review successfully', async ({ shopper }) => {
+            await openFirstProduct(shopper);
+            const comment = uniqueComment('Submitted review');
 
-            const reviewText = `Test review ${Date.now()}`;
+            await shopper.product.submitReview({ rating: 4, comment });
 
-            // Fill review form
-            await authenticatedPage.selectOption('select.form-select:near(:text("Rating"))', '4');
-            await authenticatedPage.fill('textarea', reviewText);
-
-            // Submit
-            await authenticatedPage.click('button:has-text("Submit Review")');
-
-            // Verify review appears
-            await expect(authenticatedPage.locator(`text=${reviewText}`)).toBeVisible({ timeout: 10000 });
+            const card = shopper.product.reviewCard(comment);
+            await expect(card).toBeVisible();
+            await expect(card.locator('.text-warning')).toHaveText('★★★★☆');
+            await expect(shopper.product.commentBox).toHaveValue('');
+            expect(shopper.dialogs).toContain('Review submitted!');
         });
 
-        test('TC_REV_005: Should allow selecting different ratings', async ({ authenticatedPage }) => {
-            await PageActions.goToFirstProduct(authenticatedPage);
+        test('TC_REV_005: Should allow selecting different ratings', async ({ shopper }) => {
+            await openFirstProduct(shopper);
 
-            // Test all rating options
-            const ratings = ['5', '4', '3', '2', '1'];
-            for (const rating of ratings) {
-                await authenticatedPage.selectOption('select.form-select:near(:text("Rating"))', rating);
-                const selectedValue = await authenticatedPage.locator('select.form-select:near(:text("Rating"))').inputValue();
-                expect(selectedValue).toBe(rating);
+            for (const rating of ['5', '4', '3', '2', '1']) {
+                await shopper.product.ratingSelect.selectOption(rating);
+                await expect(shopper.product.ratingSelect).toHaveValue(rating);
             }
         });
 
-        test('TC_REV_006: Should require comment text', async ({ authenticatedPage }) => {
-            await PageActions.goToFirstProduct(authenticatedPage);
+        test('TC_REV_006: Should require comment text', async ({ shopper }) => {
+            await openFirstProduct(shopper);
+            const reviewRequests = [];
+            shopper.page.on('request', r => {
+                if (r.method() === 'POST' && r.url().endsWith('/reviews')) reviewRequests.push(r.url());
+            });
 
-            // Try to submit without comment (textarea has required attribute)
-            const textarea = authenticatedPage.locator('textarea');
-            const isRequired = await textarea.getAttribute('required');
-            expect(isRequired).not.toBeNull();
+            await shopper.product.submitReviewButton.click();
+
+            // The browser blocks the submit and puts the cursor in the field that is missing
+            await expect(shopper.product.commentBox).toBeFocused();
+            expect(await shopper.product.commentBox.evaluate(el => el.validity.valueMissing)).toBe(true);
+            expect(reviewRequests).toEqual([]);
+            expect(shopper.dialogs).toEqual([]);
         });
     });
 
     test.describe('Review Form Validation', () => {
 
-        test('TC_REV_007: Should show rating options from 1 to 5', async ({ page }) => {
-            await PageActions.goToFirstProduct(page);
+        test('TC_REV_007: Should show rating options from 1 to 5', async ({ app }) => {
+            await openFirstProduct(app);
 
-            // Get all rating options
-            const options = page.locator('select.form-select:near(:text("Rating")) option');
-            const count = await options.count();
-
-            expect(count).toBe(5);
+            const values = await app.product.ratingSelect.locator('option').evaluateAll(options => options.map(o => o.value));
+            expect(values.sort()).toEqual(['1', '2', '3', '4', '5']);
         });
 
-        test('TC_REV_008: Should default to 5-star rating', async ({ page }) => {
-            await PageActions.goToFirstProduct(page);
+        test('TC_REV_008: Should default to 5-star rating', async ({ app }) => {
+            await openFirstProduct(app);
 
-            // Check default value
-            const selectedValue = await page.locator('select.form-select:near(:text("Rating"))').inputValue();
-            expect(selectedValue).toBe('5');
+            await expect(app.product.ratingSelect).toHaveValue('5');
         });
     });
 
     test.describe('Review Authentication', () => {
 
-        test('TC_REV_009: Should show error when unauthenticated user tries to review', async ({ page }) => {
-            await PageActions.goToFirstProduct(page);
+        test('TC_REV_009: Should show error when unauthenticated user tries to review', async ({ app }) => {
+            await openFirstProduct(app);
+            const comment = uniqueComment('Anonymous attempt');
 
-            // Fill review form
-            await page.selectOption('select.form-select:near(:text("Rating"))', '4');
-            await page.fill('textarea', 'Unauthenticated review attempt');
+            await app.product.submitReview({ rating: 4, comment });
 
-            // Try to submit
-            await page.click('button:has-text("Submit Review")');
+            await expect.poll(() => app.dialogs).toContain(REVIEW_REQUIRES_LOGIN);
+            await expect(app.product.reviewCard(comment)).toHaveCount(0);
         });
     });
 });

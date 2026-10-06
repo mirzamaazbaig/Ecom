@@ -17,7 +17,7 @@ A full-stack shop (React, Express, PostgreSQL) built as the system under test fo
 | `TS_API_WISH` | 8 | Auth, add, idempotent add, remove, per-user privacy |
 | `TS_API_REV` | 8 | Auth, review listing, average rating aggregation, rating range |
 
-### UI end-to-end tests: `client/tests/e2e` (49 cases)
+### UI end-to-end tests: `client/tests/e2e` (58 cases)
 
 | Suite | Cases | Coverage |
 |---|---|---|
@@ -27,14 +27,15 @@ A full-stack shop (React, Express, PostgreSQL) built as the system under test fo
 | `TS_ORDER` | 7 | Checkout, cart cleared after order, order history, protected routes redirect to login |
 | `TS_REV` | 9 | Viewing reviews, submitting a review, rating options and default, validation, unauthenticated user |
 | `TS_WISH` | 6 | Add, view, empty state, remove, add to cart from wishlist, navigate to product |
+| `TS_ADMIN` | 9 | Access (customer and anonymous are turned away), dashboard lists the catalogue, add / edit / delete a product, form validation, cancel, orders tab shows a customer's order |
 
-### Accessibility: `client/tests/a11y` (11 cases)
+### Accessibility: `client/tests/a11y` (14 cases)
 
 | Suite | Cases | Coverage |
 |---|---|---|
-| `TS_A11Y` | 11 | axe-core scan against WCAG 2.1 A and AA on the home page, login (also with an error shown), register, product details, empty search, empty and filled cart, wishlist, order history, profile |
+| `TS_A11Y` | 14 | axe-core scan against WCAG 2.1 A and AA on the home page, login (also with an error shown), register, product details, empty search, empty and filled cart, wishlist, order history, profile, and the admin dashboard (products, add form, orders) |
 
-The first scan failed on all 11 pages (unnamed form controls and low-contrast buttons); the findings and fixes are in the defect log below.
+The first scan failed on all 11 customer pages (unnamed form controls and low-contrast buttons), and the admin pages added later had two more problems; the findings and fixes are in the defect log below.
 
 Test IDs (`TC_CART_003`, `TC_API_ORDER_009`) map one to one to test titles so failures can be traced to a requirement area.
 
@@ -53,7 +54,8 @@ Each fix followed the same loop: a test asserting the correct behaviour that fai
 
 - **Two layers:** most behaviour (validation, authorisation, data integrity) is checked at the API; the UI layer covers user journeys. API tests run in seconds and need no browser.
 - **Isolation:** every test registers its own user (unique email). Tests that depend on stock or price create their own product through the admin API, so assertions are exact and tests run in parallel without interfering.
-- **Reusable layer:** E2E fixtures, assertions and UI actions live in [`tests/fixtures`](client/tests/fixtures/test-fixtures.js); API fixtures (`anon`, `user`, `admin`), factories and the SQL helper live in [`tests/api/support.js`](client/tests/api/support.js).
+- **Page objects for the UI tests:** one class per page in [`tests/pages`](client/tests/pages) (locators and user actions; assertions stay in the tests), bound together by an `App` object. Tests read like the user's journey (`shopper.home.addToCart(name)`, `shopper.cart.checkout()`) and a changed selector is fixed in one place.
+- **Fixtures:** `app` is an anonymous visitor, `shopper` and `admin` are already signed in. They sign in through the API and hand the session cookie to the browser, so only the authentication suite uses the login screens. The `App` also accepts the app's native `alert()` and `confirm()` dialogs and records their messages for assertions. API fixtures (`anon`, `user`, `admin`) and factories live in [`tests/api/support.js`](client/tests/api/support.js).
 - **Persistence checks:** selected API tests query PostgreSQL directly to verify what was stored (password hash, order and line-item rows, rollback leaves no rows).
 - **Web-first assertions, no fixed sleeps:** tests wait on conditions (`expect(...).toHaveCount`, `expect.poll`, `waitForResponse`) instead of `waitForTimeout`.
 - **UI checked against the API:** for example the category filter test compares the cards on screen with the products returned by `GET /api/products?category_id=1`.
@@ -126,7 +128,8 @@ client/            React app and the Playwright suite
     api/           *.api.spec.js suites, support.js (fixtures, factories)
     a11y/          axe-core accessibility suite
     e2e/           *.spec.js UI suites
-    fixtures/      E2E fixtures and UI helpers
+    pages/         page objects (one class per page) and the App that bundles them
+    fixtures/      E2E fixtures: app, shopper, admin
     support/       shared configuration
   playwright.config.js   projects: api, a11y, chromium
 docs/              TEST_STRATEGY.md, KNOWN_DEFECTS.md
@@ -140,8 +143,6 @@ More detail on the suites: [`client/TESTING.md`](client/TESTING.md).
 
 ## Roadmap
 
-- Page Object classes to replace the `PageActions` helper object.
-- Admin dashboard UI coverage (the admin API is covered, the dashboard is not).
 - Manual keyboard and screen reader pass, recorded as a checklist (automated scanning finds only part of the problems).
 - Contract check of API response shapes with a schema, shared by the API and UI tests.
 - Firefox and WebKit projects (configured but disabled).
