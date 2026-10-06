@@ -68,6 +68,7 @@ const ProductDetails = () => {
                     <div className="d-flex align-items-center mt-4">
                         <input
                             type="number"
+                            aria-label="Quantity"
                             className="form-control me-2"
                             style={{ width: '80px' }}
                             value={quantity}

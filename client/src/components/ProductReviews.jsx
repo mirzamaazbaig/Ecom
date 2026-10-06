@@ -64,8 +64,8 @@ const ProductReviews = ({ productId }) => {
                         <h5>Write a Review</h5>
                         <form onSubmit={handleSubmitReview}>
                             <div className="mb-3">
-                                <label className="form-label">Rating</label>
-                                <select className="form-select" value={newRating} onChange={(e) => setNewRating(parseInt(e.target.value))}>
+                                <label className="form-label" htmlFor="review-rating">Rating</label>
+                                <select id="review-rating" className="form-select" value={newRating} onChange={(e) => setNewRating(parseInt(e.target.value))}>
                                     <option value="5">5 - Excellent</option>
                                     <option value="4">4 - Very Good</option>
                                     <option value="3">3 - Good</option>
@@ -74,8 +74,9 @@ const ProductReviews = ({ productId }) => {
                                 </select>
                             </div>
                             <div className="mb-3">
-                                <label className="form-label">Comment</label>
+                                <label className="form-label" htmlFor="review-comment">Comment</label>
                                 <textarea
+                                    id="review-comment"
                                     className="form-control"
                                     rows="3"
                                     value={newComment}

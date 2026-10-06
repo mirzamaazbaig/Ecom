@@ -13,7 +13,8 @@
     "test:e2e:headed": "playwright test --project=chromium --headed",
     "test:report": "playwright show-report",
     "test:api": "playwright test --project=api",
-    "test": "playwright test"
+    "test": "playwright test",
+    "test:a11y": "playwright test --project=a11y"
   },
   "dependencies": {
     "axios": "^1.13.2",
@@ -23,6 +24,7 @@
     "react-router-dom": "^7.11.0"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
     "@eslint/js": "^9.39.1",
     "@playwright/test": "^1.57.0",
     "@types/react": "^19.2.5",

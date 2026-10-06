@@ -2,7 +2,7 @@
 
 [![E2E tests](https://github.com/mirzamaazbaig/Ecom/actions/workflows/e2e.yml/badge.svg)](https://github.com/mirzamaazbaig/Ecom/actions/workflows/e2e.yml)
 
-A full-stack shop (React, Express, PostgreSQL) built as the system under test for a two-layer test automation suite: **UI end-to-end tests** and **API tests**, both in Playwright and both in [`client/tests`](client/tests). The application is deliberately small; the focus of this repository is how the tests are structured, run and maintained, and what they found.
+A full-stack shop (React, Express, PostgreSQL) built as the system under test for a three-part test automation suite in Playwright: **API tests**, **UI end-to-end tests** and **accessibility checks**, all in [`client/tests`](client/tests). The approach and the risks behind it are written down in [`docs/TEST_STRATEGY.md`](docs/TEST_STRATEGY.md). The application is deliberately small; the focus of this repository is how the tests are structured, run and maintained, and what they found.
 
 ## What is tested
 
@@ -28,14 +28,24 @@ A full-stack shop (React, Express, PostgreSQL) built as the system under test fo
 | `TS_REV` | 9 | Viewing reviews, submitting a review, rating options and default, validation, unauthenticated user |
 | `TS_WISH` | 6 | Add, view, empty state, remove, add to cart from wishlist, navigate to product |
 
+### Accessibility: `client/tests/a11y` (11 cases)
+
+| Suite | Cases | Coverage |
+|---|---|---|
+| `TS_A11Y` | 11 | axe-core scan against WCAG 2.1 A and AA on the home page, login (also with an error shown), register, product details, empty search, empty and filled cart, wishlist, order history, profile |
+
+The first scan failed on all 11 pages (unnamed form controls and low-contrast buttons); the findings and fixes are in the defect log below.
+
 Test IDs (`TC_CART_003`, `TC_API_ORDER_009`) map one to one to test titles so failures can be traced to a requirement area.
 
 ## Defects found
 
-The API tests found 6 defects, documented in [`docs/KNOWN_DEFECTS.md`](docs/KNOWN_DEFECTS.md) with requests, expected and actual behaviour. All 6 are fixed:
+The tests found 6 functional defects (API) and 4 groups of accessibility defects (axe-core), documented in [`docs/KNOWN_DEFECTS.md`](docs/KNOWN_DEFECTS.md) with requests, expected and actual behaviour. All are fixed. The six functional ones:
 
 - **High:** orders that exceeded stock (D1) and client-controlled prices (D2). The fix locks product rows in the order transaction and prices the order on the server; a concurrency test has two users race for the last unit.
 - **Medium and low:** missing input validation (D3 to D6): malformed emails, empty registration bodies, non-numeric ids, invalid ratings and unknown products that returned 500 instead of a 4xx.
+
+The accessibility findings were unlabeled form controls (`select-name`, `label`: critical) and text contrast below 4.5:1 (`color-contrast`: serious), fixed with accessible names, label associations and darker shades of the same colours.
 
 Each fix followed the same loop: a test asserting the correct behaviour that fails against the application, the fix, then the same test passing. The tests stay as regression tests.
 
@@ -58,7 +68,7 @@ Each fix followed the same loop: a test asserting the correct behaviour that fai
 1. Starts a PostgreSQL 16 service container.
 2. Installs server and client dependencies with `npm ci` (cached) and Playwright Chromium.
 3. Creates, migrates and seeds the database (`db/setup.js`, `scripts/migrate.js`, `scripts/seedProducts.js`).
-4. Runs the API and E2E projects headless (`npm test`). With `CI` set, Playwright uses 2 retries and one worker.
+4. Runs the API, accessibility and E2E projects headless (`npm test`). With `CI` set, Playwright uses 2 retries and one worker.
 5. Uploads the HTML report as the `playwright-report` artifact; traces, screenshots and videos are uploaded as `test-results` when a run fails.
 
 Known limitations are listed under [Roadmap](#roadmap).
@@ -84,6 +94,7 @@ cd ..
 cd client
 npm test                                 # API + E2E
 npm run test:api                         # API tests only (fast, no browser)
+npm run test:a11y                        # accessibility scan (axe-core)
 npm run test:e2e                         # UI tests only, headless
 npm run test:e2e:headed                  # watch it run
 npm run test:e2e:ui                      # interactive UI mode
@@ -112,12 +123,13 @@ Environment variables: `API_URL` (default `http://localhost:5000/api`) points th
 client/            React app and the Playwright suite
   src/             Pages, components, contexts
   tests/
-    api/           *.api.spec.js suites, support.js (fixtures, factories, SQL helper)
+    api/           *.api.spec.js suites, support.js (fixtures, factories)
+    a11y/          axe-core accessibility suite
     e2e/           *.spec.js UI suites
     fixtures/      E2E fixtures and UI helpers
     support/       shared configuration
-  playwright.config.js   projects: api, chromium
-docs/              KNOWN_DEFECTS.md
+  playwright.config.js   projects: api, a11y, chromium
+docs/              TEST_STRATEGY.md, KNOWN_DEFECTS.md
 server/            Express API
   controllers/ models/ routes/ middleware/
   db/              setup.js and SQL migrations
@@ -130,6 +142,7 @@ More detail on the suites: [`client/TESTING.md`](client/TESTING.md).
 
 - Page Object classes to replace the `PageActions` helper object.
 - Admin dashboard UI coverage (the admin API is covered, the dashboard is not).
+- Manual keyboard and screen reader pass, recorded as a checklist (automated scanning finds only part of the problems).
 - Contract check of API response shapes with a schema, shared by the API and UI tests.
 - Firefox and WebKit projects (configured but disabled).
 - Next round of API test design: password policy, email case normalisation, rate limiting on login.

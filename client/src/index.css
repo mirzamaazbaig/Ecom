@@ -238,3 +238,32 @@ body {
   font-weight: 700;
   letter-spacing: 0.2px;
 }
+/* Accessibility: Bootstrap's default danger/success/info colours do not reach the WCAG AA contrast ratio (4.5:1)
+   on this app's light grey and white backgrounds, so use the darker shades of the same hues. */
+.btn-outline-danger {
+  --bs-btn-color: #b02a37;
+  --bs-btn-border-color: #b02a37;
+  --bs-btn-hover-bg: #b02a37;
+  --bs-btn-hover-border-color: #b02a37;
+  --bs-btn-active-bg: #b02a37;
+  --bs-btn-active-border-color: #b02a37;
+}
+
+.btn-success {
+  --bs-btn-bg: #146c43;
+  --bs-btn-border-color: #146c43;
+  --bs-btn-hover-bg: #0f5132;
+  --bs-btn-hover-border-color: #0f5132;
+  --bs-btn-active-bg: #0f5132;
+  --bs-btn-active-border-color: #0f5132;
+  --bs-btn-disabled-bg: #146c43;
+  --bs-btn-disabled-border-color: #146c43;
+}
+
+.text-success {
+  color: #0f5132 !important;
+}
+
+.badge.bg-success {
+  background-color: #146c43 !important;
+}

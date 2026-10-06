@@ -45,6 +45,19 @@ The API test suite found six defects in the application under test. All six have
 - **Fix:** orders return `404` for an unknown product and `400` for invalid quantities or product ids (see D1); wishlist and reviews validate `product_id` (`400`), check the product exists (`404`), and reviews require a whole-number rating from 1 to 5 (`400`). Reading reviews and removing from the wishlist validate their id parameter.
 - **Verified by:** the tests listed in the table.
 
+## Accessibility defects (found with axe-core, fixed)
+
+The accessibility scan (`TS_A11Y`, WCAG 2.1 level A and AA) failed on all 11 pages when it was first run. Findings, grouped by cause:
+
+| ID | Impact | Where | Finding | Fix |
+|---|---|---|---|---|
+| A1 | Critical | Every page | The category dropdown in the search bar has no accessible name (`select-name`) | `aria-label="Search category"` |
+| A2 | Critical | Home, product details | The sort dropdown and the review rating dropdown have no name or label (`select-name`) | `aria-label="Sort by"`; the rating label is now tied to its field (`htmlFor`) |
+| A3 | Critical | Home, product details | The price slider, the quantity input and the review text area have no label (`label`) | `aria-label="Maximum price"` and `"Quantity"`; the comment label is tied to its field |
+| A4 | Serious | Product details, cart, profile | Text contrast below 4.5:1: red outline buttons (4.11:1 on the grey page background), green buttons, the green "Active" text and green badges (`color-contrast`) | Darker shades of the same hues, defined once in `index.css` |
+
+Each page's test failed before the fix and passes after it. The scan covers what axe-core can detect automatically; it does not replace keyboard and screen reader testing (see [`TEST_STRATEGY.md`](TEST_STRATEGY.md)).
+
 ## Not covered by these fixes
 
 - No password strength policy (any non-empty password up to 72 characters is accepted) and emails are not normalised to lower case, so `A@x.com` and `a@x.com` are different accounts. Neither was reported as a defect; both are candidates for the next round of test design.

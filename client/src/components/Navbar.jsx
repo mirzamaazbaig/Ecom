@@ -44,7 +44,7 @@ const Navbar = () => {
                     {/* Search Bar */}
                     <form className="navbar-search d-flex" onSubmit={handleSearch}>
                         <div className="search-input-group w-100">
-                            <select className="form-select" style={{ maxWidth: '80px', borderRadius: '4px 0 0 4px', fontSize: '0.8rem', backgroundColor: '#f3f3f3', border: 'none' }}>
+                            <select aria-label="Search category" className="form-select" style={{ maxWidth: '80px', borderRadius: '4px 0 0 4px', fontSize: '0.8rem', backgroundColor: '#f3f3f3', border: 'none' }}>
                                 <option>All</option>
                             </select>
                             <input

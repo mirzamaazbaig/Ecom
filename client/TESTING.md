@@ -1,6 +1,6 @@
 # E2E Testing with Playwright
 
-The suite is in `client/tests`: 49 UI cases in `tests/e2e` and 65 API cases in `tests/api`. See the root [README](../README.md) for the overview and setup.
+The suite is in `client/tests`: 49 UI cases in `tests/e2e`, 65 API cases in `tests/api` and 11 accessibility cases in `tests/a11y`. The strategy behind it is in [`docs/TEST_STRATEGY.md`](../docs/TEST_STRATEGY.md). See the root [README](../README.md) for the overview and setup.
 
 ## Layout
 
@@ -17,6 +17,7 @@ The suite is in `client/tests`: 49 UI cases in `tests/e2e` and 65 API cases in `
 | `tests/api/admin.api.spec.js` | `TS_API_ADMIN` | Role-based access, product CRUD |
 | `tests/api/orders.api.spec.js` | `TS_API_ORDER` | Order creation, server-side pricing, stock rules, all-or-nothing, concurrency, SQL checks |
 | `tests/api/wishlist-reviews.api.spec.js` | `TS_API_WISH`, `TS_API_REV` | Wishlist and review endpoints |
+| `tests/a11y/pages.a11y.spec.js` | `TS_A11Y` | axe-core WCAG 2.1 A and AA scan of every customer page; `a11y-support.js` formats violations |
 | `tests/fixtures/test-fixtures.js` | | E2E `authenticatedPage` fixture, `TestData`, `TestAssertions`, `PageActions` |
 | `tests/api/support.js` | | API fixtures `anon`/`user`/`admin`, `makeUser`, `makeProduct` |
 | `tests/support/db.js` | | `sql()` helper for setup and persistence checks |
@@ -34,7 +35,7 @@ The suite is in `client/tests`: 49 UI cases in `tests/e2e` and 65 API cases in `
 
 `playwright.config.js`:
 
-- Two projects: `api` (no browser, `tests/api`) and `chromium` (headless, `tests/e2e`). Firefox and WebKit are present but commented out.
+- Three projects: `api` (no browser, `tests/api`), `a11y` (`tests/a11y`) and `chromium` (headless, `tests/e2e`). Firefox and WebKit are present but commented out.
 - Loads `../server/.env` when present so `DATABASE_URL` is available to the API tests.
 - Starts the API (`../server`, port 5000) and the Vite client (port 5173) and reuses them if already running.
 - Screenshot and video on failure, trace on first retry, 2 retries and 1 worker when `CI` is set.

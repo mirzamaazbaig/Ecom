@@ -32,6 +32,11 @@ export default defineConfig({
             use: { baseURL: `${API_URL}/` },
         },
         {
+            name: 'a11y',
+            testMatch: 'a11y/**/*.spec.js',
+            use: { ...devices['Desktop Chrome'] },
+        },
+        {
             name: 'chromium',
             testMatch: 'e2e/**/*.spec.js',
             use: { ...devices['Desktop Chrome'] },

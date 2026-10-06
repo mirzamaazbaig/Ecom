@@ -83,6 +83,7 @@ const Home = () => {
                             <h5>Price</h5>
                             <input
                                 type="range"
+                                aria-label="Maximum price"
                                 className="form-range"
                                 min="0"
                                 max="2000"
@@ -98,7 +99,7 @@ const Home = () => {
                         <hr />
                         <div className="filter-section">
                             <h5>Sort By</h5>
-                            <select className="form-select form-select-sm" value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+                            <select aria-label="Sort by" className="form-select form-select-sm" value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
                                 <option value="avg_rating">Avg. Customer Review</option>
                                 <option value="price">Price: Low to High</option>
                                 <option value="created_at">Newest Arrivals</option>
