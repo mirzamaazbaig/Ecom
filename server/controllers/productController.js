@@ -1,4 +1,5 @@
 const ProductModel = require('../models/productModel');
+const { parseId } = require('../utils/validation');
 
 exports.getAllProducts = async (req, res) => {
     try {
@@ -20,8 +21,12 @@ exports.getAllProducts = async (req, res) => {
 };
 
 exports.getProductById = async (req, res) => {
+    const id = parseId(req.params.id);
+    if (id === null) {
+        return res.status(400).json({ message: 'Invalid product id' });
+    }
     try {
-        const product = await ProductModel.findById(req.params.id);
+        const product = await ProductModel.findById(id);
         if (!product) {
             return res.status(404).json({ message: 'Product not found' });
         }
@@ -43,8 +48,12 @@ exports.createProduct = async (req, res) => {
 };
 
 exports.updateProduct = async (req, res) => {
+    const id = parseId(req.params.id);
+    if (id === null) {
+        return res.status(400).json({ message: 'Invalid product id' });
+    }
     try {
-        const updatedProduct = await ProductModel.update(req.params.id, req.body);
+        const updatedProduct = await ProductModel.update(id, req.body);
         if (!updatedProduct) {
             return res.status(404).json({ message: 'Product not found' });
         }
@@ -56,8 +65,12 @@ exports.updateProduct = async (req, res) => {
 };
 
 exports.deleteProduct = async (req, res) => {
+    const id = parseId(req.params.id);
+    if (id === null) {
+        return res.status(400).json({ message: 'Invalid product id' });
+    }
     try {
-        const result = await ProductModel.delete(req.params.id);
+        const result = await ProductModel.delete(id);
         if (!result) {
             return res.status(404).json({ message: 'Product not found' });
         }

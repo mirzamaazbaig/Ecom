@@ -58,10 +58,19 @@ test.describe('TS_API_WISH: Wishlist API', () => {
         }
     });
 
-    test('TC_API_WISH_007 [KNOWN DEFECT D6]: wishlisting an unknown product should be a client error, not a 500', async ({ user }) => {
-        test.fail(true, 'D6: foreign key violation is returned as a generic 500');
+    test('TC_API_WISH_007: wishlisting an unknown product returns 404 and stores nothing', async ({ user }) => {
         const res = await user.api.post('wishlist', { data: { product_id: 99999999 } });
-        expect(res.status()).toBeLessThan(500);
+
+        expect(res.status()).toBe(404);
+        expect(await (await user.api.get('wishlist')).json()).toEqual([]);
+    });
+
+    test('TC_API_WISH_008: an invalid product id is rejected with 400', async ({ user }) => {
+        for (const data of [{}, { product_id: 'abc' }, { product_id: -1 }, { product_id: 1.5 }]) {
+            const res = await user.api.post('wishlist', { data });
+            expect(res.status(), JSON.stringify(data)).toBe(400);
+        }
+        expect((await user.api.delete('wishlist/abc')).status()).toBe(400);
     });
 });
 
@@ -123,15 +132,20 @@ test.describe('TS_API_REV: Reviews API', () => {
         }
     });
 
-    test('TC_API_REV_006 [KNOWN DEFECT D6]: an invalid rating should return 400, not a 500', async ({ user }) => {
-        test.fail(true, 'D6: no input validation, the database CHECK violation becomes a generic 500');
-        const res = await user.api.post('reviews', { data: { product_id: 1, rating: 99, comment: 'x' } });
-        expect(res.status()).toBe(400);
+    test('TC_API_REV_006: an invalid rating is rejected with 400', async ({ user }) => {
+        for (const rating of [99, 0, 6, -1, 4.5, '5', null, undefined]) {
+            const res = await user.api.post('reviews', { data: { product_id: 1, rating, comment: 'x' } });
+            expect(res.status(), `rating ${rating}`).toBe(400);
+        }
     });
 
-    test('TC_API_REV_007 [KNOWN DEFECT D6]: reviewing an unknown product should be a client error, not a 500', async ({ user }) => {
-        test.fail(true, 'D6: foreign key violation is returned as a generic 500');
+    test('TC_API_REV_007: reviewing an unknown product returns 404', async ({ user }) => {
         const res = await user.api.post('reviews', { data: { product_id: 99999999, rating: 5, comment: 'x' } });
-        expect(res.status()).toBeLessThan(500);
+        expect(res.status()).toBe(404);
+    });
+
+    test('TC_API_REV_008: an invalid product id is rejected with 400 when posting and when reading', async ({ user, anon }) => {
+        expect((await user.api.post('reviews', { data: { product_id: 'abc', rating: 5 } })).status()).toBe(400);
+        expect((await anon.get('reviews/abc')).status()).toBe(400);
     });
 });

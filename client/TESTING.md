@@ -1,6 +1,6 @@
 # E2E Testing with Playwright
 
-The suite is in `client/tests`: 49 UI cases in `tests/e2e` and 61 API cases in `tests/api`. See the root [README](../README.md) for the overview and setup.
+The suite is in `client/tests`: 49 UI cases in `tests/e2e` and 65 API cases in `tests/api`. See the root [README](../README.md) for the overview and setup.
 
 ## Layout
 
@@ -26,7 +26,7 @@ The suite is in `client/tests`: 49 UI cases in `tests/e2e` and 61 API cases in `
 - Case titles start with a stable ID: `TC_<AREA>_<NNN>: Should ...`.
 - Use the `authenticatedPage` fixture when a logged-in user is needed; use `page` for anonymous flows. Each use creates a unique user.
 - API tests: use `anon`, `user` or `admin`; create products with `makeProduct` when a test depends on stock or price; clean up what you create.
-- A case that documents a known defect is titled `[KNOWN DEFECT Dn]`, asserts the correct behaviour and calls `test.fail(true, reason)`. Add the defect to `docs/KNOWN_DEFECTS.md`.
+- A defect that is not fixed yet is pinned by a case titled `[KNOWN DEFECT Dn]` that asserts the correct behaviour and calls `test.fail(true, reason)`; log it in `docs/KNOWN_DEFECTS.md` and remove the marker when it is fixed. No defects are open at the moment.
 - Do not use `waitForTimeout`. Wait for the element, the response, or poll for the state.
 - Assert the outcome, not that "something is visible". An assertion that passes in both the success and the failure state (for example `a.or(b)`) is a defect in the test.
 

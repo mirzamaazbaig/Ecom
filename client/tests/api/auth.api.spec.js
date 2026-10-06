@@ -2,9 +2,7 @@
  * Auth API tests: POST /auth/register, /auth/login, /auth/logout, GET /auth/me
  * Test Suite ID: TS_API_AUTH
  *
- * Cases tagged "KNOWN DEFECT" assert the CORRECT behaviour and are marked test.fail():
- * they pass while the defect exists and turn red as soon as it is fixed
- * (then remove test.fail). See docs/KNOWN_DEFECTS.md.
+ * Input validation cases (009 to 011) were written for defects D3 and D4, see docs/KNOWN_DEFECTS.md.
  */
 import { test, expect, sql, uniqueEmail, PASSWORD } from './support.js';
 
@@ -73,21 +71,35 @@ test.describe('TS_API_AUTH: Authentication API', () => {
         expect((await user.api.get('auth/me')).status()).toBe(401);
     });
 
-    test('TC_API_AUTH_009 [KNOWN DEFECT D3]: malformed email should be rejected with 400', async ({ anon }) => {
-        test.fail(true, 'D3: any string is accepted as an email address');
-        // Unique per run: a fixed string would be "already registered" on the second run and pass for the wrong reason
+    test('TC_API_AUTH_009: a malformed email is rejected with 400', async ({ anon }) => {
+        // Unique per run: a fixed string would be "already registered" on the second run and prove nothing
         const malformed = `not-an-email-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
-        try {
-            const res = await anon.post('auth/register', { data: { email: malformed, password: PASSWORD } });
-            expect(res.status()).toBe(400);
-        } finally {
-            await sql('DELETE FROM users WHERE email = $1', [malformed]);
+        const res = await anon.post('auth/register', { data: { email: malformed, password: PASSWORD } });
+
+        expect(res.status()).toBe(400);
+        expect(await sql('SELECT 1 FROM users WHERE email = $1', [malformed])).toHaveLength(0);
+    });
+
+    test('TC_API_AUTH_010: missing or non-text fields are rejected with 400, not a server error', async ({ anon }) => {
+        const bodies = [
+            {},
+            { email: uniqueEmail() },
+            { password: PASSWORD },
+            { email: '', password: PASSWORD },
+            { email: uniqueEmail(), password: '' },
+            { email: 12345, password: PASSWORD },
+            { email: uniqueEmail(), password: ['a', 'b'] },
+        ];
+        for (const data of bodies) {
+            const res = await anon.post('auth/register', { data });
+            expect(res.status(), JSON.stringify(data)).toBe(400);
         }
     });
 
-    test('TC_API_AUTH_010 [KNOWN DEFECT D4]: missing fields should return 400, not a server error', async ({ anon }) => {
-        test.fail(true, 'D4: empty body causes an unhandled error and a 500 response');
-        const res = await anon.post('auth/register', { data: {} });
-        expect(res.status()).toBe(400);
+    test('TC_API_AUTH_011: login with missing fields is rejected with 400', async ({ anon }) => {
+        for (const data of [{}, { email: uniqueEmail() }, { password: PASSWORD }]) {
+            const res = await anon.post('auth/login', { data });
+            expect(res.status(), JSON.stringify(data)).toBe(400);
+        }
     });
 });

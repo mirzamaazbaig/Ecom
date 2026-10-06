@@ -1,15 +1,15 @@
 # Defects found by the test suite
 
-The API test suite found six defects in the application under test. Two high-severity ones (D1, D2) and the order part of D6 have been fixed; the rest are intentionally left open as a worked example of how known defects are tracked. Every open defect is pinned by an automated test that asserts the *correct* behaviour and is marked `test.fail()`: while the defect exists the test is reported as an expected failure; as soon as it is fixed the test starts passing, Playwright reports an unexpected pass, and the `test.fail()` line should be removed.
+The API test suite found six defects in the application under test. All six have been fixed. For each one the sequence was the same: write a test that asserts the correct behaviour, confirm it fails against the application, fix the application, confirm the test passes. While a defect was open its test was marked `test.fail()` (an expected failure), and that marker was removed when the fix landed.
 
 | ID | Severity | Area | Summary | Status | Test |
 |---|---|---|---|---|---|
-| D1 | High | Orders | Stock is not checked; ordering more than is available succeeds and stock goes negative | **Fixed** | `TC_API_ORDER_009`, `010`, `011`, `015`, `016` |
-| D2 | High | Orders | Item prices and `totalAmount` are taken from the request body, so a client can buy at any price | **Fixed** | `TC_API_ORDER_012` |
-| D3 | Medium | Auth | Registration accepts any string as an email address | Open | `TC_API_AUTH_009` |
-| D4 | Low | Auth | Registration with a missing email or password returns 500 | Open | `TC_API_AUTH_010` |
-| D5 | Low | Products | `GET /api/products/abc` returns 500 | Open | `TC_API_PROD_013` |
-| D6 | Medium | Validation | Unknown product ids and out-of-range ratings surface as generic 500s | Orders fixed; wishlist and reviews open | `TC_API_ORDER_013`, `014`; open: `TC_API_WISH_007`, `TC_API_REV_006`, `TC_API_REV_007` |
+| D1 | High | Orders | Stock is not checked; ordering more than is available succeeds and stock goes negative | Fixed | `TC_API_ORDER_009`, `010`, `011`, `015`, `016` |
+| D2 | High | Orders | Item prices and `totalAmount` are taken from the request body, so a client can buy at any price | Fixed | `TC_API_ORDER_012` |
+| D3 | Medium | Auth | Registration accepts any string as an email address | Fixed | `TC_API_AUTH_009` |
+| D4 | Low | Auth | Registration with a missing email or password returns 500 | Fixed | `TC_API_AUTH_010`, `011` |
+| D5 | Low | Products | `GET /api/products/abc` returns 500 | Fixed | `TC_API_PROD_013`, `014` |
+| D6 | Medium | Validation | Unknown product ids and out-of-range ratings surface as generic 500s | Fixed | `TC_API_ORDER_013`, `014`, `TC_API_WISH_007`, `008`, `TC_API_REV_006`, `007`, `008` |
 
 ## Fixed
 
@@ -25,28 +25,26 @@ The API test suite found six defects in the application under test. Two high-sev
 - **Fix:** the server reads the price from `products` and computes the total (in cents) itself; client-sent prices and totals are ignored. The UI is unchanged: it still sends them, they are just not trusted.
 - **Verified by:** `TC_API_ORDER_012`.
 
-### D6, orders part
-- **Found with:** `POST /api/orders` with an unknown product id returned `500` (the transaction rolled back correctly, but the status was wrong).
-- **Fix:** unknown product returns `404`; non-positive or non-integer quantities and invalid product ids return `400`.
-- **Verified by:** `TC_API_ORDER_013`, `TC_API_ORDER_014`.
-
-## Open
-
 ### D3: no email format validation (Medium)
-- **Request:** `POST /api/auth/register` with `{"email": "not-an-email", "password": "..."}`.
-- **Expected:** 400. **Actual:** `201 Created`, user stored with that email.
+- **Found with:** `POST /api/auth/register` with `{"email": "not-an-email", ...}` returned `201 Created`.
+- **Fix:** the email must be text of at most 255 characters and match `local@domain.tld`; otherwise `400`.
+- **Verified by:** `TC_API_AUTH_009` (unique malformed email per run, and checks nothing was stored).
 
-### D4: empty registration body gives 500 (Low)
-- **Request:** `POST /api/auth/register` with `{}`.
-- **Expected:** 400 with a message naming the missing fields. **Actual:** `500 {"message":"Server error"}` (bcrypt receives `undefined`).
+### D4: missing registration fields give 500 (Low)
+- **Found with:** `POST /api/auth/register` with `{}` returned `500` (bcrypt received `undefined`).
+- **Fix:** email and password must be non-empty text (password at most 72 characters, the bcrypt limit); otherwise `400 Email and password are required`. Login got the same check.
+- **Verified by:** `TC_API_AUTH_010` (seven malformed bodies including wrong types), `TC_API_AUTH_011`.
 
 ### D5: non-numeric product id gives 500 (Low)
-- **Request:** `GET /api/products/abc`.
-- **Expected:** 400 or 404. **Actual:** `500`; Postgres rejects the cast to integer and the error is not handled.
+- **Found with:** `GET /api/products/abc` returned `500` (Postgres rejected the cast to integer).
+- **Fix:** ids are validated as positive integers within the Postgres range before any query; otherwise `400 Invalid product id`. Applied to get, update and delete.
+- **Verified by:** `TC_API_PROD_013` (six invalid ids including a SQL fragment), `TC_API_PROD_014`.
 
-### D6, wishlist and reviews part (Medium)
-All return `500` instead of a 4xx:
-- `POST /api/wishlist` with an unknown `product_id`.
-- `POST /api/reviews` with `rating: 99` (blocked by the database `CHECK`, but not validated by the API) or an unknown `product_id`.
+### D6: database errors leak out as 500 (Medium)
+- **Found with:** unknown product ids in orders, wishlist and reviews, and `rating: 99`, all returned `500`.
+- **Fix:** orders return `404` for an unknown product and `400` for invalid quantities or product ids (see D1); wishlist and reviews validate `product_id` (`400`), check the product exists (`404`), and reviews require a whole-number rating from 1 to 5 (`400`). Reading reviews and removing from the wishlist validate their id parameter.
+- **Verified by:** the tests listed in the table.
 
-Suggested fix for D3 to D6: validate request bodies in the controllers (or with a schema library) and map known database errors (`23503`, `23514`, `22P02`) to 4xx responses.
+## Not covered by these fixes
+
+- No password strength policy (any non-empty password up to 72 characters is accepted) and emails are not normalised to lower case, so `A@x.com` and `a@x.com` are different accounts. Neither was reported as a defect; both are candidates for the next round of test design.

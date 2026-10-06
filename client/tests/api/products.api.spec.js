@@ -112,9 +112,15 @@ test.describe('TS_API_PROD: Product catalogue API', () => {
         expect((await res.json()).message).toBe('Product not found');
     });
 
-    test('TC_API_PROD_013 [KNOWN DEFECT D5]: non-numeric id should be a client error, not a 500', async ({ anon }) => {
-        test.fail(true, 'D5: id is passed straight to Postgres; the cast error surfaces as a 500');
-        const res = await anon.get('products/abc');
-        expect(res.status()).toBeLessThan(500);
+    test('TC_API_PROD_013: a non-numeric or out-of-range id is a 400, not a server error', async ({ anon }) => {
+        for (const id of ['abc', '1.5', '-1', '0', '99999999999', '1;DROP TABLE products']) {
+            const res = await anon.get(`products/${encodeURIComponent(id)}`);
+            expect(res.status(), `GET products/${id}`).toBe(400);
+        }
+    });
+
+    test('TC_API_PROD_014: admin endpoints validate the id before touching the database', async ({ admin }) => {
+        expect((await admin.api.put('products/abc', { data: { price: 1 } })).status()).toBe(400);
+        expect((await admin.api.delete('products/abc')).status()).toBe(400);
     });
 });

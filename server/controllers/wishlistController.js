@@ -1,11 +1,20 @@
 const WishlistModel = require('../models/wishlistModel');
+const ProductModel = require('../models/productModel');
+const { parseId } = require('../utils/validation');
 
 exports.addToWishlist = async (req, res) => {
     try {
-        const { product_id } = req.body;
+        const productId = parseId(req.body.product_id);
         const userId = req.user.id;
 
-        const item = await WishlistModel.add({ userId, productId: product_id });
+        if (productId === null) {
+            return res.status(400).json({ message: 'A valid product_id is required' });
+        }
+        if (!(await ProductModel.findById(productId))) {
+            return res.status(404).json({ message: 'Product not found' });
+        }
+
+        const item = await WishlistModel.add({ userId, productId });
         if (!item) {
             return res.status(200).json({ message: 'Item already in wishlist' });
         }
@@ -29,8 +38,12 @@ exports.getWishlist = async (req, res) => {
 
 exports.removeFromWishlist = async (req, res) => {
     try {
-        const { productId } = req.params;
+        const productId = parseId(req.params.productId);
         const userId = req.user.id;
+
+        if (productId === null) {
+            return res.status(400).json({ message: 'Invalid product id' });
+        }
         await WishlistModel.remove({ userId, productId });
         res.json({ message: 'Removed from wishlist' });
     } catch (error) {

@@ -1,9 +1,17 @@
 const bcrypt = require('bcrypt');
 const UserModel = require('../models/userModel');
+const { isNonEmptyString, isValidEmail } = require('../utils/validation');
 
 exports.register = async (req, res) => {
     try {
         const { email, password } = req.body;
+
+        if (!isNonEmptyString(email) || !isNonEmptyString(password, 72)) {
+            return res.status(400).json({ message: 'Email and password are required' });
+        }
+        if (!isValidEmail(email)) {
+            return res.status(400).json({ message: 'Email address is not valid' });
+        }
 
         // Check if user exists
         const existingUser = await UserModel.findByEmail(email);
@@ -32,6 +40,10 @@ exports.register = async (req, res) => {
 exports.login = async (req, res) => {
     try {
         const { email, password } = req.body;
+
+        if (!isNonEmptyString(email) || !isNonEmptyString(password, 72)) {
+            return res.status(400).json({ message: 'Email and password are required' });
+        }
 
         // Find user
         const user = await UserModel.findByEmail(email);
