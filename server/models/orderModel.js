@@ -1,33 +1,83 @@
 
 const db = require('../db');
 
+/** Error carrying the HTTP status the controller should respond with. */
+class OrderError extends Error {
+    constructor(status, message) {
+        super(message);
+        this.name = 'OrderError';
+        this.status = status;
+    }
+}
+
 class OrderModel {
-    static async create(userId, totalAmount, items, transactionHash = null) {
+    /**
+     * Create an order from the requested { productId, quantity } lines.
+     *
+     * Prices and the total are always taken from the catalogue, never from the client.
+     * Product rows are locked for the duration of the transaction so concurrent orders
+     * cannot oversell stock. Everything is validated before anything is written, and
+     * the whole order is rolled back on any failure.
+     */
+    static async create(userId, items, transactionHash = null) {
+        // Merge duplicate lines for the same product
+        const requested = new Map();
+        for (const item of items) {
+            const productId = Number(item?.productId);
+            const quantity = Number(item?.quantity);
+            if (!Number.isInteger(productId) || productId <= 0 || productId > 2147483647) {
+                throw new OrderError(400, 'Each item needs a valid productId');
+            }
+            if (!Number.isInteger(quantity) || quantity <= 0) {
+                throw new OrderError(400, 'Each item needs a quantity that is a positive whole number');
+            }
+            requested.set(productId, (requested.get(productId) || 0) + quantity);
+        }
+
         const client = await db.pool.connect();
         try {
             await client.query('BEGIN');
 
-            // 1. Create Order
-            const insertOrderQuery = `
-        INSERT INTO orders(user_id, total_amount, transaction_hash)
-VALUES($1, $2, $3)
-        RETURNING id, created_at, status;
-`;
-            const { rows: orderRows } = await client.query(insertOrderQuery, [userId, totalAmount, transactionHash]);
+            // Lock in id order so concurrent orders cannot deadlock each other
+            const productIds = [...requested.keys()].sort((a, b) => a - b);
+            const { rows: products } = await client.query(
+                'SELECT id, name, price, stock FROM products WHERE id = ANY($1::int[]) ORDER BY id FOR UPDATE',
+                [productIds]
+            );
+            const byId = new Map(products.map(p => [p.id, p]));
+
+            for (const [productId, quantity] of requested) {
+                const product = byId.get(productId);
+                if (!product) {
+                    throw new OrderError(404, `Product ${productId} not found`);
+                }
+                if (product.stock < quantity) {
+                    throw new OrderError(409, `Insufficient stock for "${product.name}": ${product.stock} available, ${quantity} requested`);
+                }
+            }
+
+            // Total in cents to avoid floating point drift
+            let totalCents = 0;
+            for (const [productId, quantity] of requested) {
+                totalCents += Math.round(Number(byId.get(productId).price) * 100) * quantity;
+            }
+            const totalAmount = totalCents / 100;
+
+            const { rows: orderRows } = await client.query(
+                `INSERT INTO orders(user_id, total_amount, transaction_hash)
+                 VALUES($1, $2, $3)
+                 RETURNING id, total_amount, created_at, status`,
+                [userId, totalAmount, transactionHash]
+            );
             const order = orderRows[0];
 
-            // 2. Create Order Items and Update Stock
-            const insertItemQuery = `
-        INSERT INTO order_items(order_id, product_id, quantity, price_at_purchase)
-VALUES($1, $2, $3, $4)
-    `;
-            const updateStockQuery = `
-        UPDATE products SET stock = stock - $1 WHERE id = $2
-    `;
-
-            for (const item of items) {
-                await client.query(insertItemQuery, [order.id, item.productId, item.quantity, item.price]);
-                await client.query(updateStockQuery, [item.quantity, item.productId]);
+            for (const [productId, quantity] of requested) {
+                await client.query(
+                    `INSERT INTO order_items(order_id, product_id, quantity, price_at_purchase)
+                     VALUES($1, $2, $3, $4)`,
+                    [order.id, productId, quantity, byId.get(productId).price]
+                );
+                await client.query('UPDATE products SET stock = stock - $1 WHERE id = $2', [quantity, productId]);
             }
 
             await client.query('COMMIT');
@@ -74,3 +124,4 @@ VALUES($1, $2, $3, $4)
 }
 
 module.exports = OrderModel;
+module.exports.OrderError = OrderError;

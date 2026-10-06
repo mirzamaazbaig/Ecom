@@ -6,14 +6,14 @@ A full-stack shop (React, Express, PostgreSQL) built as the system under test fo
 
 ## What is tested
 
-### API tests: `client/tests/api` (57 cases)
+### API tests: `client/tests/api` (61 cases)
 
 | Suite | Cases | Coverage |
 |---|---|---|
 | `TS_API_AUTH` | 10 | Register, duplicate email, session start, bcrypt hash stored, login, no user enumeration, `/me`, logout |
 | `TS_API_PROD` | 13 | Field contract, limit/offset, category/price filters, sorting, search, SQL-injection and unsupported `sort_by` handling, get by id, 404 |
 | `TS_API_ADMIN` | 8 | Role-based access (401 anonymous, 403 customer), product create/update/delete lifecycle |
-| `TS_API_ORDER` | 12 | Validation, persistence, stock decrement, price snapshot, per-user isolation, **transaction rollback**, SQL checks on stored rows |
+| `TS_API_ORDER` | 16 | Validation, persistence, stock decrement and stock boundary, server-side pricing, price snapshot, per-user isolation, all-or-nothing orders, concurrent orders, SQL checks on stored rows |
 | `TS_API_WISH` | 7 | Auth, add, idempotent add, remove, per-user privacy |
 | `TS_API_REV` | 7 | Auth, review listing, average rating aggregation, rating range |
 
@@ -32,7 +32,10 @@ Test IDs (`TC_CART_003`, `TC_API_ORDER_009`) map one to one to test titles so fa
 
 ## Defects found
 
-The API tests found 6 defects, including orders that exceed stock and client-controlled prices. They are documented in [`docs/KNOWN_DEFECTS.md`](docs/KNOWN_DEFECTS.md) with requests, expected and actual behaviour. They are intentionally left unfixed and each is pinned by a test marked `test.fail()`, so the suite stays green while the defect exists and the test flags itself the moment it is fixed.
+The API tests found 6 defects, documented in [`docs/KNOWN_DEFECTS.md`](docs/KNOWN_DEFECTS.md) with requests, expected and actual behaviour.
+
+- **Fixed:** orders that exceeded stock (D1) and client-controlled prices (D2), plus the order part of D6 (unknown products returned 500). The fix locks product rows in the order transaction and prices the order on the server. The new tests fail against the old code and pass against the fix, including a concurrency test where two users race for the last unit.
+- **Left open on purpose:** D3 to D6 (input validation). Each is pinned by a test marked `test.fail()` that asserts the correct behaviour, so the suite stays green while the defect exists and flags itself when it is fixed.
 
 ## Test approach
 
@@ -43,6 +46,7 @@ The API tests found 6 defects, including orders that exceed stock and client-con
 - **Web-first assertions, no fixed sleeps:** tests wait on conditions (`expect(...).toHaveCount`, `expect.poll`, `waitForResponse`) instead of `waitForTimeout`.
 - **UI checked against the API:** for example the category filter test compares the cards on screen with the products returned by `GET /api/products?category_id=1`.
 - **Known defects are tracked in code:** see [Defects found](#defects-found).
+- **Test data:** the checkout UI suite tops up seeded stock before it runs, because the server now enforces stock.
 - **Failure evidence:** screenshots and video are kept on failure and a trace is recorded on the first retry. The HTML report is written to `client/playwright-report`.
 
 ## Continuous integration
@@ -126,4 +130,4 @@ More detail on the suites: [`client/TESTING.md`](client/TESTING.md).
 - Admin dashboard UI coverage (the admin API is covered, the dashboard is not).
 - Contract check of API response shapes with a schema, shared by the API and UI tests.
 - Firefox and WebKit projects (configured but disabled).
-- Fix the defects in `docs/KNOWN_DEFECTS.md` and remove the matching `test.fail()` markers.
+- Fix the open validation defects (D3 to D6) and remove the matching `test.fail()` markers.

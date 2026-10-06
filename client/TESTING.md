@@ -1,6 +1,6 @@
 # E2E Testing with Playwright
 
-The suite is in `client/tests`: 49 UI cases in `tests/e2e` and 57 API cases in `tests/api`. See the root [README](../README.md) for the overview and setup.
+The suite is in `client/tests`: 49 UI cases in `tests/e2e` and 61 API cases in `tests/api`. See the root [README](../README.md) for the overview and setup.
 
 ## Layout
 
@@ -15,10 +15,11 @@ The suite is in `client/tests`: 49 UI cases in `tests/e2e` and 57 API cases in `
 | `tests/api/auth.api.spec.js` | `TS_API_AUTH` | Auth endpoints, session handling, password storage |
 | `tests/api/products.api.spec.js` | `TS_API_PROD` | Catalogue contract, filters, sorting, search, injection handling |
 | `tests/api/admin.api.spec.js` | `TS_API_ADMIN` | Role-based access, product CRUD |
-| `tests/api/orders.api.spec.js` | `TS_API_ORDER` | Order creation, stock, snapshots, rollback, SQL checks |
+| `tests/api/orders.api.spec.js` | `TS_API_ORDER` | Order creation, server-side pricing, stock rules, all-or-nothing, concurrency, SQL checks |
 | `tests/api/wishlist-reviews.api.spec.js` | `TS_API_WISH`, `TS_API_REV` | Wishlist and review endpoints |
 | `tests/fixtures/test-fixtures.js` | | E2E `authenticatedPage` fixture, `TestData`, `TestAssertions`, `PageActions` |
-| `tests/api/support.js` | | API fixtures `anon`/`user`/`admin`, `makeUser`, `makeProduct`, `sql` |
+| `tests/api/support.js` | | API fixtures `anon`/`user`/`admin`, `makeUser`, `makeProduct` |
+| `tests/support/db.js` | | `sql()` helper for setup and persistence checks |
 
 ## Conventions
 

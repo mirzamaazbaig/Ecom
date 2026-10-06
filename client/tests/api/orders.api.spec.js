@@ -2,7 +2,8 @@
  * Order API tests: POST /orders, GET /orders/my-orders
  * Test Suite ID: TS_API_ORDER
  *
- * Every test that touches stock creates its own product through the admin API,
+ * Stock is checked and prices are set on the server (defects D1 and D2, now fixed;
+ * see docs/KNOWN_DEFECTS.md). Every test that touches stock creates its own product through the admin API,
  * so assertions are exact and tests can run in parallel.
  */
 import { test, expect, makeUser, makeProduct, sql } from './support.js';
@@ -123,66 +124,137 @@ test.describe('TS_API_ORDER: Orders API', () => {
         }
     });
 
-    test('TC_API_ORDER_009: a failed multi-item order is rolled back completely (atomicity)', async ({ user, admin, anon }) => {
-        const product = await makeProduct(admin.api, { stock: 10 });
+    test('TC_API_ORDER_009: a multi-item order with one unavailable line is rejected as a whole (all or nothing)', async ({ user, admin, anon }) => {
+        const plenty = await makeProduct(admin.api, { stock: 10 });
+        const scarce = await makeProduct(admin.api, { stock: 1 });
         try {
-            // Second line item references a product that does not exist
             const res = await user.api.post('orders', {
-                data: {
-                    totalAmount: 100,
-                    items: [
-                        { productId: product.id, quantity: 2, price: Number(product.price) },
-                        { productId: 99999999, quantity: 1, price: 1 },
-                    ],
-                },
+                data: { items: [{ productId: plenty.id, quantity: 2 }, { productId: scarce.id, quantity: 2 }] },
             });
 
-            expect(res.ok()).toBe(false);
+            expect(res.status()).toBe(409);
+            expect((await res.json()).message).toContain('Insufficient stock');
             expect(await (await user.api.get('orders/my-orders')).json()).toHaveLength(0);
-            expect(await stockOf(anon, product.id)).toBe(10);
-
-            const orphans = await sql('SELECT 1 FROM orders WHERE user_id = $1', [user.id]);
-            expect(orphans).toHaveLength(0);
+            expect(await stockOf(anon, plenty.id)).toBe(10);
+            expect(await stockOf(anon, scarce.id)).toBe(1);
+            expect(await sql('SELECT 1 FROM orders WHERE user_id = $1', [user.id])).toHaveLength(0);
         } finally {
-            await admin.api.delete(`products/${product.id}`);
+            await admin.api.delete(`products/${plenty.id}`);
+            await admin.api.delete(`products/${scarce.id}`);
         }
     });
 
-    test('TC_API_ORDER_010 [KNOWN DEFECT D1]: ordering more than the available stock should be rejected', async ({ user, admin, anon }) => {
-        test.fail(true, 'D1: no stock check, the order succeeds and stock becomes negative');
+    test('TC_API_ORDER_010: ordering more than the available stock is rejected with 409 and changes nothing', async ({ user, admin, anon }) => {
         const product = await makeProduct(admin.api, { stock: 2 });
         try {
             const res = await user.api.post('orders', { data: orderOf(product, 5) });
 
-            expect(res.status()).toBeGreaterThanOrEqual(400);
-            expect(res.status()).toBeLessThan(500);
-            expect(await stockOf(anon, product.id)).toBeGreaterThanOrEqual(0);
+            expect(res.status()).toBe(409);
+            expect((await res.json()).message).toContain('Insufficient stock');
+            expect(await stockOf(anon, product.id)).toBe(2);
+            expect(await (await user.api.get('orders/my-orders')).json()).toHaveLength(0);
+        } finally {
+            await admin.api.delete(`products/${product.id}`);
+        }
+    });
+
+    test('TC_API_ORDER_011: ordering exactly the remaining stock succeeds and leaves zero (boundary)', async ({ user, admin, anon }) => {
+        const product = await makeProduct(admin.api, { stock: 3 });
+        try {
+            expect((await user.api.post('orders', { data: orderOf(product, 3) })).status()).toBe(201);
+            expect(await stockOf(anon, product.id)).toBe(0);
+
+            // One more is now too many
+            expect((await user.api.post('orders', { data: orderOf(product, 1) })).status()).toBe(409);
+            expect(await stockOf(anon, product.id)).toBe(0);
         } finally {
             await sql('DELETE FROM order_items WHERE product_id = $1', [product.id]);
             await admin.api.delete(`products/${product.id}`);
         }
     });
 
-    test('TC_API_ORDER_011 [KNOWN DEFECT D2]: the server should price the order from the catalogue, not the client', async ({ user, admin }) => {
-        test.fail(true, 'D2: price and totalAmount are taken from the request body');
+    test('TC_API_ORDER_012: the server prices the order from the catalogue, ignoring client prices and totals', async ({ user, admin }) => {
         const product = await makeProduct(admin.api, { stock: 10, price: 100 });
         try {
-            await user.api.post('orders', { data: orderOf(product, 1, 0.01) });
+            const res = await user.api.post('orders', { data: orderOf(product, 2, 0.01) });
+            expect(res.status()).toBe(201);
+            expect(Number((await res.json()).order.total_amount)).toBe(200);
 
             const [order] = await (await user.api.get('orders/my-orders')).json();
             expect(Number(order.items[0].price)).toBe(100);
-            expect(Number(order.total_amount)).toBe(100);
+            expect(Number(order.total_amount)).toBe(200);
         } finally {
             await sql('DELETE FROM order_items WHERE product_id = $1', [product.id]);
             await admin.api.delete(`products/${product.id}`);
         }
     });
 
-    test('TC_API_ORDER_012 [KNOWN DEFECT D6]: an unknown product should be a client error, not a 500', async ({ user }) => {
-        test.fail(true, 'D6: the foreign key violation is returned as a generic 500');
-        const res = await user.api.post('orders', {
-            data: { totalAmount: 1, items: [{ productId: 99999999, quantity: 1, price: 1 }] },
-        });
-        expect(res.status()).toBeLessThan(500);
+    test('TC_API_ORDER_013: an unknown product is rejected with 404 and nothing is written', async ({ user, admin, anon }) => {
+        const product = await makeProduct(admin.api, { stock: 10 });
+        try {
+            const res = await user.api.post('orders', {
+                data: { items: [{ productId: product.id, quantity: 1 }, { productId: 99999999, quantity: 1 }] },
+            });
+
+            expect(res.status()).toBe(404);
+            expect(await (await user.api.get('orders/my-orders')).json()).toHaveLength(0);
+            expect(await stockOf(anon, product.id)).toBe(10);
+        } finally {
+            await admin.api.delete(`products/${product.id}`);
+        }
+    });
+
+    test('TC_API_ORDER_014: invalid quantities and product ids are rejected with 400', async ({ user, admin, anon }) => {
+        const product = await makeProduct(admin.api, { stock: 10 });
+        try {
+            const invalidLines = [
+                { productId: product.id, quantity: 0 },
+                { productId: product.id, quantity: -2 },
+                { productId: product.id, quantity: 1.5 },
+                { productId: product.id, quantity: 'two' },
+                { productId: product.id },
+                { productId: 'abc', quantity: 1 },
+                { productId: 99999999999, quantity: 1 },
+                { quantity: 1 },
+            ];
+            for (const line of invalidLines) {
+                const res = await user.api.post('orders', { data: { items: [line] } });
+                expect(res.status(), JSON.stringify(line)).toBe(400);
+            }
+            expect(await stockOf(anon, product.id)).toBe(10);
+        } finally {
+            await admin.api.delete(`products/${product.id}`);
+        }
+    });
+
+    test('TC_API_ORDER_015: duplicate lines for one product are combined before the stock check', async ({ user, admin, anon }) => {
+        const product = await makeProduct(admin.api, { stock: 3 });
+        try {
+            const res = await user.api.post('orders', {
+                data: { items: [{ productId: product.id, quantity: 2 }, { productId: product.id, quantity: 2 }] },
+            });
+            expect(res.status()).toBe(409);
+            expect(await stockOf(anon, product.id)).toBe(3);
+        } finally {
+            await admin.api.delete(`products/${product.id}`);
+        }
+    });
+
+    test('TC_API_ORDER_016: concurrent orders cannot oversell the last unit', async ({ playwright, user, admin, anon }) => {
+        const other = await makeUser(playwright);
+        const product = await makeProduct(admin.api, { stock: 1 });
+        try {
+            const results = await Promise.all([
+                user.api.post('orders', { data: orderOf(product, 1) }),
+                other.api.post('orders', { data: orderOf(product, 1) }),
+            ]);
+
+            expect(results.map(r => r.status()).sort()).toEqual([201, 409]);
+            expect(await stockOf(anon, product.id)).toBe(0);
+        } finally {
+            await sql('DELETE FROM order_items WHERE product_id = $1', [product.id]);
+            await admin.api.delete(`products/${product.id}`);
+            await other.api.dispose();
+        }
     });
 });

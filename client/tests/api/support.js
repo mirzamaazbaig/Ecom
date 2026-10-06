@@ -8,29 +8,15 @@
  * - `db`     : direct SQL access for verifying persistence (needs DATABASE_URL)
  */
 import { test as base, expect } from '@playwright/test';
-import pg from 'pg';
 import { API_URL } from '../support/env.js';
+import { sql } from '../support/db.js';
 
-export { expect };
+export { expect, sql };
 
 export const PASSWORD = 'TestPass123!';
 
 export const uniqueEmail = (prefix = 'api') =>
     `${prefix}_${Date.now()}_${Math.random().toString(36).slice(2, 7)}@example.com`;
-
-/** Run a query against the application database. */
-export async function sql(text, params = []) {
-    if (!process.env.DATABASE_URL) {
-        throw new Error('DATABASE_URL is not set; API tests need it for setup and persistence checks (see README).');
-    }
-    const client = new pg.Client({ connectionString: process.env.DATABASE_URL });
-    await client.connect();
-    try {
-        return (await client.query(text, params)).rows;
-    } finally {
-        await client.end();
-    }
-}
 
 async function newContext(playwright) {
     return playwright.request.newContext({ baseURL: `${API_URL}/` });

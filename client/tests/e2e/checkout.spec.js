@@ -9,8 +9,14 @@
  */
 
 import { test, expect, PageActions } from '../fixtures/test-fixtures.js';
+import { sql } from '../support/db.js';
 
 test.describe('TS_ORDER: Checkout & Orders Test Suite', () => {
+
+    // Orders consume the seeded stock and the server now enforces it, so top it up for repeated runs
+    test.beforeAll(async () => {
+        await sql('UPDATE products SET stock = GREATEST(stock, 100)');
+    });
 
     test.describe('Checkout Process', () => {
 
