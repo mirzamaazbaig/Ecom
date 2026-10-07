@@ -41,14 +41,18 @@ export default defineConfig({
             testMatch: 'e2e/**/*.spec.js',
             use: { ...devices['Desktop Chrome'] },
         },
-        // {
-        //     name: 'firefox',
-        //     use: { ...devices['Desktop Firefox'] },
-        // },
-        // {
-        //     name: 'webkit',
-        //     use: { ...devices['Desktop Safari'] },
-        // },
+        // Cross-browser: the same UI tests in Firefox and WebKit. Not part of `npm test`; run with
+        // `npm run test:cross-browser` (CI runs them as a separate job).
+        {
+            name: 'firefox',
+            testMatch: 'e2e/**/*.spec.js',
+            use: { ...devices['Desktop Firefox'] },
+        },
+        {
+            name: 'webkit',
+            testMatch: 'e2e/**/*.spec.js',
+            use: { ...devices['Desktop Safari'] },
+        },
     ],
 
     /* Start the API and the React client; both are reused if already running locally */
