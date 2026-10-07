@@ -1,6 +1,6 @@
 # E-Commerce Application with Playwright E2E Test Suite
 
-[![E2E tests](https://github.com/mirzamaazbaig/Ecom/actions/workflows/e2e.yml/badge.svg)](https://github.com/mirzamaazbaig/Ecom/actions/workflows/e2e.yml)
+[![E2E tests](https://github.com/mirzamaazbaig/ecommerce-test-automation/actions/workflows/e2e.yml/badge.svg)](https://github.com/mirzamaazbaig/ecommerce-test-automation/actions/workflows/e2e.yml)
 
 A full-stack shop (React, Express, PostgreSQL) built as the system under test for a three-part test automation suite in Playwright: **API tests**, **UI end-to-end tests** and **accessibility checks**, all in [`client/tests`](client/tests). The approach and the risks behind it are written down in [`docs/TEST_STRATEGY.md`](docs/TEST_STRATEGY.md). The application is deliberately small; the focus of this repository is how the tests are structured, run and maintained, and what they found.
 
