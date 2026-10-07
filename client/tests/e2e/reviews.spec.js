@@ -115,8 +115,11 @@ test.describe('TS_REV: Product Reviews Test Suite', () => {
         test('TC_REV_007: Should show rating options from 1 to 5', async ({ app }) => {
             await openFirstProduct(app);
 
-            const values = await app.product.ratingSelect.locator('option').evaluateAll(options => options.map(o => o.value));
-            expect(values.sort()).toEqual(['1', '2', '3', '4', '5']);
+            // evaluateAll does not wait: read the options by polling until the form has rendered (WebKit is slower than Chromium here)
+            await expect.poll(async () => {
+                const values = await app.product.ratingSelect.locator('option').evaluateAll(options => options.map(o => o.value));
+                return values.sort();
+            }).toEqual(['1', '2', '3', '4', '5']);
         });
 
         test('TC_REV_008: Should default to 5-star rating', async ({ app }) => {
