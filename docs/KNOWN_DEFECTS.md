@@ -10,6 +10,7 @@ The API test suite found six defects in the application under test. All six have
 | D4 | Low | Auth | Registration with a missing email or password returns 500 | Fixed | `TC_API_AUTH_010`, `011` |
 | D5 | Low | Products | `GET /api/products/abc` returns 500 | Fixed | `TC_API_PROD_013`, `014` |
 | D6 | Medium | Validation | Unknown product ids and out-of-range ratings surface as generic 500s | Fixed | `TC_API_ORDER_013`, `014`, `TC_API_WISH_007`, `008`, `TC_API_REV_006`, `007`, `008` |
+| D7 | Medium | Products | Deleting a product that customers have ordered returns 500 (the foreign key error leaks out) | Fixed | `TC_API_ADMIN_009` |
 
 ## Fixed
 
@@ -44,6 +45,29 @@ The API test suite found six defects in the application under test. All six have
 - **Found with:** unknown product ids in orders, wishlist and reviews, and `rating: 99`, all returned `500`.
 - **Fix:** orders return `404` for an unknown product and `400` for invalid quantities or product ids (see D1); wishlist and reviews validate `product_id` (`400`), check the product exists (`404`), and reviews require a whole-number rating from 1 to 5 (`400`). Reading reviews and removing from the wishlist validate their id parameter.
 - **Verified by:** the tests listed in the table.
+
+### D7: deleting an ordered product gives 500 (Medium)
+- **Found with:** the database test suite (`ecommerce-db-pytest`): an admin deleted a product that had been ordered; `order_items` references it, PostgreSQL refused, and the API answered `500 Server error`.
+- **Fix:** the foreign key violation (`23503`) is answered with `409 Product has been ordered and cannot be deleted`; the product and the order history stay as they were.
+- **Verified by:** `TC_API_ADMIN_009` fails on the old code and passes on the fix.
+
+## Schema safeguards that were missing (found by the database suite, fixed by migration 002)
+
+The schema accepted data that no part of the shop should ever store. The application code prevents most of it, but a database that relies on that is one bug away from bad data (D1 let stock go negative for exactly this reason).
+
+| ID | Missing safeguard | Now |
+|---|---|---|
+| S1 | `products.stock` could be negative or NULL | `NOT NULL`, `CHECK (stock >= 0)` |
+| S2 | `products.price` could be negative | `CHECK (price >= 0)` |
+| S3 | An order line could have quantity 0 or less, or a negative price | `CHECK (quantity > 0)`, `CHECK (price_at_purchase >= 0)` |
+| S4 | An order line could have no order or no product | `NOT NULL` on both columns |
+| S5 | An order could have a negative total or no user | `CHECK (total_amount >= 0)`, `NOT NULL` on `user_id` |
+| S6 | `users.role` accepted any text | `NOT NULL`, `CHECK (role IN ('user', 'admin'))` |
+| S7 | Migration 001 inserted dummy reviews again on every run, and `migrate.js` ran only 001 | The seed is guarded; `migrate.js` runs every file in `db/migrations` in order; 002 is idempotent |
+
+Each was first written as an expected failure (`xfail`, strict) in the database suite, then closed by `db/migrations/002_add_integrity_constraints.sql`.
+
+Not changed because they need a product decision: the allowed order statuses (only `pending` is ever written), one review per user and product, and case-insensitive email uniqueness.
 
 ## Accessibility defects (found with axe-core, fixed)
 

@@ -9,19 +9,22 @@ const pool = new Pool({
     connectionString: process.env.DATABASE_URL
 });
 
-async function runMigration() {
+// Runs every file in db/migrations in name order (001_..., 002_...).
+async function runMigrations() {
+    const dir = path.join(__dirname, '../db/migrations');
+    const files = fs.readdirSync(dir).filter(f => f.endsWith('.sql')).sort();
     try {
-        console.log('Running Migration: 001_add_modern_features.sql');
-        const sqlPath = path.join(__dirname, '../db/migrations/001_add_modern_features.sql');
-        const sql = fs.readFileSync(sqlPath, 'utf8');
-
-        await pool.query(sql);
-        console.log('Migration executed successfully!');
+        for (const file of files) {
+            console.log(`Running Migration: ${file}`);
+            await pool.query(fs.readFileSync(path.join(dir, file), 'utf8'));
+        }
+        console.log('Migrations executed successfully!');
     } catch (err) {
         console.error('Migration failed:', err);
+        process.exitCode = 1;
     } finally {
-        pool.end();
+        await pool.end();
     }
 }
 
-runMigration();
+runMigrations();

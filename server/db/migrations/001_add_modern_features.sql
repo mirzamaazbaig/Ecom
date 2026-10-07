@@ -20,8 +20,10 @@ CREATE TABLE IF NOT EXISTS wishlist (
 -- Seed some dummy reviews for existing products
 INSERT INTO reviews (user_id, product_id, rating, comment) 
 SELECT id, (SELECT id FROM products ORDER BY RANDOM() LIMIT 1), 5, 'Amazing product! Highly recommended.'
-FROM users LIMIT 5;
+FROM users WHERE NOT EXISTS (SELECT 1 FROM reviews WHERE comment = 'Amazing product! Highly recommended.')
+LIMIT 5;
 
 INSERT INTO reviews (user_id, product_id, rating, comment) 
 SELECT id, (SELECT id FROM products ORDER BY RANDOM() LIMIT 1), 4, 'Good quality but shipping was slow.'
-FROM users LIMIT 5;
+FROM users WHERE NOT EXISTS (SELECT 1 FROM reviews WHERE comment = 'Good quality but shipping was slow.')
+LIMIT 5;

@@ -76,6 +76,10 @@ exports.deleteProduct = async (req, res) => {
         }
         res.json({ message: 'Product deleted' });
     } catch (error) {
+        // 23503 = foreign_key_violation: customers have ordered this product, so its history must stay intact
+        if (error.code === '23503') {
+            return res.status(409).json({ message: 'Product has been ordered and cannot be deleted' });
+        }
         console.error(error);
         res.status(500).json({ message: 'Server error' });
     }

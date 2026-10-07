@@ -6,13 +6,13 @@ A full-stack shop (React, Express, PostgreSQL) built as the system under test fo
 
 ## What is tested
 
-### API tests: `client/tests/api` (65 cases)
+### API tests: `client/tests/api` (66 cases)
 
 | Suite | Cases | Coverage |
 |---|---|---|
 | `TS_API_AUTH` | 11 | Register, duplicate email, session start, bcrypt hash stored, login, no user enumeration, `/me`, logout |
 | `TS_API_PROD` | 14 | Field contract, limit/offset, category/price filters, sorting, search, SQL-injection and unsupported `sort_by` handling, get by id, 404 |
-| `TS_API_ADMIN` | 8 | Role-based access (401 anonymous, 403 customer), product create/update/delete lifecycle |
+| `TS_API_ADMIN` | 9 | Role-based access (401 anonymous, 403 customer), product create/update/delete lifecycle, a product that has been ordered cannot be deleted |
 | `TS_API_ORDER` | 16 | Validation, persistence, stock decrement and stock boundary, server-side pricing, price snapshot, per-user isolation, all-or-nothing orders, concurrent orders, SQL checks on stored rows |
 | `TS_API_WISH` | 8 | Auth, add, idempotent add, remove, per-user privacy |
 | `TS_API_REV` | 8 | Auth, review listing, average rating aggregation, rating range |

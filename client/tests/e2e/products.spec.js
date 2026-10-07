@@ -46,7 +46,7 @@ test.describe('TS_PROD: Product Browsing Test Suite', () => {
 
         test('TC_PROD_004: Should navigate to product details via View Details button', async ({ app }) => {
             await app.home.goto();
-            const name = await app.home.firstProductName();
+            const name = await app.home.seededProductName();
 
             await app.home.openDetails(name);
 
@@ -57,7 +57,7 @@ test.describe('TS_PROD: Product Browsing Test Suite', () => {
 
         test('TC_PROD_005: Should navigate to product details via product name link', async ({ app }) => {
             await app.home.goto();
-            const name = await app.home.firstProductName();
+            const name = await app.home.seededProductName();
 
             await app.home.openDetailsViaTitle(name);
 
@@ -67,7 +67,7 @@ test.describe('TS_PROD: Product Browsing Test Suite', () => {
 
         test('TC_PROD_006: Should display product details correctly', async ({ app }) => {
             await app.home.goto();
-            const name = await app.home.firstProductName();
+            const name = await app.home.seededProductName();
             const price = await app.home.priceOf(name);
 
             await app.home.openDetails(name);

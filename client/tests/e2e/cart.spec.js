@@ -11,7 +11,7 @@ test.describe('TS_CART: Shopping Cart Test Suite', () => {
 
         test('TC_CART_001: Should add product to cart from home page', async ({ shopper }) => {
             await shopper.home.goto();
-            const name = await shopper.home.firstProductName();
+            const name = await shopper.home.seededProductName();
 
             await shopper.home.addToCart(name);
             await shopper.nav.expectCartCount(1);
@@ -22,7 +22,7 @@ test.describe('TS_CART: Shopping Cart Test Suite', () => {
 
         test('TC_CART_002: Should add product to cart from product details page', async ({ shopper }) => {
             await shopper.home.goto();
-            const name = await shopper.home.firstProductName();
+            const name = await shopper.home.seededProductName();
             await shopper.home.openDetails(name);
 
             await shopper.product.addToCart();
@@ -34,7 +34,7 @@ test.describe('TS_CART: Shopping Cart Test Suite', () => {
 
         test('TC_CART_003: Should add product with custom quantity', async ({ shopper }) => {
             await shopper.home.goto();
-            const name = await shopper.home.firstProductName();
+            const name = await shopper.home.seededProductName();
             await shopper.home.openDetails(name);
 
             await shopper.product.setQuantity(2);
@@ -49,7 +49,7 @@ test.describe('TS_CART: Shopping Cart Test Suite', () => {
 
         test('TC_CART_004: Should display cart items correctly', async ({ shopper }) => {
             await shopper.home.goto();
-            await shopper.home.addToCart(await shopper.home.firstProductName());
+            await shopper.home.addToCart(await shopper.home.seededProductName());
             await shopper.nav.expectCartCount(1);
             await shopper.nav.openCart();
 
@@ -72,7 +72,7 @@ test.describe('TS_CART: Shopping Cart Test Suite', () => {
 
         test('TC_CART_006: Should remove item from cart', async ({ shopper }) => {
             await shopper.home.goto();
-            const name = await shopper.home.firstProductName();
+            const name = await shopper.home.seededProductName();
             await shopper.home.addToCart(name);
             await shopper.nav.expectCartCount(1);
             await shopper.nav.openCart();
@@ -88,7 +88,7 @@ test.describe('TS_CART: Shopping Cart Test Suite', () => {
 
         test('TC_CART_007: Should calculate total correctly', async ({ shopper }) => {
             await shopper.home.goto();
-            const name = await shopper.home.firstProductName();
+            const name = await shopper.home.seededProductName();
             const price = await shopper.home.priceOf(name);
 
             await shopper.home.addToCart(name);

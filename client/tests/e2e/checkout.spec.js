@@ -9,7 +9,7 @@ import { sql } from '../support/db.js';
 /** Puts the first listed product in the cart and opens the cart; returns the product's name and price. */
 async function fillCart(shopper) {
     await shopper.home.goto();
-    const name = await shopper.home.firstProductName();
+    const name = await shopper.home.seededProductName();
     const price = await shopper.home.priceOf(name);
     await shopper.home.addToCart(name);
     await shopper.nav.expectCartCount(1);

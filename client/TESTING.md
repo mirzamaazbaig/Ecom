@@ -1,6 +1,6 @@
 # E2E Testing with Playwright
 
-The suite is in `client/tests`: 58 UI cases in `tests/e2e`, 65 API cases in `tests/api` and 16 accessibility cases in `tests/a11y`. The strategy behind it is in [`docs/TEST_STRATEGY.md`](../docs/TEST_STRATEGY.md). See the root [README](../README.md) for the overview and setup.
+The suite is in `client/tests`: 58 UI cases in `tests/e2e`, 66 API cases in `tests/api` and 16 accessibility cases in `tests/a11y`. The strategy behind it is in [`docs/TEST_STRATEGY.md`](../docs/TEST_STRATEGY.md). See the root [README](../README.md) for the overview and setup.
 
 ## Layout
 

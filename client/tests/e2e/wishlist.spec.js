@@ -8,7 +8,7 @@ import { test, expect } from '../fixtures/test-fixtures.js';
 /** Opens the first listed product, wishlists it and returns its name. */
 async function wishlistFirstProduct(shopper) {
     await shopper.home.goto();
-    const name = await shopper.home.firstProductName();
+    const name = await shopper.home.seededProductName();
     await shopper.home.openDetails(name);
     await shopper.product.addToWishlist();
     await expect.poll(() => shopper.dialogs).toContain('Added to Wishlist!');

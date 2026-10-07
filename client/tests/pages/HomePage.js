@@ -1,4 +1,5 @@
 import { expect } from '@playwright/test';
+import { SEEDED_PRODUCTS } from '../support/seed.js';
 
 /** The product listing with its category, sort and price controls. */
 export class HomePage {
@@ -24,8 +25,14 @@ export class HomePage {
         return this.cards.filter({ has: this.page.locator('.card-title', { hasText: name }) });
     }
 
-    async firstProductName() {
-        return (await this.titles.first().innerText()).trim();
+    /**
+     * The name of the first listed product that is part of the seeded catalogue. Tests that need "any product"
+     * use this instead of the first card, which may be a product another test created and is about to delete.
+     */
+    async seededProductName() {
+        const escaped = SEEDED_PRODUCTS.map(n => n.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+        const seeded = this.titles.filter({ hasText: new RegExp(`^(${escaped.join('|')})$`) });
+        return (await seeded.first().innerText()).trim();
     }
 
     async productNames() {

@@ -3,7 +3,7 @@
  * Test Suite ID: TS_API_ADMIN
  * Covers role-based access control on write endpoints and the product CRUD lifecycle.
  */
-import { test, expect, makeProduct } from './support.js';
+import { test, expect, makeProduct, sql } from './support.js';
 
 test.describe('TS_API_ADMIN: Role-based access and product management', () => {
 
@@ -78,6 +78,23 @@ test.describe('TS_API_ADMIN: Role-based access and product management', () => {
         test('TC_API_ADMIN_008: updating or deleting an unknown product returns 404', async ({ admin }) => {
             expect((await admin.api.put('products/99999999', { data: { price: 1 } })).status()).toBe(404);
             expect((await admin.api.delete('products/99999999')).status()).toBe(404);
+        });
+
+        test('TC_API_ADMIN_009: a product that customers have ordered cannot be deleted (409, not a server error)', async ({ admin, user, anon }) => {
+            const product = await makeProduct(admin.api, { stock: 5 });
+            try {
+                const order = await user.api.post('orders', { data: { items: [{ productId: product.id, quantity: 1, price: 1 }] } });
+                expect(order.status()).toBe(201);
+
+                const res = await admin.api.delete(`products/${product.id}`);
+
+                expect(res.status()).toBe(409);
+                expect((await res.json()).message).toBe('Product has been ordered and cannot be deleted');
+                expect((await anon.get(`products/${product.id}`)).status()).toBe(200);
+            } finally {
+                await sql('DELETE FROM order_items WHERE product_id = $1', [product.id]);
+                await admin.api.delete(`products/${product.id}`);
+            }
         });
     });
 });

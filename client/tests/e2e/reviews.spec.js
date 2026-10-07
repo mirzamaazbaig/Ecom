@@ -7,10 +7,10 @@ import { test, expect, API_URL } from '../fixtures/test-fixtures.js';
 
 const REVIEW_REQUIRES_LOGIN = 'Failed to submit review. You might need to login.';
 
-/** Opens the details page of the first listed product. */
+/** Opens the details page of a seeded product (see support/seed.js). */
 async function openFirstProduct(app) {
     await app.home.goto();
-    const name = await app.home.firstProductName();
+    const name = await app.home.seededProductName();
     await app.home.openDetails(name);
     return name;
 }
