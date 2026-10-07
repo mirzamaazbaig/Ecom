@@ -169,4 +169,32 @@ test.describe('TS_PROD: Product Browsing Test Suite', () => {
             await expect(app.home.cards).toHaveCount(0);
         });
     });
+
+    test.describe('Product without an image', () => {
+
+        test('TC_PROD_014: The details page of a product without an image does not load an image from an outside website', async ({ app, adminSession }) => {
+            const api = adminSession.api;
+            const product = await (await api.post('products', {
+                data: { name: `No Image ${Date.now()}`, price: 5, stock: 1, categoryId: 1 },
+            })).json();
+            try {
+                const appHost = new URL(app.page.url() === 'about:blank' ? 'http://localhost:5173' : app.page.url()).host;
+                const outsideImages = [];
+                app.page.on('request', request => {
+                    const { host, protocol } = new URL(request.url());
+                    if (request.resourceType() === 'image' && protocol.startsWith('http') && host !== appHost && host !== new URL(API_URL).host) {
+                        outsideImages.push(request.url());
+                    }
+                });
+
+                await app.product.goto(product.id);
+
+                // A missing image used to be replaced by one fetched from via.placeholder.com; when that site was slow the page never finished loading
+                await expect(app.page.locator('img.card-img-top')).toHaveAttribute('src', /^data:image\//);
+                expect(outsideImages).toEqual([]);
+            } finally {
+                await api.delete(`products/${product.id}`);
+            }
+        });
+    });
 });

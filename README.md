@@ -17,12 +17,12 @@ A full-stack shop (React, Express, PostgreSQL) built as the system under test fo
 | `TS_API_WISH` | 8 | Auth, add, idempotent add, remove, per-user privacy |
 | `TS_API_REV` | 8 | Auth, review listing, average rating aggregation, rating range |
 
-### UI end-to-end tests: `client/tests/e2e` (58 cases, run on desktop and at phone size; Firefox and WebKit in a separate CI job)
+### UI end-to-end tests: `client/tests/e2e` (59 cases, run on desktop and at phone size; Firefox and WebKit in a separate CI job)
 
 | Suite | Cases | Coverage |
 |---|---|---|
 | `TS_AUTH` | 7 | Registration, duplicate email, password mismatch, login, invalid credentials, logout, session persistence after reload |
-| `TS_PROD` | 13 | Listing, prices and ratings, navigation, category filter, sorting, search, empty search |
+| `TS_PROD` | 14 | Listing, prices and ratings, navigation, category filter, sorting, search, empty search, a product without an image loads no outside image |
 | `TS_CART` | 7 | Add from list and details page, quantity, empty cart, remove, total calculation |
 | `TS_ORDER` | 7 | Checkout, cart cleared after order, order history, protected routes redirect to login |
 | `TS_REV` | 9 | Viewing reviews, submitting a review, rating options and default, validation, unauthenticated user |

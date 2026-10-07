@@ -11,6 +11,7 @@ The API test suite found six defects in the application under test. All six have
 | D5 | Low | Products | `GET /api/products/abc` returns 500 | Fixed | `TC_API_PROD_013`, `014` |
 | D6 | Medium | Validation | Unknown product ids and out-of-range ratings surface as generic 500s | Fixed | `TC_API_ORDER_013`, `014`, `TC_API_WISH_007`, `008`, `TC_API_REV_006`, `007`, `008` |
 | D7 | Medium | Products | Deleting a product that customers have ordered returns 500 (the foreign key error leaks out) | Fixed | `TC_API_ADMIN_009` |
+| D8 | Medium | Product page | A product without an image showed a picture loaded from `via.placeholder.com`, an outside service; when it was slow or down the page never finished loading | Fixed | `TC_PROD_014` |
 
 ## Fixed
 
@@ -50,6 +51,12 @@ The API test suite found six defects in the application under test. All six have
 - **Found with:** the database test suite (`ecommerce-db-pytest`): an admin deleted a product that had been ordered; `order_items` references it, PostgreSQL refused, and the API answered `500 Server error`.
 - **Fix:** the foreign key violation (`23503`) is answered with `409 Product has been ordered and cannot be deleted`; the product and the order history stay as they were.
 - **Verified by:** `TC_API_ADMIN_009` fails on the old code and passes on the fix.
+
+### D8: the product page depends on an outside image service (Medium)
+- **Found with:** intermittent CI timeouts. A review test that creates a product without an image hung for 30 seconds in Chromium and Firefox, but not in WebKit and not on a machine without internet. The product page used `https://via.placeholder.com/400` as its fallback picture, and the browser waits for that image before the page counts as loaded. That service was slow or unreachable at times.
+- **Fix:** the fallback is now an inline SVG data URI, so the page makes no outside image request.
+- **Verified by:** `TC_PROD_014` records every image request while a product without an image loads: it fails on the old code (the image source is the outside URL) and passes on the fix, on desktop and at phone size.
+- **Not changed:** the Google Fonts stylesheet is still loaded from an outside site on every page.
 
 ## Schema safeguards that were missing (found by the database suite, fixed by migration 002)
 

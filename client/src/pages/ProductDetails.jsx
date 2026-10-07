@@ -5,6 +5,14 @@ import { useCart } from '../context/CartContext';
 
 import ProductReviews from '../components/ProductReviews';
 
+// Shown when a product has no image. Inline, so the page never waits for (or depends on) an outside website.
+const PLACEHOLDER_IMAGE = `data:image/svg+xml;utf8,${encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400">'
+    + '<rect width="400" height="400" fill="#e9ecef"/>'
+    + '<text x="200" y="210" font-family="sans-serif" font-size="28" fill="#495057" text-anchor="middle">No image</text>'
+    + '</svg>'
+)}`;
+
 const ProductDetails = () => {
     const { id } = useParams();
     const [product, setProduct] = useState(null);
@@ -53,7 +61,7 @@ const ProductDetails = () => {
             <div className="row">
                 <div className="col-md-6">
                     <img
-                        src={product.image_url || 'https://via.placeholder.com/400'}
+                        src={product.image_url || PLACEHOLDER_IMAGE}
                         className="img-fluid rounded shadow-lg card-img-top"
                         alt={product.name}
                     />

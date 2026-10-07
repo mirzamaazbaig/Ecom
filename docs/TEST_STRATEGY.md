@@ -36,7 +36,7 @@ Test effort follows risk: what would hurt most if it were wrong, and how likely 
 | Level | Tool | Purpose | Count |
 |---|---|---|---|
 | API | Playwright `request` | Business rules, authorisation, validation, data integrity. Fast (seconds), no browser, checks persisted rows with SQL. Most behaviour is tested here. | 66 |
-| UI end-to-end | Playwright (Chromium, Firefox, WebKit; also at phone size) | User journeys through the real interface: sign-up, browse, cart, checkout, wishlist, reviews, and the admin dashboard. Written with page objects. | 58 (each run on desktop, at phone size and in two more browsers) |
+| UI end-to-end | Playwright (Chromium, Firefox, WebKit; also at phone size) | User journeys through the real interface: sign-up, browse, cart, checkout, wishlist, reviews, and the admin dashboard. Written with page objects. | 59 (each run on desktop, at phone size and in two more browsers) |
 | Accessibility | Playwright and axe-core | WCAG 2.1 A and AA on every customer page, the admin dashboard and the phone-width home page. | 16 |
 
 The pyramid is deliberately API-heavy: a rule such as "an order cannot exceed stock" is checked once, at the API, in milliseconds. The UI tests then only need to prove that the interface is wired to it.
