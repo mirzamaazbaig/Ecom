@@ -17,7 +17,7 @@ A full-stack shop (React, Express, PostgreSQL) built as the system under test fo
 | `TS_API_WISH` | 8 | Auth, add, idempotent add, remove, per-user privacy |
 | `TS_API_REV` | 8 | Auth, review listing, average rating aggregation, rating range |
 
-### UI end-to-end tests: `client/tests/e2e` (58 cases)
+### UI end-to-end tests: `client/tests/e2e` (58 cases, run on desktop and at phone size; Firefox and WebKit in a separate CI job)
 
 | Suite | Cases | Coverage |
 |---|---|---|
@@ -29,11 +29,11 @@ A full-stack shop (React, Express, PostgreSQL) built as the system under test fo
 | `TS_WISH` | 6 | Add, view, empty state, remove, add to cart from wishlist, navigate to product |
 | `TS_ADMIN` | 9 | Access (customer and anonymous are turned away), dashboard lists the catalogue, add / edit / delete a product, form validation, cancel, orders tab shows a customer's order |
 
-### Accessibility: `client/tests/a11y` (14 cases)
+### Accessibility: `client/tests/a11y` (16 cases)
 
 | Suite | Cases | Coverage |
 |---|---|---|
-| `TS_A11Y` | 14 | axe-core scan against WCAG 2.1 A and AA on the home page, login (also with an error shown), register, product details, empty search, empty and filled cart, wishlist, order history, profile, and the admin dashboard (products, add form, orders) |
+| `TS_A11Y` | 16 | axe-core scan against WCAG 2.1 A and AA on the home page, login (also with an error shown), register, product details, empty search, empty and filled cart, wishlist, order history, profile, the admin dashboard (products, add form, orders), and the home page at phone width (hamburger button, menu open) |
 
 The first scan failed on all 11 customer pages (unnamed form controls and low-contrast buttons), and the admin pages added later had two more problems; the findings and fixes are in the defect log below.
 
@@ -94,7 +94,9 @@ cd ..
 
 # 3. Run (Playwright starts the API on :5000 and the client on :5173 itself)
 cd client
-npm test                                 # API + E2E
+npm test                                 # API, accessibility, UI on desktop and at phone size
+npm run test:cross-browser               # the UI tests in Firefox and WebKit
+npm run test:mobile                      # the UI tests at 393 x 851 (Pixel 5 emulation)
 npm run test:api                         # API tests only (fast, no browser)
 npm run test:a11y                        # accessibility scan (axe-core)
 npm run test:e2e                         # UI tests only, headless
@@ -131,7 +133,7 @@ client/            React app and the Playwright suite
     pages/         page objects (one class per page) and the App that bundles them
     fixtures/      E2E fixtures: app, shopper, admin
     support/       shared configuration
-  playwright.config.js   projects: api, a11y, chromium
+  playwright.config.js   projects: api, a11y, chromium, mobile-chrome, firefox, webkit
 docs/              TEST_STRATEGY.md, KNOWN_DEFECTS.md
 server/            Express API
   controllers/ models/ routes/ middleware/
@@ -145,5 +147,5 @@ More detail on the suites: [`client/TESTING.md`](client/TESTING.md).
 
 - Manual keyboard and screen reader pass, recorded as a checklist (automated scanning finds only part of the problems).
 - Contract check of API response shapes with a schema, shared by the API and UI tests.
-- Mobile viewports (the UI tests run in desktop Firefox and WebKit, not on phone-sized screens).
+- Real mobile browsers and devices (phone size is emulated in Chromium).
 - Next round of API test design: password policy, email case normalisation, rate limiting on login.

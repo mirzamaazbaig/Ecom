@@ -134,3 +134,20 @@ appTest.describe('TS_A11Y: Accessibility, admin pages', () => {
         await expectNoA11yViolations(admin.page);
     });
 });
+
+appTest.describe('TS_A11Y: Accessibility, phone-sized screen', () => {
+
+    appTest.use({ viewport: { width: 393, height: 851 }, hasTouch: true });
+
+    appTest('TC_A11Y_015: home page at phone width, with the hamburger button', async ({ app }) => {
+        await app.home.goto();
+        await expect(app.nav.toggler).toBeVisible();
+        await expectNoA11yViolations(app.page);
+    });
+
+    appTest('TC_A11Y_016: home page at phone width, with the menu open', async ({ app }) => {
+        await app.home.goto();
+        await app.nav.openMenu();
+        await expectNoA11yViolations(app.page);
+    });
+});

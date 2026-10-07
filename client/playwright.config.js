@@ -48,6 +48,12 @@ export default defineConfig({
             testMatch: 'e2e/**/*.spec.js',
             use: { ...devices['Desktop Firefox'] },
         },
+        // Phone-sized screen (Chromium device emulation): the same UI tests at 393 x 851 with touch.
+        {
+            name: 'mobile-chrome',
+            testMatch: 'e2e/**/*.spec.js',
+            use: { ...devices['Pixel 5'] },
+        },
         {
             name: 'webkit',
             testMatch: 'e2e/**/*.spec.js',

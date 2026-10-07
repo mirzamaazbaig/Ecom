@@ -136,7 +136,8 @@ const AdminDashboard = () => {
                         </button>
                     ) : renderProductForm()}
 
-                    <table className="table table-striped">
+                    <div className="table-responsive">
+<table className="table table-striped">
                         <thead>
                             <tr>
                                 <th>ID</th>
@@ -161,12 +162,14 @@ const AdminDashboard = () => {
                             ))}
                         </tbody>
                     </table>
+</div>
                 </div>
             )}
 
             {activeTab === 'orders' && (
                 <div>
-                    <table className="table">
+                    <div className="table-responsive">
+<table className="table">
                         <thead>
                             <tr>
                                 <th>Order ID</th>
@@ -188,6 +191,7 @@ const AdminDashboard = () => {
                             ))}
                         </tbody>
                     </table>
+</div>
                 </div>
             )}
         </div>

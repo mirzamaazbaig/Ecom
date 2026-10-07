@@ -1,6 +1,6 @@
 # E2E Testing with Playwright
 
-The suite is in `client/tests`: 58 UI cases in `tests/e2e`, 65 API cases in `tests/api` and 14 accessibility cases in `tests/a11y`. The strategy behind it is in [`docs/TEST_STRATEGY.md`](../docs/TEST_STRATEGY.md). See the root [README](../README.md) for the overview and setup.
+The suite is in `client/tests`: 58 UI cases in `tests/e2e`, 65 API cases in `tests/api` and 16 accessibility cases in `tests/a11y`. The strategy behind it is in [`docs/TEST_STRATEGY.md`](../docs/TEST_STRATEGY.md). See the root [README](../README.md) for the overview and setup.
 
 ## Layout
 
@@ -38,6 +38,7 @@ The suite is in `client/tests`: 58 UI cases in `tests/e2e`, 65 API cases in `tes
 
 `playwright.config.js`:
 
+- `mobile-chrome` runs the same UI tests at 393 x 851 with touch (Chromium device emulation, `npm run test:mobile`); it is part of `npm test`.
 - Three projects: `api` (no browser, `tests/api`), `a11y` (`tests/a11y`) and `chromium` (headless, `tests/e2e`). `firefox` and `webkit` run the same UI tests (`npm run test:cross-browser`); they are not part of `npm test` so a local run needs only Chromium. CI runs them as a separate job with no retries.
 - Loads `../server/.env` when present so `DATABASE_URL` is available to the API tests.
 - Starts the API (`../server`, port 5000) and the Vite client (port 5173) and reuses them if already running.

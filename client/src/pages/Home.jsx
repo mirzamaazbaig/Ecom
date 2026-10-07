@@ -66,7 +66,7 @@ const Home = () => {
             <div className="container-fluid ps-4 pe-4">
                 <div className="row">
                     {/* Sidebar */}
-                    <div className="col-md-2 d-none d-md-block sidebar">
+                    <div className="col-12 col-md-2 sidebar">
                         <div className="filter-section">
                             <h5>Categories</h5>
                             <ul>
@@ -108,7 +108,7 @@ const Home = () => {
                     </div>
 
                     {/* Product Grid */}
-                    <div className="col-md-10">
+                    <div className="col-12 col-md-10">
                         {searchQuery && <h3>Results for "{searchQuery}"</h3>}
                         <div className="row">
                             {products.length === 0 && !loading && <p>No products found.</p>}

@@ -273,3 +273,13 @@ body {
 .nav-tabs .nav-link:not(.active) {
   color: #0a58ca;
 }
+
+/* Phone-sized screens: the filter sidebar stacks above the products instead of filling a column */
+@media (max-width: 767.98px) {
+  .sidebar {
+    min-height: 0;
+    border-right: 0;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 1rem;
+  }
+}

@@ -13,8 +13,9 @@
     "test:e2e:headed": "playwright test --project=chromium --headed",
     "test:report": "playwright show-report",
     "test:api": "playwright test --project=api",
-    "test": "playwright test --project=api --project=a11y --project=chromium",
+    "test": "playwright test --project=api --project=a11y --project=chromium --project=mobile-chrome",
     "test:cross-browser": "playwright test --project=firefox --project=webkit",
+    "test:mobile": "playwright test --project=mobile-chrome",
     "test:a11y": "playwright test --project=a11y"
   },
   "dependencies": {

@@ -61,6 +61,18 @@ The accessibility scan (`TS_A11Y`, WCAG 2.1 level A and AA) failed on all 11 cus
 
 Each customer page's scan failed before its fix and passes after it; the same is true of A5. The scan covers what axe-core can detect automatically; it does not replace keyboard and screen reader testing (see [`TEST_STRATEGY.md`](TEST_STRATEGY.md)).
 
+## Responsive defects (found by running the UI tests at phone size, fixed)
+
+Running the 58 UI tests at 393 x 851 (touch) failed 29 of them on the first run. Most were the tests clicking links hidden behind the collapsed menu, which is expected behaviour; the page objects now open the menu first (`NavBar.openMenu`). After that, six tests still failed and showed three real defects:
+
+| ID | Impact | Where | Finding | Fix | Shown by |
+|---|---|---|---|---|---|
+| M1 | Medium | Home page | The sidebar with the category list, the price slider and the sort selector was `d-none d-md-block`: on a phone there was no way to sort or limit the price (the category dropdown in the menu still worked) | The sidebar is always shown and stacks above the products on small screens | `TC_PROD_007` to `010` on `mobile-chrome` |
+| M2 | Medium | Admin dashboard | The product and order tables overflowed the screen; other cells overlapped the Edit and Delete buttons, so they could not be tapped | Both tables are wrapped in `.table-responsive` (they scroll sideways) | `TC_ADMIN_005`, `006` on `mobile-chrome` |
+| M3 | Critical (accessibility) | Every page, phone width | The hamburger button has no accessible name (axe `button-name`); it is hidden on wide screens, so the desktop scans never saw it | `aria-label="Toggle navigation"`, `aria-controls` and `aria-expanded` | `TC_A11Y_015`, `016` |
+
+All of them fail on the previous code and pass on the fix (the accessibility tests were run against the unfixed app first and failed on `button-name`).
+
 ## Not covered by these fixes
 
 - No password strength policy (any non-empty password up to 72 characters is accepted) and emails are not normalised to lower case, so `A@x.com` and `a@x.com` are different accounts. Neither was reported as a defect; both are candidates for the next round of test design.

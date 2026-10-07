@@ -13,7 +13,7 @@ How this application is tested, why, and what is deliberately not tested. It is 
 | Not tested | Reason |
 |---|---|
 | Payments, email, third-party services | The application has none. The "Web3 receipt" feature is a mock. |
-| Phone-sized screens and real mobile browsers | The UI tests run in desktop Chromium, Firefox and WebKit only. |
+| Real mobile browsers and devices | Phone size is emulated in Chromium (393 x 851, touch), not run on real devices. |
 | Manual keyboard and screen reader testing | Not automated here, see section 6. |
 
 ## 2. Product risks and how they drive testing
@@ -36,8 +36,8 @@ Test effort follows risk: what would hurt most if it were wrong, and how likely 
 | Level | Tool | Purpose | Count |
 |---|---|---|---|
 | API | Playwright `request` | Business rules, authorisation, validation, data integrity. Fast (seconds), no browser, checks persisted rows with SQL. Most behaviour is tested here. | 65 |
-| UI end-to-end | Playwright (Chromium) | User journeys through the real interface: sign-up, browse, cart, checkout, wishlist, reviews, and the admin dashboard. Written with page objects. | 58 |
-| Accessibility | Playwright and axe-core | WCAG 2.1 A and AA on every customer page and the admin dashboard. | 14 |
+| UI end-to-end | Playwright (Chromium, Firefox, WebKit; also at phone size) | User journeys through the real interface: sign-up, browse, cart, checkout, wishlist, reviews, and the admin dashboard. Written with page objects. | 58 (each run on desktop, at phone size and in two more browsers) |
+| Accessibility | Playwright and axe-core | WCAG 2.1 A and AA on every customer page, the admin dashboard and the phone-width home page. | 16 |
 
 The pyramid is deliberately API-heavy: a rule such as "an order cannot exceed stock" is checked once, at the API, in milliseconds. The UI tests then only need to prove that the interface is wired to it.
 
@@ -76,6 +76,6 @@ The pyramid is deliberately API-heavy: a rule such as "an order cannot exceed st
 | R3 | `TC_API_AUTH_001` to `008` |
 | R4 | `TC_API_PROD_009`, `010`, `013`, `014`; `TC_API_AUTH_009` to `011`; `TC_API_ORDER_013`, `014`; `TC_API_WISH_007`, `008`; `TC_API_REV_005` to `008` |
 | R5 | `TC_PROD_*`, `TC_CART_*`, `TC_ORDER_*` |
-| R6 | `TC_A11Y_001` to `014` |
+| R6 | `TC_A11Y_001` to `016` |
 | R7 | `TC_PROD_007`, `008`, `009`, `TC_ADMIN_003` and the UI tests that read prices and totals |
 | Admin changes (add, edit, delete) | `TC_ADMIN_004` to `009`, with API checks that the change was stored |
