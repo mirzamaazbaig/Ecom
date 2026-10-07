@@ -24,6 +24,11 @@ export class ProductPage {
         await expect(this.addToCartButton).toBeVisible();
     }
 
+    /** The product page is shown (the quantity field exists only here, so the previous page is gone). */
+    async expectLoaded() {
+        await expect(this.quantity).toBeVisible();
+    }
+
     async priceValue() {
         return parseFloat((await this.price.innerText()).replace('$', ''));
     }
@@ -33,6 +38,9 @@ export class ProductPage {
     }
 
     async addToCart() {
+        // The quantity field exists only on this page. Wait for it, so the previous page's "Add to Cart"
+        // buttons (still on screen for a moment after a client-side navigation in WebKit) are gone.
+        await this.expectLoaded();
         await this.addToCartButton.click();
     }
 

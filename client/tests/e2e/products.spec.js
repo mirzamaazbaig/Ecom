@@ -51,7 +51,7 @@ test.describe('TS_PROD: Product Browsing Test Suite', () => {
             await app.home.openDetails(name);
 
             await expect(app.product.name).toHaveText(name);
-            await expect(app.product.addToCartButton).toBeVisible();
+            await app.product.expectLoaded();
             await expect(app.product.wishlistButton).toBeVisible();
         });
 
@@ -62,7 +62,7 @@ test.describe('TS_PROD: Product Browsing Test Suite', () => {
             await app.home.openDetailsViaTitle(name);
 
             await expect(app.product.name).toHaveText(name);
-            await expect(app.product.addToCartButton).toBeVisible();
+            await app.product.expectLoaded();
         });
 
         test('TC_PROD_006: Should display product details correctly', async ({ app }) => {

@@ -85,7 +85,7 @@ test.describe('TS_WISH: Wishlist Test Suite', () => {
             await shopper.wishlist.openProduct(name);
 
             await expect(shopper.product.name).toHaveText(name);
-            await expect(shopper.product.addToCartButton).toBeVisible();
+            await shopper.product.expectLoaded();
         });
     });
 });
