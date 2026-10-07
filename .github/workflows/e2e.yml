@@ -147,7 +147,7 @@ jobs:
           node scripts/seedProducts.js
 
       - name: Run the UI tests in ${{ matrix.browser }}
-        run: npx playwright test --project=${{ matrix.browser }}
+        run: npx playwright test --project=${{ matrix.browser }} --retries=0
         working-directory: client
         env:
           CI: 'true'

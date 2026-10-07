@@ -38,7 +38,7 @@ The suite is in `client/tests`: 58 UI cases in `tests/e2e`, 65 API cases in `tes
 
 `playwright.config.js`:
 
-- Three projects: `api` (no browser, `tests/api`), `a11y` (`tests/a11y`) and `chromium` (headless, `tests/e2e`). Firefox and WebKit are present but commented out.
+- Three projects: `api` (no browser, `tests/api`), `a11y` (`tests/a11y`) and `chromium` (headless, `tests/e2e`). `firefox` and `webkit` run the same UI tests (`npm run test:cross-browser`); they are not part of `npm test` so a local run needs only Chromium. CI runs them as a separate job with no retries.
 - Loads `../server/.env` when present so `DATABASE_URL` is available to the API tests.
 - Starts the API (`../server`, port 5000) and the Vite client (port 5173) and reuses them if already running.
 - Screenshot and video on failure, trace on first retry, 2 retries and 1 worker when `CI` is set.

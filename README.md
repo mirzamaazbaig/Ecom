@@ -145,5 +145,5 @@ More detail on the suites: [`client/TESTING.md`](client/TESTING.md).
 
 - Manual keyboard and screen reader pass, recorded as a checklist (automated scanning finds only part of the problems).
 - Contract check of API response shapes with a schema, shared by the API and UI tests.
-- Firefox and WebKit projects (configured but disabled).
+- Mobile viewports (the UI tests run in desktop Firefox and WebKit, not on phone-sized screens).
 - Next round of API test design: password policy, email case normalisation, rate limiting on login.

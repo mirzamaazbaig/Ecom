@@ -13,7 +13,7 @@ How this application is tested, why, and what is deliberately not tested. It is 
 | Not tested | Reason |
 |---|---|
 | Payments, email, third-party services | The application has none. The "Web3 receipt" feature is a mock. |
-| Cross-browser (Firefox, WebKit) | Configured but disabled; Chromium only. |
+| Phone-sized screens and real mobile browsers | The UI tests run in desktop Chromium, Firefox and WebKit only. |
 | Manual keyboard and screen reader testing | Not automated here, see section 6. |
 
 ## 2. Product risks and how they drive testing
@@ -64,7 +64,7 @@ The pyramid is deliberately API-heavy: a rule such as "an order cannot exceed st
 |---|---|---|
 | Automated accessibility scanning finds only part of the problems | Only a portion of WCAG issues can be detected by tools. Keyboard order, focus visibility, meaningful alternative text and screen reader announcements need a person. | Manual keyboard and screen reader pass on checkout, recorded as a checklist |
 | No password policy or e-mail case normalisation tests | Both are unspecified behaviours; they need a product decision before tests | Agree the rules, then test them |
-| Chromium only | Browser-specific defects would go unseen | Enable the Firefox and WebKit projects |
+| API and accessibility tests run in Chromium only | The API tests use no browser; the axe scan is browser-independent in most rules but was run in Chromium | Acceptable; revisit if a browser-specific accessibility defect appears |
 | No performance gate in this repository | See R8 | Load test project, run on a schedule |
 
 ## 7. Traceability: where each risk's tests live
